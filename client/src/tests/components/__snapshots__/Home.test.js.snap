@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render Header correctly 1`] = `
+<div>
+  <h1>
+    React-Redux Starter Template
+  </h1>
+  <h3>
+    This is my starting template for a React project!
+  </h3>
+  <ul>
+    <li>
+      <em>
+        Redux
+      </em>
+    </li>
+    <a
+      href="https://github.com/zalmoxisus/redux-devtools-extension"
+    >
+      <li>
+        Redux DevTools Extension
+      </li>
+    </a>
+    <li>
+      React Router
+    </li>
+    <li>
+      SASS
+    </li>
+    <a
+      href="https://necolas.github.io/normalize.css/"
+    >
+      <li>
+        Normalize.css
+      </li>
+    </a>
+    <li>
+      Webpack configured for development
+    </li>
+    <li>
+      Babel plugins:
+    </li>
+    <ul>
+      <a
+        href="https://babeljs.io/docs/plugins/transform-class-properties/"
+      >
+        <li>
+          Class properties transform
+        </li>
+      </a>
+      <a
+        href="https://babeljs.io/docs/plugins/transform-object-rest-spread/"
+      >
+        <li>
+          Object rest spread transform
+        </li>
+      </a>
+    </ul>
+  </ul>
+</div>
+`;

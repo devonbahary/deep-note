@@ -1,0 +1,33 @@
+@keyframes appear {
+  from  { opacity: 0; }
+  to    { opacity: 1; }
+}
+
+@keyframes disappear {
+  from  { opacity: 1; }
+  to    { opacity: 0; }
+}
+
+@keyframes slide-in-from-left {
+  from  { left: -100%; }
+  to    { left: 0; }
+}
+
+@keyframes slide-out-to-left {
+  from  { left: 0; }
+  to    { left: -100%; }
+}
+
+@keyframes rotate {
+  from {
+    -webkit-transform: translate(-50%, -50%) rotate(0deg);
+        -ms-transform: translate(-50%, -50%) rotate(0deg);
+            transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: translate(-50%, -50%) rotate(360deg);
+        -ms-transform: translate(-50%, -50%) rotate(360deg);
+            transform: translate(-50%, -50%) rotate(360deg);
+  }
+}

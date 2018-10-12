@@ -1,0 +1,29 @@
+.FolderHeader {
+  display: grid;
+  grid-template-columns: $button-width 1fr $button-width $button-width;
+  background: $primary-dark;
+  position: absolute;
+  top: 0; right: 0; left: 0;
+  height: $header-height;
+  color: $primary-white;
+  line-height: $header-height;
+  font-size: 1.2rem;
+
+  .FolderHeader__Link {
+    text-align: center;
+    color: inherit;
+  }
+
+  .FolderHeader__name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+  }
+
+  .FolderHeader__folderAction {
+    text-align: center;
+    opacity: 0.8;
+    color: inherit;
+  }
+}

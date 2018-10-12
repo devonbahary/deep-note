@@ -1,0 +1,28 @@
+.LoadError {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: appear 0.25s ease-out;
+  text-align: center;
+
+  i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 5px 5px $primary-gray;
+  }
+  
+  .LoadError__status,
+  .LoadError__statusText {
+    display: block;
+  }
+
+  .LoadError__status {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .LoadError__statusText {
+    opacity: 0.8;
+  }
+}

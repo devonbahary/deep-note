@@ -1,0 +1,61 @@
+.NoteHeader,
+.NoteHeader--saveError,
+.NoteHeader--saving,
+.NoteHeader--savingFadeout,
+.NoteHeader--done {
+  display: grid;
+  background: $primary-dark;
+  position: absolute;
+  top: 0; right: 0; left: 0;
+  height: $header-height;
+  color: $primary-white;
+  line-height: $header-height;
+  font-size: 1.2rem;
+
+  .NoteHeader__saveErrorTxt {
+    margin-left: 6px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  .NoteHeader__Link {
+    text-align: center;
+    color: inherit;
+  }
+
+  .NoteHeader__name,
+  .NoteHeader__name--undefined {
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+  }
+
+  .NoteHeader__name--undefined {
+    opacity: 0.6;
+  }
+
+  .NoteHeader__action {
+    position: relative;
+    text-align: center;
+    opacity: 0;
+    animation: appear 1s ease-out;
+    @include animation-fill-mode;
+  }
+}
+
+.NoteHeader--saveError {
+  grid-template-columns: $button-width 1fr 8rem;
+}
+
+.NoteHeader--saving,
+.NoteHeader--savingFadeout,
+.NoteHeader--done {
+  grid-template-columns: $button-width 1fr $button-width;
+}
+
+.NoteHeader--savingFadeout {
+  .NoteHeader__action {
+    animation: disappear 1s ease-out;
+  }
+}

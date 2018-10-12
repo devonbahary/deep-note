@@ -1,0 +1,35 @@
+{
+  "name": "mern-traversy",
+  "version": "1.0.0",
+  "description": "A shopping application built with the MERN stack through Traversy Media's tutorial.",
+  "main": "server.js",
+  "scripts": {
+    "client-install": "npm install --prefix client",
+    "start": "node server.js",
+    "server": "export NODE_ENV=dev || set \"NODE_ENV=dev\" && nodemon server.js",
+    "client": "npm run dev-server --prefix client",
+    "dev": "export NODE_ENV=dev || set \"NODE_ENV=dev\" && concurrently \"npm run server\" \"npm run client\"",
+    "test": "export NODE_ENV=test || set \"NODE_ENV=test\" && mocha tests/**/*.test.js --colors",
+    "test-watch": "nodemon --exec npm test",
+    "test-client": "npm test --prefix client",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run heroku-postbuild --prefix client"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "concurrently": "^3.6.0",
+    "expect": "^23.4.0",
+    "express": "^4.16.3",
+    "lodash": "^4.17.10",
+    "mocha": "^5.2.0",
+    "moment": "^2.22.2",
+    "mongodb": "^3.1.1",
+    "mongoose": "^5.2.3",
+    "redux-thunk": "^2.3.0",
+    "supertest": "^3.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.1"
+  }
+}

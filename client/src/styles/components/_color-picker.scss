@@ -1,0 +1,57 @@
+.ColorPicker {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  z-index: 1;
+  border-radius: 6px;
+
+  .ColorPicker__colorList {
+    
+  }
+
+  .ColorPicker__option {
+    position: relative;
+    left: -100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: calc(2 * #{$item-height});
+    line-height: calc(2 * #{$item-height});
+    letter-spacing: 1px;
+    animation: slide-in-from-left 0.25s ease-out;
+    @include animation-fill-mode;
+    
+    .ColorPicker__optionName {
+      padding-left: 6px;
+    }
+
+    .ColorPicker__optionCode {
+      font-size: 0.8rem;
+      text-align: right;
+      padding-right: 6px;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+  }
+}
+
+.ColorPicker.ReactModal__Content--before-close {
+  .ColorPicker__option {
+    left: 0;
+    animation: slide-out-to-left 0.5s ease-out;
+    @include animation-fill-mode;
+  }
+}
+
+.ColorPickerOverlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba($primary-dark, 0.5);
+  animation: appear 0.25s ease-out;
+  @include animation-fill-mode;
+}
+
+.ColorPickerOverlay.ReactModal__Overlay--before-close {
+  animation: disappear 1s ease-out;
+}

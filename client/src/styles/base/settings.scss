@@ -1,0 +1,29 @@
+$primary-dark: #1E1E1E;
+$primary-darkgray: #616161;
+$primary-gray: #E7E7E7;
+$primary-light: #F8F8F8;
+$primary-white: #FFFFFF;
+
+
+$header-height: 3rem;
+$footer-height: 3rem;
+
+$item-height: 2.5rem;
+
+$button-width: 3rem;
+
+$color-tab-width: 16px;
+
+
+$scrollbar-track-color: $primary-gray;
+$scrollbar-thumb-color: $primary-darkgray;
+
+
+
+@mixin animation-fill-mode {
+  -webkit-animation-fill-mode: forwards; /* Chrome 16+, Safari 4+ */
+     -moz-animation-fill-mode: forwards;    /* FF 5+ */
+       -o-animation-fill-mode: forwards;      /* Not implemented yet */
+      -ms-animation-fill-mode: forwards;     /* IE 10+ */
+          animation-fill-mode: forwards;
+}

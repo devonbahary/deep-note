@@ -1,0 +1,38 @@
+.ChildNote {
+  display: grid;
+  grid-template-columns: $color-tab-width 1fr;
+  height: $item-height;
+  line-height: $item-height;
+  border-bottom: 1px solid $primary-gray;
+  opacity: 0;
+  animation: appear 0.5s ease-out;
+  @include animation-fill-mode;
+
+  .ChildNote__Link {
+    display: grid;
+    grid-template-columns: 32px 1fr $button-width;
+    background: $primary-white;
+    color: inherit;
+    text-decoration: none;
+    overflow: hidden;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+
+    .ChildNote__icon {
+      padding-left: 6px;
+    }
+  
+    .ChildNote__contents {
+      color: inherit;
+      white-space: nowrap;
+      overflow: hidden; 
+      text-align: left;
+      text-overflow: ellipsis;
+    }
+
+    .ChildNote__arrow {
+      text-align: center;
+      color: $primary-gray;
+    }
+  }
+}

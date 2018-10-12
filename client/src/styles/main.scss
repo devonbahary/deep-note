@@ -1,0 +1,21 @@
+@import './base/animations.scss';
+@import './base/base.scss';
+@import './base/settings.scss';
+@import './base/scrollbar.scss';
+@import './components/_app-footer.scss';
+@import './components/_child-folder.scss';
+@import './components/_child-note.scss';
+@import './components/_color-picker.scss';
+@import './components/_folder.scss';
+@import './components/_folder-header.scss';
+@import './components/_load-error.scss';
+@import './components/_loading-spinner.scss';
+@import './components/_note.scss';
+@import './components/_note-header.scss';
+
+
+#Page {
+  background:$primary-white;
+  position: fixed;
+  top: 0; right: 0; left: 0; bottom: 0;
+}
