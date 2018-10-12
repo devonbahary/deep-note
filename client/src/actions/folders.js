@@ -1,5 +1,35 @@
 import axios from 'axios';
 
+// CONNECT_TO_HEAD_FOLDER
+export const connectToHeadFolder = name => dispatch => {
+  const headFolderId = localStorage.getItem('headFolderId');
+  if (headFolderId) {
+    dispatch(setLoadingFolder());
+    axios 
+      .get(`/api/folders/${headFolderId}`)
+      .then(res => {
+        dispatch({ type: 'CONNECT_TO_HEAD_FOLDER', payload: res.data });
+      })
+      .catch(err => {
+        if (err.status === 404) {
+          localStorage.removeItem('headFolderId');
+        }
+        dispatch(loadErr(err.response));
+      })
+  } else if (name) {
+    dispatch(setLoadingFolder());
+    axios
+      .post('/api/folders', { name })
+      .then(res => {
+        dispatch({
+          type: 'ADD_FOLDER',
+          payload: res.data
+        });
+        localStorage.setItem('headFolderId', res.data._id)
+        dispatch(connectToHeadFolder());
+      });
+  }
+};
 
 // GET_FOLDER 
 export const getFolder = id => dispatch => {

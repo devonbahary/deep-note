@@ -6,6 +6,13 @@ const initialState = {
 
 export default (prevState = initialState, action) => {
   switch (action.type) {
+    case 'CONNECT_TO_HEAD_FOLDER': 
+      return {
+        ...prevState,
+        folders: [ ...prevState.folders, action.payload ],
+        isLoading: false,
+        error: null
+      };
     case 'GET_FOLDER':
       return {
         ...prevState,

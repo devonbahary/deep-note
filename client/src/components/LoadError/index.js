@@ -9,8 +9,8 @@ const LoadError = ({ loadError }) => (
   </div>
 );
 
-const mapStateToProps = state => ({
-  loadError: state.folders.error || state.notes.loadError
+const mapStateToProps = (state, ownProps) => ({
+  loadError: ownProps.loadError || state.folders.error || state.notes.loadError
 });
 
 export default connect(mapStateToProps)(LoadError);
