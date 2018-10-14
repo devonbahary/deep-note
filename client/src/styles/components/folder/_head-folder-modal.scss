@@ -1,0 +1,79 @@
+.HeadFolderModal {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  z-index: 1;
+
+  .HeadFolderModal__header {
+    display: grid;
+    grid-template-columns: $button-width 1fr;
+    height: $item-height;
+    background: $primary-dark;
+    color: $primary-white;
+    line-height: $item-height;
+    
+    .HeadFolderModal__headerIcon {
+      text-align: center;
+      font-size: 1.4rem;
+    }
+
+    .HeadFolderModal__headerText {
+      letter-spacing: 1px;
+    }
+  }
+
+  .HeadFolderModal__body {
+    background: $primary-light;
+    padding: 12px;
+
+    p {
+      margin: 0;
+      margin-bottom: 0.5rem;
+      opacity: 0.8;
+    }
+
+    hr {
+      margin: 1rem 0;
+    }
+
+    .HeadFolderModal__headFolderId {
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .HeadFolderModal__buttonContainer {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+
+      .HeadFolderModal__button {
+        background: $primary-dark;
+        height: $item-height;
+        color: $primary-white;
+        border-radius: 12px;
+        padding: 0 12px;
+        letter-spacing: 1px;
+      }
+    }
+  }
+}
+
+.HeadFolderModal:focus {
+  outline: none;
+}
+
+.HeadFolderModal__Overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba($primary-dark, 0.5);
+  opacity: 0;
+  animation: appear 0.5s ease-out;
+  @include animation-fill-mode;
+}
+
+.HeadFolderModal__Overlay.ReactModal__Overlay--before-close {
+  animation: disappear 0.25s ease-out;
+}

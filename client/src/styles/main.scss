@@ -3,17 +3,18 @@
 @import './base/settings.scss';
 @import './base/scrollbar.scss';
 @import './components/_app-footer.scss';
-@import './components/_child-folder.scss';
-@import './components/_child-note.scss';
-@import './components/_color-picker.scss';
-@import './components/_folder.scss';
-@import './components/_folder-header.scss';
-@import './components/_home.scss';
 @import './components/_load-error.scss';
 @import './components/_loading-spinner.scss';
 @import './components/_not-found-page.scss';
-@import './components/_note.scss';
-@import './components/_note-header.scss';
+@import './components/folder/_child-folder.scss';
+@import './components/folder/_child-note.scss';
+@import './components/folder/_color-picker.scss';
+@import './components/folder/_folder.scss';
+@import './components/folder/_folder-header.scss';
+@import './components/folder/_head-folder-modal.scss';
+@import './components/home/_home.scss';
+@import './components/note/_note.scss';
+@import './components/note/_note-header.scss';
 
 
 #Page {

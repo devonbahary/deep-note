@@ -7,63 +7,60 @@ import colors from '../../settings/colors';
 
 Modal.setAppElement('#app')
 
-class ColorPicker extends React.Component {
-  handleRequestClose = () => {
-    this.props.closeColorPicker();
-  };
 
-  handleSelectColor = color => {
-    if (this.props.activeColor !== color) {
-      const id = this.props.childFolderId;
-      this.props.updateFolder({ color }, id);
+const ColorPicker = ({ activeColor, childFolderId, closeColorPicker, isOpen, updateFolder }) => {
+  const handleRequestClose = () => closeColorPicker();
+
+  const handleSelectColor = color => {
+    if (activeColor !== color) {
+      const id = childFolderId;
+      updateFolder({ color }, id);
     }
-    this.handleRequestClose();
+    handleRequestClose();
   }
 
-  render() {
-    const colorsLength = Object.keys(colors).length;
-    const animationDelay = 0.05;
+  const colorsLength = Object.keys(colors).length;
+  const animationDelay = 0.05;
 
-    return (
-      <Modal
-        isOpen={this.props.isOpen}
-        onRequestClose={this.handleRequestClose}
-        contentLabel="Color Picker"
-        className="ColorPicker"
-        overlayClassName="ColorPickerOverlay"
-        closeTimeoutMS={colorsLength * animationDelay * 1000}
-      >
-        <ul className="ColorPicker__colorList">
-          {Object.keys(colors).map((colorName, index) => {
-            const colorCode = colors[colorName].code;
-            const colorText = colors[colorName].textColor;
+  return (
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={handleRequestClose}
+      contentLabel="Color Picker"
+      className="ColorPicker"
+      overlayClassName="ColorPickerOverlay"
+      closeTimeoutMS={colorsLength * animationDelay * 1000}
+    >
+      <ul className="ColorPicker__colorList">
+        {Object.keys(colors).map((colorName, index) => {
+          const colorCode = colors[colorName].code;
+          const colorText = colors[colorName].textColor;
 
-            const style = { backgroundColor: `${colorCode}`, color: `${colorText}` };
-            style.animationDelay = this.props.isOpen ? `${index * 0.05}s` : `${(length - index) * 0.05}s`;
-            if (colorCode === this.props.activeColor) {
-              style.borderLeft = `5px solid ${colorText}`;
-            }
-            
-            return (
-              <li 
-                className="ColorPicker__option" 
-                onClick={() => this.handleSelectColor(colorCode)}
-                style={style}
-                key={colorName} 
-              >
-                <div className="ColorPicker__optionName">
-                  {colorName}
-                </div>
-                <div className="ColorPicker__optionCode">
-                  {colorCode}
-                </div>
-              </li> 
-            );
-          })}
-        </ul>
-      </Modal>
-    );
-  }
+          const style = { backgroundColor: `${colorCode}`, color: `${colorText}` };
+          style.animationDelay = isOpen ? `${index * 0.05}s` : `${(length - index) * 0.05}s`;
+          if (colorCode === activeColor) {
+            style.borderLeft = `5px solid ${colorText}`;
+          }
+          
+          return (
+            <li 
+              className="ColorPicker__option" 
+              onClick={() => handleSelectColor(colorCode)}
+              style={style}
+              key={colorName} 
+            >
+              <div className="ColorPicker__optionName">
+                {colorName}
+              </div>
+              <div className="ColorPicker__optionCode">
+                {colorCode}
+              </div>
+            </li> 
+          );
+        })}
+      </ul>
+    </Modal>
+  );
 };
 
 const mapStateToProps = state => {

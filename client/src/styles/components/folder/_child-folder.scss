@@ -1,7 +1,6 @@
 .ChildFolder {
   display: grid;
   grid-template-columns: $color-tab-width 1fr;
-  grid-template-rows: 1fr;
   height: $item-height;
   line-height: $item-height;
   border-bottom: 1px solid $primary-gray;
@@ -29,7 +28,6 @@
     display: grid;
     grid-template-columns: 32px 1fr $button-width;
     background: $primary-white;
-    height: 100%;
     color: inherit;
     text-decoration: none;
     overflow: hidden;

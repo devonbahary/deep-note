@@ -6,6 +6,7 @@ import { Redirect } from 'react-router';
 import ColorPicker from './ColorPicker';
 import FolderContents from './FolderContents';
 import FolderHeader from './FolderHeader';
+import HeadFolderModal from './HeadFolderModal';
 import LoadError from '../LoadError';
 import LoadingSpinner from '../Loading';
 
@@ -44,6 +45,7 @@ class Folder extends React.Component {
           {bodyContents}
         </div>
         <ColorPicker />
+        <HeadFolderModal />
       </div>
     );
   }
