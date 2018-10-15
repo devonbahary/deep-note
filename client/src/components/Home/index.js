@@ -15,7 +15,8 @@ class Home extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.loadError && this.props.loadError && this.props.loadError.status === 404) {
+    const errStatus = this.props.loadError && this.props.loadError.status;
+    if (!prevProps.loadError && errStatus && (errStatus === 404 || errStatus === 400)) {
       if (confirm(`We didn\'t find a folder with ID '${this.state.text}'. Create new folder '${this.state.text}'?`)) {
         this.props.createAndConnectHeadFolder({ name: this.state.text });
       }
