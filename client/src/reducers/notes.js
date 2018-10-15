@@ -36,6 +36,8 @@ export default (prevState = initialState, action) => {
           action.payload
         ) : note),
         isSaving: false,
+        isLoading: false,
+        loadError: null,
         saveError: null
       };
     case 'SET_LOADING_NOTE':
@@ -61,6 +63,13 @@ export default (prevState = initialState, action) => {
         ...prevState,
         isSaving: false,
         saveError: action.error
+      };
+    case 'REMOVE_NOTE':
+      return {
+        ...prevState,
+        isLoading: false,
+        loadError: null,
+        notes: prevState.notes.filter(note => note._id !== action.id)
       };
     default:
       return prevState;

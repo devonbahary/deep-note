@@ -4,6 +4,7 @@ import { getFolder } from '../../actions/folders';
 import { didRedirectToNewNote } from '../../actions/notes';
 import { Redirect } from 'react-router';
 import ColorPicker from './ColorPicker';
+import FolderChildAction from './FolderChildAction';
 import FolderContents from './FolderContents';
 import FolderHeader from './FolderHeader';
 import HeadFolderModal from './HeadFolderModal';
@@ -46,6 +47,7 @@ class Folder extends React.Component {
         </div>
         <ColorPicker />
         <HeadFolderModal />
+        <FolderChildAction parentFolder={folder} />
       </div>
     );
   }

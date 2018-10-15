@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { addFolder, updateFolder } from '../../actions/folders';
 import { openHeadFolderModal } from '../../actions/headFolderModal';
 import { addNote } from '../../actions/notes';
+import { promptRenameFolder } from '../../utils';
 
 const FolderHeader = ({ folder, addFolder, updateFolder, addNote, isNotesLoading, openHeadFolderModal }) => {
   const promptAddFolder = () => {
@@ -11,16 +12,14 @@ const FolderHeader = ({ folder, addFolder, updateFolder, addNote, isNotesLoading
     if (name !== null) addFolder({ name, parentId: folder._id });
   };
 
-  const promptRenameFolder = () => {
-    const name = prompt('Enter a new name for folder:', folder.name);
-    if (name !== null) {
-      updateFolder({ name }, folder._id);
-    }
+  const handleRename = () => {
+    const folderToRename = { _id: folder._id, name: folder.name };
+    promptRenameFolder(folderToRename, updateFolder);
   };
 
   const handleAddNote = () => {
     if (isNotesLoading) return;
-    addNote({ parentFolderId: folder._id });
+    addNote({ parentId: folder._id });
   };
 
   const isHead = folder && !folder.parentId;
@@ -38,7 +37,7 @@ const FolderHeader = ({ folder, addFolder, updateFolder, addNote, isNotesLoading
           <i className="fas fa-chevron-left"></i>
         </Link>
       )}
-      <button type="button" className="FolderHeader__name" onClick={promptRenameFolder}>
+      <button type="button" className="FolderHeader__name" onClick={handleRename}>
         {folderName}
       </button>
       <button 

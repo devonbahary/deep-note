@@ -1,26 +1,63 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import { openFolderChildAction } from '../../actions/folderChildAction';
+import { LONG_PRESS_DELAY } from '../../settings';
 
-const ChildNote = ({ childNote, parentFolderId, index }) => {
-  const linkTo = `/folders/${parentFolderId}/notes/${childNote.noteId}`;
-  const childNoteStyle = { animationDelay: `${0.05 * index}s` };
+class ChildNote extends React.Component {
+  state = {
+    isPressed: false
+  };
 
-  return (
-    <div className="ChildNote" style={childNoteStyle}>
-      <div></div>
-      <Link to={linkTo} className="ChildNote__Link">
-        <div className="ChildNote__icon">
-          <i className="far fa-sticky-note"></i>
+  handleContentPress = () => {
+    this.setState(() => ({ isPressed: true }));
+    this.buttonPressTimer = setTimeout(() => this.handleLongPress(), LONG_PRESS_DELAY);
+  };
+
+  handleContentRelease = e => {
+    e.preventDefault();
+    this.setState(() => ({ isPressed: false }));
+    clearTimeout(this.buttonPressTimer);
+    if (!this.props.isFolderChildActionOpen) {
+      this.props.history.push(`/folders/${this.props.childNote.parentId}/notes/${this.props.childNote.noteId}`);
+    }
+  };
+
+  handleLongPress = () => {
+    this.setState(() => ({ isPressed: false }));
+    this.props.openFolderChildAction(this.props.childNote, this.refNode);
+  };
+  render() {
+    const { childNote, parentId, index } = this.props;
+    const linkTo = `/folders/${parentId}/notes/${childNote.noteId}`;
+    const childNoteClass = this.state.isPressed ? 'ChildNote--pressed' : 'ChildNote';
+    const childNoteStyle = { animationDelay: `${0.05 * index}s` };
+    return (
+      <li className={childNoteClass} style={childNoteStyle} ref={ref => this.refNode = ref}>
+        <div></div>
+        <div className="ChildNote__content"
+          onTouchStart={this.handleContentPress}
+          onTouchEnd={this.handleContentRelease}
+          onMouseDown={this.handleContentPress}
+          onMouseUp={this.handleContentRelease}
+        >
+          <div className="ChildNote__icon">
+            <i className="far fa-sticky-note"></i>
+          </div>
+          <div className="ChildNote__contents">
+            {childNote.name}
+          </div>
+          <div className="ChildNote__arrow" >
+            <i className="fas fa-chevron-right"></i>
+          </div>
         </div>
-        <div className="ChildNote__contents">
-          {childNote.name}
-        </div>
-        <div className="ChildNote__arrow" >
-          <i className="fas fa-chevron-right"></i>
-        </div>
-      </Link>
-    </div>
-  );
+      </li>
+    );
+  }
 };
 
-export default ChildNote;
+const mapStateToProps = state => ({
+  isFolderChildActionOpen: state.folderChildAction.isOpen
+});
+
+export default connect(mapStateToProps, { openFolderChildAction })(withRouter(ChildNote));

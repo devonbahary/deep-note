@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 
 const NoteSchema = new Schema({
-  parentFolderId: Schema.Types.ObjectId,
+  parentId: Schema.Types.ObjectId,
   name: String,
   text: String,
   lastUpdated: {

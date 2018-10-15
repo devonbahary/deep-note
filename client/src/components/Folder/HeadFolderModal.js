@@ -35,7 +35,8 @@ const HeadFolderModal = ({ closeHeadFolderModal, isOpen, history }) => {
         </div>
       </header>
       <div className="HeadFolderModal__body">
-        <p>Your head folder is the one you connect to when you enter the app. It leads to all your other child folders.</p> 
+        <p>Your <b>head folder</b> is the one you connect to when you enter the app.</p>
+        <p>It <b>leads</b> to all your other child folders.</p> 
         <p>If you disconnect from it, you <b>cannot</b> connect with it again without knowing its ID.</p>
         <hr />
         <div className="HeadFolderModal__headFolderId">

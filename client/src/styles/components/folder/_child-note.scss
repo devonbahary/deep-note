@@ -1,4 +1,5 @@
-.ChildNote {
+.ChildNote,
+.ChildNote--pressed {
   display: grid;
   grid-template-columns: $color-tab-width 1fr;
   height: $item-height;
@@ -8,7 +9,7 @@
   animation: appear 0.5s ease-out;
   @include animation-fill-mode;
 
-  .ChildNote__Link {
+  .ChildNote__content {
     display: grid;
     grid-template-columns: 32px 1fr $button-width;
     background: $primary-white;
@@ -34,5 +35,11 @@
       text-align: center;
       color: $primary-gray;
     }
+  }
+}
+
+.ChildNote--pressed {
+  .ChildNote__content {
+    background: darken($primary-white, 5);
   }
 }

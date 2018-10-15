@@ -48,21 +48,13 @@ export default (prevState = initialState, action) => {
         isLoading: false,
         error: action.error
       };
-    // case 'UPDATE_FOLDER':
-    //     return {
-    //       ...prevState,
-    //       folders: prevState.folders.map(folder => folder._id === action.id ? (
-    //         {
-    //           ...folder,
-    //           ...action.updates
-    //         }
-    //       ) : folder)
-    //     };
-    // case 'REMOVE_FOLDER':
-    //     return {
-    //       ...prevState,
-    //       folders: prevState.folders.filter(folder => folder._id !== action.id)
-    //     };
+    case 'REMOVE_FOLDER':
+        return {
+          ...prevState,
+          isLoading: false,
+          error: null,
+          folders: prevState.folders.filter(folder => folder._id !== action.id)
+        };
     default:
       return prevState;
   }

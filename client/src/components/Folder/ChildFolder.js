@@ -1,35 +1,71 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import { openColorPicker } from '../../actions/colorPicker';
-import { Link } from 'react-router-dom';
+import { openFolderChildAction } from '../../actions/folderChildAction';
+import { LONG_PRESS_DELAY } from '../../settings';
 
-const ChildFolder = ({ childFolder, openColorPicker, index }) => {
-  const childFolderStyle = { animationDelay: `${0.05 * index}s` };
-  const childFolderColorTagStyle = { backgroundColor: `${childFolder.color}` };
-  const linkTo = `/folders/${childFolder.folderId}`;
-
-  const handleColorPicker = () => {
-    openColorPicker(childFolder);
+class ChildFolder extends React.Component {
+  state = {
+    isPressed: false
   };
 
-  return (
-    <li className="ChildFolder" style={childFolderStyle}>
-      <div className="ChildFolder__colorTag" onClick={handleColorPicker}>
-        <div className="ChildFolder__color" style={childFolderColorTagStyle}></div>
-      </div>
-      <Link to={linkTo} className="ChildFolder__Link">
-        <div className="ChildFolder__icon">
-          <i className="far fa-folder"></i>
-        </div>
-        <div className="ChildFolder__contents">
-          {childFolder.name}
-        </div>
-        <div className="ChildFolder__arrow" >
-          <i className="fas fa-chevron-right"></i>
-        </div>
-      </Link>
-    </li>
-  );
-}
+  handleColorPicker = () => this.props.openColorPicker(this.props.childFolder);
 
-export default connect(undefined, { openColorPicker })(ChildFolder);
+  handleContentPress = () => {
+    this.setState(() => ({ isPressed: true }));
+    this.buttonPressTimer = setTimeout(() => this.handleLongPress(), LONG_PRESS_DELAY);
+  };
+
+  handleContentRelease = e => {
+    e.preventDefault();
+    this.setState(() => ({ isPressed: false }));
+    clearTimeout(this.buttonPressTimer);
+    if (!this.props.isFolderChildActionOpen) {
+      this.props.history.push(`/folders/${this.props.childFolder.folderId}`);
+    }
+  };
+
+  handleLongPress = () => {
+    this.setState(() => ({ isPressed: false }));
+    this.props.openFolderChildAction(this.props.childFolder, this.refNode);
+  };
+
+  render() {
+    const { childFolder, index } = this.props;
+
+    const childFolderClass = this.state.isPressed ? 'ChildFolder--pressed' : 'ChildFolder';
+    const childFolderStyle = { animationDelay: `${0.05 * index}s` };
+    const childFolderColorTagStyle = { backgroundColor: `${childFolder.color}` };
+
+    return (
+      <li className={childFolderClass} style={childFolderStyle} ref={ref => this.refNode = ref}>
+        <div className="ChildFolder__colorTag" onClick={this.handleColorPicker}>
+          <div className="ChildFolder__color" style={childFolderColorTagStyle}></div>
+        </div>
+        <div className="ChildFolder__content" 
+          onTouchStart={this.handleContentPress}
+          onTouchEnd={this.handleContentRelease}
+          onMouseDown={this.handleContentPress}
+          onMouseUp={this.handleContentRelease}
+        >
+          <div className="ChildFolder__icon">
+            <i className="far fa-folder"></i>
+          </div>
+          <div className="ChildFolder__name">
+            {childFolder.name}
+          </div>
+          <div className="ChildFolder__arrow" >
+            <i className="fas fa-chevron-right"></i>
+          </div>
+        </div>
+      </li>
+    );
+  }
+};
+
+const mapStateToProps = state => ({
+  isFolderChildActionOpen: state.folderChildAction.isOpen
+});
+
+export default connect(mapStateToProps, { openColorPicker, openFolderChildAction })(withRouter(ChildFolder));

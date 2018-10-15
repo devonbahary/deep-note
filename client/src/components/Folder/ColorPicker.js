@@ -9,14 +9,12 @@ Modal.setAppElement('#app')
 
 
 const ColorPicker = ({ activeColor, childFolderId, closeColorPicker, isOpen, updateFolder }) => {
-  const handleRequestClose = () => closeColorPicker();
-
   const handleSelectColor = color => {
     if (activeColor !== color) {
       const id = childFolderId;
       updateFolder({ color }, id);
     }
-    handleRequestClose();
+    closeColorPicker();
   }
 
   const colorsLength = Object.keys(colors).length;
@@ -25,10 +23,10 @@ const ColorPicker = ({ activeColor, childFolderId, closeColorPicker, isOpen, upd
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={handleRequestClose}
+      onRequestClose={closeColorPicker}
       contentLabel="Color Picker"
       className="ColorPicker"
-      overlayClassName="ColorPickerOverlay"
+      overlayClassName="ColorPicker__Overlay"
       closeTimeoutMS={colorsLength * animationDelay * 1000}
     >
       <ul className="ColorPicker__colorList">

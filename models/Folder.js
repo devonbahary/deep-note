@@ -50,6 +50,8 @@ FolderSchema.statics.getIdsRecursively = function(folderId, ids) {
 
 FolderSchema.pre('save', function (next) {
   this.lastUpdated = Date.now();
+  if (!this.childFolders.length) this.childFolders = [];
+  if (!this.childNotes.length) this.childNotes = [];
   next();
 });
 

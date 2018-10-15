@@ -1,5 +1,6 @@
 const expect = require('expect');
 const request = require('supertest');
+const { ObjectID } = require('mongodb');
 const moment = require('moment');
 
 const { app } = require('../../../server');
@@ -25,7 +26,7 @@ describe('POST /api/folders', () => {
         expect(res.body.name).toBe(body.name);
         expect(res.body._id).toBeTruthy();
         expect(res.body.childFolders).toBeTruthy();
-        expect(res.body.notes).toBeTruthy();
+        expect(res.body.childNotes).toBeTruthy();
         expect(res.body.lastUpdated).toBeTruthy();
 
         Folder
@@ -62,7 +63,7 @@ describe('POST /api/folders', () => {
               expect(res.body.name).toBe(body.name);
               expect(res.body._id).toBeTruthy();
               expect(res.body.childFolders).toBeTruthy();
-              expect(res.body.notes).toBeTruthy();
+              expect(res.body.childNotes).toBeTruthy();
               expect(res.body.lastUpdated).toBeTruthy();
 
               Folder
@@ -81,9 +82,30 @@ describe('POST /api/folders', () => {
     });
   });
 
+  describe('GET /api/folders/:id', () => {
+    it('should return a folder', done => {
+      request(app)
+        .get(`/api/folders/${testFolders[0]._id}`)
+        .expect(200)
+        .end((err, res) => {
+          if (err) return done(err);
+
+          expect(res.body._id).toBe(testFolders[0]._id.toString());
+          expect(res.body.name).toBe(testFolders[0].name);
+          done();
+        });
+    });
+
+    it('should return a 404 if no matching folder with id', done => {
+      request(app)
+        .get(`/api/folders/${ObjectID()}`)
+        .expect(404, done);
+    });
+  });
+
   describe('PATCH /api/folders/:id', () => {
-    it('should update parent folder when updating child folder', done => {
-      // create new child folder and add it to parent data thru POST route
+    it('should update parent folder when updating child folder and return modified folders', done => {
+      // create new child folder and add it to parent data through POST route
       const parentId = testFolders[0]._id;
       let formerLastUpdated;
       Folder
@@ -100,13 +122,19 @@ describe('POST /api/folders', () => {
 
               const childFolder = res.body;
               const childFolderLastUpdated = childFolder.lastUpdated;
-              const updates = { name: 'updated child folder name' };
+              const updates = { name: 'updated child folder name', color: '#FFFFFF' };
               request(app)
                 .patch(`/api/folders/${childFolder._id}`)
                 .send(updates)
                 .expect(200)
                 .end((err, res) => {
                   if (err) return done(err);
+
+                  expect(res.body.folder).toBeTruthy();
+                  expect(res.body.folder.name).toBe(updates.name);
+                  expect(res.body.folder.color).toBe(updates.color);
+                  expect(res.body.parentFolders).toHaveLength(1);
+                  expect(res.body.parentFolders[0]._id).toBe(res.body.folder.parentId);
 
                   Folder 
                     .findById(childFolder.parentId)
@@ -120,6 +148,78 @@ describe('POST /api/folders', () => {
                     .catch(err => done(err));
                 })
           });
+        });
+    });
+
+    it('should update parentless folder, returning updated folder and no parent folders', done => {
+      const timeAtStartOfTest = Date.now();
+      const updates = { name: 'roots', color: '#123456' };
+      request(app)
+        .patch(`/api/folders/${testFolders[0]._id}`)
+        .send(updates)
+        .expect(200)
+        .end((err, res) => {
+          if (err) return done(err);
+
+          expect(res.body.folder).toBeTruthy();
+          expect(res.body.folder.name).toBe(updates.name);
+          expect(res.body.folder.color).toBe(updates.color);
+          expect(moment(res.body.folder.lastUpdated).isAfter(timeAtStartOfTest)).toBeTruthy();
+          expect(res.body.parentFolders).toHaveLength(0);
+          done();
+        });
+    });
+
+    it('should update parent folder when updating child folder and return modified folders', done => {
+      // create new child folder and add it to parent data through POST route
+      const timeAtStartOfTest = Date.now();
+      const parentId = testFolders[0]._id;
+      const newFolder = { name: 'childFolder', parentId };
+
+      request(app)
+        .post('/api/folders')
+        .send(newFolder)
+        .end((err, res) => {
+          if (err) return done(err);
+
+          const childFolder = res.body;
+          const updates = { parentId: testFolders[1]._id };
+          request(app)
+            .patch(`/api/folders/${childFolder._id}`)
+            .send(updates)
+            .expect(200)
+            .end((err, res) => {
+              if (err) return done(err);
+
+              expect(res.body.folder).toBeTruthy();
+              expect(res.body.folder.parentId).toBe(updates.parentId.toString());
+              expect(res.body.parentFolders).toHaveLength(2);
+              const prevParent = res.body.parentFolders.find(parentFolder => parentFolder._id === parentId.toString());
+              const currentParent = res.body.parentFolders.find(parentFolder => parentFolder._id === updates.parentId.toString());
+              expect(prevParent).toBeTruthy();
+              expect(currentParent).toBeTruthy();
+              expect(prevParent.childFolders.find(prevChildFolder => prevChildFolder.folderId === childFolder._id)).toBeFalsy();
+              expect(currentParent.childFolders.find(currentChildFolder => currentChildFolder.folderId === childFolder._id)).toBeTruthy();
+
+              Promise.all([
+                Folder 
+                  .findById(childFolder.parentId)
+                  .then(oldParentFolder => {
+                    expect(oldParentFolder.childFolders.find(prevChildFolder => prevChildFolder.folderId.equals(childFolder._id))).toBeFalsy();
+                    expect(moment(oldParentFolder.lastUpdated).isAfter(timeAtStartOfTest)).toBeTruthy();
+                    return Promise.resolve();
+                  }),
+                Folder
+                  .findById(updates.parentId)
+                  .then(newParentFolder => {
+                    expect(newParentFolder.childFolders.find(newChildFolder => newChildFolder.folderId.equals(childFolder._id))).toBeTruthy();
+                    expect(moment(newParentFolder.lastUpdated).isAfter(timeAtStartOfTest)).toBeTruthy();
+                    return Promise.resolve();
+                  })
+              ])
+              .then(() => done())
+              .catch(err => done(err));
+            });
         });
     });
   });
@@ -144,15 +244,15 @@ describe('POST /api/folders', () => {
 
               Promise.all([
                 Folder
-                .find({})
-                .then(folders => {
-                  expect(folders).toHaveLength(testFolders.length);
-                }),
+                  .find({})
+                  .then(folders => {
+                    expect(folders).toHaveLength(testFolders.length);
+                  }),
                 Folder
-                .findById(parentId)
-                .then(parentFolder => {
-                  expect(parentFolder.childFolders.some(childFolder => childFolder.folderId.equals(newFolderId))).toBeFalsy();
-                })
+                  .findById(parentId)
+                  .then(parentFolder => {
+                    expect(parentFolder.childFolders.some(childFolder => childFolder.folderId.equals(newFolderId))).toBeFalsy();
+                  })
               ])
               .then(() => done())
               .catch(err => done(err));

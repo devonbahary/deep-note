@@ -1,4 +1,5 @@
-.ChildFolder {
+.ChildFolder,
+.ChildFolder--pressed {
   display: grid;
   grid-template-columns: $color-tab-width 1fr;
   height: $item-height;
@@ -24,7 +25,7 @@
     }
   }
 
-  .ChildFolder__Link {
+  .ChildFolder__content {
     display: grid;
     grid-template-columns: 32px 1fr $button-width;
     background: $primary-white;
@@ -38,8 +39,7 @@
       padding-left: 6px;
     }
   
-    .ChildFolder__contents {
-      color: inherit;
+    .ChildFolder__name {
       white-space: nowrap;
       overflow: hidden; 
       text-align: left;
@@ -50,5 +50,11 @@
       text-align: center;
       color: $primary-gray;
     }
+  }
+}
+
+.ChildFolder--pressed {
+  .ChildFolder__content {
+    background: darken($primary-white, 5);
   }
 }

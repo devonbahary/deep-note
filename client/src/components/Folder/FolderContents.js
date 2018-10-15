@@ -15,7 +15,7 @@ const FolderContents = ({ folder }) => {
           <ChildNote 
             key={childNote._id}
             childNote={childNote} 
-            parentFolderId={folder._id} 
+            parentId={folder._id} 
             index={folder.childFolders.length + index} 
           />
         ))}

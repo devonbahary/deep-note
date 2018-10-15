@@ -1,0 +1,93 @@
+.FolderChildAction,
+.FolderChildAction--open {
+  position: absolute;
+  right: 0;
+  width: 60%;
+  background: $primary-white;
+  z-index: 1;
+  border-radius: 6px;
+  border: 1px solid darken($primary-gray, 5);
+  transition: max-height 0.15s ease-out;
+  max-height: 0;
+
+  .FolderChildAction__menu {
+    background: inherit;
+    border-radius: 6px;
+  }
+
+  .FolderChildAction__pointer--top,
+  .FolderChildAction__pointer--bottom {
+    position: absolute;
+    right: 12px;
+    width: 15px; height: 15px;
+    background: inherit;
+    transform: rotate(45deg);
+    z-index: 1;
+  }
+
+  .FolderChildAction__pointer--top {
+    top: -7.5px; 
+    border-top: 1px solid darken($primary-gray, 5);
+    border-left: 1px solid darken($primary-gray, 5);
+  }
+
+  .FolderChildAction__pointer--bottom {
+    bottom: -7.5px;
+    border-right: 1px solid darken($primary-gray, 5);
+    border-bottom: 1px solid darken($primary-gray, 5);
+  }
+
+  .FolderChildAction__action,
+  .FolderChildAction__action--moveToTitle,
+  .FolderChildAction__action--parent {
+    height: $item-height;
+    border-bottom: 1px solid $primary-gray;
+    line-height: $item-height;
+    padding-left: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .FolderChildAction__action--moveToTitle {
+    opacity: 0.6;
+    border-bottom: 1px solid $primary-darkgray;
+  }
+
+  .FolderChildAction__action--parent {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+  }
+
+  .FolderChildAction__moveToOptions {
+    overflow-y: scroll;
+    max-height: calc(3 * #{$item-height});
+  }
+  
+}
+
+.FolderChildAction--open:focus {
+  outline: none;
+}
+
+.FolderChildAction--open.ReactModal__Content--after-open {
+  max-height: calc(4 * #{$item-height});
+}
+
+.FolderChildAction--open.ReactModal__Content--before-close {
+  max-height: 0;
+}
+
+.FolderChildAction__Overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba($primary-dark, 0.1);
+  opacity: 0;
+  animation: appear 0.15s ease-out;
+  @include animation-fill-mode;
+}
+
+.FolderChildAction__Overlay.ReactModal__Overlay--before-close {
+  animation: disappear 0.15s ease-out;
+}

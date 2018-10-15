@@ -11,7 +11,7 @@ export const connectToHeadFolder = folderId => dispatch => {
         dispatch({ type: 'CONNECT_TO_HEAD_FOLDER', payload: res.data })
       })
       .catch(err => {
-        if (err.status === 404) localStorage.removeItem('headFolderId');
+        if (err.response.status === 404) localStorage.removeItem('headFolderId');
         dispatch(loadError(err.response));
       });
   } else if (localStorage.getItem('headFolderId')) {
@@ -82,19 +82,23 @@ export const updateFolder = (updates, id) => dispatch => {
   axios 
     .patch(`/api/folders/${id}`, updates)
     .then(res => {
-      const folder = res.data;
-      dispatch({ type: 'UPDATE_FOLDER', payload: folder, id });
-      if (folder.parentId) dispatch(reloadFolder(folder.parentId));
+      const foldersToUpdate = [ res.data.folder, ...res.data.parentFolders ];
+      foldersToUpdate.forEach(folder => dispatch({ type: 'UPDATE_FOLDER', payload: folder, id: folder._id }));
     })
     .catch(err => dispatch(loadError(err.response)));
 };
 
-// // REMOVE_FOLDER
-// export const removeFolder = id => dispatch => {
-//   axios.delete(`/api/folders/${id}`).then(res =>
-//     dispatch({
-//       type: 'REMOVE_FOLDER',
-//       id
-//     })
-//   );
-// };
+// REMOVE_FOLDER
+export const removeFolder = folder => dispatch => {
+  dispatch(setLoadingFolder());
+  axios
+    .delete(`/api/folders/${folder._id}`)
+    .then(() => {
+      dispatch({
+        type: 'REMOVE_FOLDER',
+        id: folder._id
+      });
+      if (folder.parentId) dispatch(reloadFolder(folder.parentId));
+    })
+    .catch(err => dispatch(loadError(err.response)));
+};

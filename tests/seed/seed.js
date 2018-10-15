@@ -1,6 +1,7 @@
 const { ObjectID } = require('mongodb');
 
 const Folder = require('../../models/Folder');
+const Note = require('../../models/Note');
 
 const testFolders = [{
   _id: ObjectID(),

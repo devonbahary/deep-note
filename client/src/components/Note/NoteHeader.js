@@ -37,7 +37,7 @@ const NoteHeader = ({ note, isSaving, saveError, updateNote, onReattemptSave, is
 
   return note ? (
     <header className={noteHeaderClass}>
-      <Link to={`/folders/${note.parentFolderId}`} className="NoteHeader__Link">
+      <Link to={`/folders/${note.parentId}`} className="NoteHeader__Link">
         <i className="fas fa-chevron-left"></i>
       </Link>
       <button type="button" className={noteNameClass} onClick={promptRenameNote}>

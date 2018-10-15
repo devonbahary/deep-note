@@ -29,9 +29,9 @@ export const addNote = note => dispatch => {
         type: 'ADD_NOTE',
         payload: res.data
       });
-      dispatch(reloadFolder(note.parentFolderId));
+      dispatch(reloadFolder(note.parentId));
     })
-    .catch(err => dispatch(loadErr(err.response)));
+    .catch(err => dispatch(loadError(err.response)));
 };
 
 // DID_REDIRECT_TO_NEW_NOTE
@@ -45,7 +45,7 @@ export const saveNote = (text, id) => dispatch => {
   axios 
     .patch(`/api/notes/${id}`, { text })
     .then(res => {
-      const note = res.data;
+      const { note } = res.data;
       dispatch({ type: 'UPDATE_NOTE', payload: note, id });
     })
     .catch(err => dispatch(saveError(err.response)));
@@ -53,13 +53,14 @@ export const saveNote = (text, id) => dispatch => {
 
 // UPDATE_NOTE
 export const updateNote = (updates, id) => dispatch => {
-  dispatch(setSavingNote());
+  dispatch(setLoadingNote());
   axios 
     .patch(`/api/notes/${id}`, updates)
     .then(res => {
-      const note = res.data;
+      const { note } = res.data;
       dispatch({ type: 'UPDATE_NOTE', payload: note, id });
-      dispatch(reloadFolder(note.parentFolderId));
+      const { parentFolders } = res.data
+      parentFolders.forEach(folder => dispatch({ type: 'UPDATE_FOLDER', payload: folder, id: folder._id }));
     })
     .catch(err => dispatch(saveError(err.response)));
 };
@@ -72,3 +73,15 @@ const saveError = error => ({
   type: 'SAVE_ERROR',
   error
 });
+
+// REMOVE_NOTE
+export const removeNote = note => dispatch => {
+  dispatch(setLoadingNote());
+  axios 
+    .delete(`/api/notes/${note._id}`)
+    .then(res => {
+      dispatch({ type: 'REMOVE_NOTE', id: note._id });
+      dispatch(reloadFolder(note.parentId));
+    })
+    .catch(err => dispatch(loadError(err.response)));
+}

@@ -38,7 +38,7 @@
   }
 }
 
-.ColorPickerOverlay {
+.ColorPicker__Overlay {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -47,6 +47,6 @@
   @include animation-fill-mode;
 }
 
-.ColorPickerOverlay.ReactModal__Overlay--before-close {
+.ColorPicker__Overlay.ReactModal__Overlay--before-close {
   animation: disappear 1s ease-out;
 }

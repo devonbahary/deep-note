@@ -4,12 +4,12 @@ const initialState = {
 
 export default (prevState = initialState, action) => {
   switch (action.type) {
-    case 'OPEN_MODAL':
+    case 'OPEN_HEAD_FOLDER_MODAL':
       return {
         ...prevState, 
         isOpen: true
       };
-    case 'CLOSE_MODAL':
+    case 'CLOSE_HEAD_FOLDER_MODAL':
       return {
         ...prevState,
         isOpen: false
