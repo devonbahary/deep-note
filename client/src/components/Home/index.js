@@ -50,6 +50,7 @@ class Home extends React.Component {
       bodyContents = (
         <div className="Home__dialog--open">
           <form onSubmit={this.handleSubmit} className="Home__form">
+            <div></div>
             <input 
               type="text" 
               className="Home__input" 
@@ -57,6 +58,7 @@ class Home extends React.Component {
               onChange={this.handleTextChange}
               disabled={isLoading}
               placeholder="folder"
+              autoFocus
             >
             </input>
             {isLoading ? (

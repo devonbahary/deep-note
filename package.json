@@ -1,7 +1,7 @@
 {
-  "name": "mern-traversy",
+  "name": "deep-note",
   "version": "1.0.0",
-  "description": "A shopping application built with the MERN stack through Traversy Media's tutorial.",
+  "description": "A note-taking app featuring a recursive data tree structure for infinite-depth organization.",
   "main": "server.js",
   "scripts": {
     "client-install": "npm install --prefix client",

@@ -7,10 +7,13 @@
   .Home__dialog,
   .Home__dialog--open {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; right: 0; left: 0;
+    transform: translateY(-50%);
 
     .Home__dialogIcon {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
       font-size: 3rem;
       opacity: 0;
       animation: appear 2s ease-out 0.5s;
@@ -20,25 +23,26 @@
 
     .Home__form {
       display: grid;
-      grid-template-columns: 1fr $button-width;
+      grid-template-columns: $button-width 1fr $button-width;
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
       height: $item-height;
       opacity: 0;
       animation: appear 0.5s ease-out;
       @include animation-fill-mode;
 
       .Home__input {
+        position: relative;
         background: inherit;
         border: none;
         border-bottom: 1px solid $primary-dark;
         text-align: center;
-        width: 100%;
-        opacity: 0.6;
-        transition: opacity 0.5s ease-out;
       }
 
       .Home__input:focus {
         outline: none;
-        opacity: 1;
       }
 
       .Home__submit,
@@ -60,14 +64,5 @@
         position: relative;
       }
     }
-  }
-
-  .Home__dialog {
-    transform: translate(-50%, -50%);
-  }
-
-  .Home__dialog--open {
-    transform: translate(-40%, -50%);
-    width: 70%;
   }
 }
