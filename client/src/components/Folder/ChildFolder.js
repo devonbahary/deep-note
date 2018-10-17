@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { openColorPicker } from '../../actions/colorPicker';
 import { openFolderChildAction } from '../../actions/folderChildAction';
-import { LONG_PRESS_DELAY } from '../../settings';
+import { LONG_PRESS_DELAY, FOLDER_CHILD_APPEAR_ANIM_DELAY } from '../../settings';
 
 class ChildFolder extends React.Component {
   state = {
@@ -35,7 +35,7 @@ class ChildFolder extends React.Component {
     const { childFolder, index } = this.props;
 
     const childFolderClass = this.state.isPressed ? 'ChildFolder--pressed' : 'ChildFolder';
-    const childFolderStyle = { animationDelay: `${0.05 * index}s` };
+    const childFolderStyle = { animationDelay: `${FOLDER_CHILD_APPEAR_ANIM_DELAY * index}s` };
     const childFolderColorTagStyle = { backgroundColor: `${childFolder.color}` };
 
     return (

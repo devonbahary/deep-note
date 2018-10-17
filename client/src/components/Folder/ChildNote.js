@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { openFolderChildAction } from '../../actions/folderChildAction';
-import { LONG_PRESS_DELAY } from '../../settings';
+import { LONG_PRESS_DELAY, FOLDER_CHILD_APPEAR_ANIM_DELAY } from '../../settings';
 
 class ChildNote extends React.Component {
   state = {
@@ -31,7 +31,7 @@ class ChildNote extends React.Component {
     const { childNote, parentId, index } = this.props;
     const linkTo = `/folders/${parentId}/notes/${childNote.noteId}`;
     const childNoteClass = this.state.isPressed ? 'ChildNote--pressed' : 'ChildNote';
-    const childNoteStyle = { animationDelay: `${0.05 * index}s` };
+    const childNoteStyle = { animationDelay: `${FOLDER_CHILD_APPEAR_ANIM_DELAY * index}s` };
     return (
       <li className={childNoteClass} style={childNoteStyle} ref={ref => this.refNode = ref}>
         <div></div>

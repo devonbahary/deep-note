@@ -47,6 +47,7 @@ class Note extends React.Component {
           className="Note__bodyTextarea"
           value={this.state.textarea} 
           onChange={this.handleTextareaChange} 
+          autoFocus
         />  
       );
     }

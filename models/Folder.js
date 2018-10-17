@@ -49,9 +49,12 @@ FolderSchema.statics.getIdsRecursively = function(folderId, ids) {
 
 
 FolderSchema.pre('save', function (next) {
+  this.name = this.name.trim();
   this.lastUpdated = Date.now();
   if (!this.childFolders.length) this.childFolders = [];
   if (!this.childNotes.length) this.childNotes = [];
+  this.childFolders.forEach(childFolder => childFolder.name = childFolder.name ? childFolder.name.trim() : '');
+  this.childNotes.forEach(childNote => childNote.name = childNote.name ? childNote.name.trim() : '');
   next();
 });
 
