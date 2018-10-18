@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const express = require('express');
 const Folder = require('../../models/Folder');
+const Note = require('../../models/Note');
 
 const router = express.Router();
 
@@ -114,9 +115,10 @@ router.patch('/:id', (req, res) => {
 // @desc    delete Folder and all child Folders recursively
 // @access  public
 router.delete('/:id', (req, res) => {
-  const childrenToRemoveIds = [];
+  const childFoldersToRemoveIds = [];
+  const childNotesToRemoveIds = [];
   Folder
-    .getIdsRecursively(req.params.id, childrenToRemoveIds)
+    .getIdsRecursively(req.params.id, childFoldersToRemoveIds, childNotesToRemoveIds)
     .then(() => {
       Folder
         .findById(req.params.id)
@@ -129,7 +131,10 @@ router.delete('/:id', (req, res) => {
             return Promise.resolve();
           }
         })
-        .then(() => Folder.deleteMany({ _id: { $in: childrenToRemoveIds } }))
+        .then(() => Promise.all([
+          Folder.deleteMany({ _id: { $in: childFoldersToRemoveIds } }),
+          Note.deleteMany({ _id: { $in: childNotesToRemoveIds } }) 
+        ]))
         .then(() => res.sendStatus(200))
     })
     .catch(err => res.sendStatus(400));

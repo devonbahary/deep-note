@@ -8,7 +8,7 @@ import { SAVE_DELAY, SAVE_ANIM_DELAY } from '../../settings';
 
 class Note extends React.Component {
   state = {
-    textarea: this.props.note ? this.props.note.text : '',
+    textarea: (this.props.note && this.props.note.text) || '',
     isSaveFadeout: false
   };
 
@@ -18,7 +18,7 @@ class Note extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (!this.props.note && !this.props.loadError) this.props.getNote(this.props.id);
-    else if (!prevProps.note && this.props.note) this.setState(() => ({ textarea: this.props.note.text }));
+    else if (!prevProps.note && this.props.note) this.setState(() => ({ textarea: this.props.note.text || '' }));
     if (prevProps.isSaving && !this.props.isSaving) {
       this.setState(() => ({ isSaveFadeout: true }));
       clearTimeout(this.saveFadeout);
@@ -47,7 +47,7 @@ class Note extends React.Component {
           className="Note__bodyTextarea"
           value={this.state.textarea} 
           onChange={this.handleTextareaChange} 
-          autoFocus
+          autoFocus={!this.state.textarea.length}
         />  
       );
     }

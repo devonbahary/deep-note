@@ -1,6 +1,7 @@
 const initialState = {
-  selectionFolder: null,
-  isOpen: false
+  selectionItem: null,
+  isOpen: false,
+  itemType: null
 };
 
 export default (prevState = initialState, action) => {
@@ -8,14 +9,16 @@ export default (prevState = initialState, action) => {
     case 'OPEN_COLOR_PICKER':
       return {
         ...prevState,
-        selectionFolder: action.childFolder,
-        isOpen: true
+        selectionItem: action.item,
+        isOpen: true,
+        itemType: action.itemType
       };
     case 'CLOSE_COLOR_PICKER':
       return {
         ...prevState,
-        selectionFolder: null,
-        isOpen: false
+        selectionItem: null,
+        isOpen: false,
+        itemType: null
       };
     default:
       return prevState;

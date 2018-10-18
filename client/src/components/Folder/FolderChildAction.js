@@ -34,9 +34,11 @@ const FolderChildAction = ({
   }
 
   const handleColorPicker = () => {
-    if (child.folderId) {
-      openColorPicker(child);
-    }
+    const isFolder = !!child.folderId;
+    const _id = isFolder ? child.folderId : child.noteId;
+    const { color } = child;
+    const itemType = isFolder ? 'folder': 'note';
+    openColorPicker({ _id, color }, itemType);
     handleRequestClose();
   };
 
@@ -135,11 +137,9 @@ const FolderChildAction = ({
         <div className="FolderChildAction__action" onClick={handleRenameAction}> 
           Rename
         </div>
-        {child && child.folderId && (
-          <div className="FolderChildAction__action" onClick={handleColorPicker}> 
-            Color Picker
-          </div>
-        )}
+        <div className="FolderChildAction__action" onClick={handleColorPicker}> 
+          Color Picker
+        </div>
         <div className="FolderChildAction__action" onClick={handleMoveTo}>
           Move to...
         </div>

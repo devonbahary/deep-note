@@ -3,22 +3,28 @@ import { connect } from 'react-redux';
 import { closeColorPicker } from '../../actions/colorPicker';
 import Modal from 'react-modal';
 import { updateFolder } from '../../actions/folders';
+import { updateNote } from '../../actions/notes';
 import colors from '../../settings/colors';
 
 Modal.setAppElement('#app')
 
 
-const ColorPicker = ({ activeColor, childFolderId, closeColorPicker, isOpen, updateFolder }) => {
+const ColorPicker = ({ activeColor, itemId, isFolder, closeColorPicker, isOpen, updateFolder, updateNote }) => {
   const handleSelectColor = color => {
     if (activeColor !== color) {
-      const id = childFolderId;
-      updateFolder({ color }, id);
+      const id = itemId;
+      if (isFolder) {
+        updateFolder({ color }, id );
+      } else { // Folder
+        updateNote({ color }, id );
+      }
     }
     closeColorPicker();
   }
 
   const colorsLength = Object.keys(colors).length;
   const animationDelay = 0.05;
+  const closeTimeoutMS = colorsLength * animationDelay * 1000;
 
   return (
     <Modal
@@ -27,7 +33,7 @@ const ColorPicker = ({ activeColor, childFolderId, closeColorPicker, isOpen, upd
       contentLabel="Color Picker"
       className="ColorPicker"
       overlayClassName="ColorPicker__Overlay"
-      closeTimeoutMS={colorsLength * animationDelay * 1000}
+      closeTimeoutMS={closeTimeoutMS}
     >
       <ul className="ColorPicker__colorList">
         {Object.keys(colors).map((colorName, index) => {
@@ -62,14 +68,16 @@ const ColorPicker = ({ activeColor, childFolderId, closeColorPicker, isOpen, upd
 };
 
 const mapStateToProps = state => {
-  const activeColor = state.colorPicker.selectionFolder && state.colorPicker.selectionFolder.color;
-  const childFolderId = state.colorPicker.selectionFolder && state.colorPicker.selectionFolder.folderId;
+  const activeColor = state.colorPicker.selectionItem && state.colorPicker.selectionItem.color;
+  const itemId = state.colorPicker.selectionItem && state.colorPicker.selectionItem._id;
   const isOpen = state.colorPicker.isOpen;
+  const isFolder = state.colorPicker.itemType === 'folder';
   return {
     activeColor,
-    childFolderId,
+    itemId,
+    isFolder,
     isOpen
   };
 };
 
-export default connect(mapStateToProps, { closeColorPicker, updateFolder })(ColorPicker);
+export default connect(mapStateToProps, { closeColorPicker, updateFolder, updateNote })(ColorPicker);

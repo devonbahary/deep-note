@@ -1,6 +1,7 @@
-export const openColorPicker = childFolder => ({
+export const openColorPicker = (item, itemType) => ({
   type: 'OPEN_COLOR_PICKER',
-  childFolder
+  item,
+  itemType
 });
 
 export const closeColorPicker = () => ({

@@ -1,12 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { openColorPicker } from '../../actions/colorPicker';
 import { openFolderChildAction } from '../../actions/folderChildAction';
 import { LONG_PRESS_DELAY, FOLDER_CHILD_APPEAR_ANIM_DELAY } from '../../settings';
 
 class ChildNote extends React.Component {
   state = {
     isPressed: false
+  };
+
+  handleColorPicker = () => {
+    const _id = this.props.childNote.noteId;
+    const { color } = this.props.childNote;
+    const itemType = 'note';
+    this.props.openColorPicker({ _id, color }, itemType);
   };
 
   handleContentPress = () => {
@@ -29,11 +37,16 @@ class ChildNote extends React.Component {
   };
   render() {
     const { childNote, parentId, index } = this.props;
-    const linkTo = `/folders/${parentId}/notes/${childNote.noteId}`;
+    
     const childNoteClass = this.state.isPressed ? 'ChildNote--pressed' : 'ChildNote';
     const childNoteStyle = { animationDelay: `${FOLDER_CHILD_APPEAR_ANIM_DELAY * index}s` };
+    const childNoteColorTagStyle = { backgroundColor: `${childNote.color}` };
+    const childNoteIconStyle = { textShadow: `2px 2px ${childNote.color}` };
     return (
       <li className={childNoteClass} style={childNoteStyle} ref={ref => this.refNode = ref}>
+        {/* <div className="ChildNote__colorTag" onClick={this.handleColorPicker}>
+          <div className="ChildNote__color" style={childNoteColorTagStyle}></div>
+        </div> */}
         <div></div>
         <div className="ChildNote__content"
           onTouchStart={this.handleContentPress}
@@ -41,7 +54,7 @@ class ChildNote extends React.Component {
           onMouseDown={this.handleContentPress}
           onMouseUp={this.handleContentRelease}
         >
-          <div className="ChildNote__icon">
+          <div className="ChildNote__icon" style={childNoteIconStyle}>
             <i className="far fa-sticky-note"></i>
           </div>
           <div className="ChildNote__contents">
@@ -60,4 +73,4 @@ const mapStateToProps = state => ({
   isFolderChildActionOpen: state.folderChildAction.isOpen
 });
 
-export default connect(mapStateToProps, { openFolderChildAction })(withRouter(ChildNote));
+export default connect(mapStateToProps, { openFolderChildAction, openColorPicker })(withRouter(ChildNote));

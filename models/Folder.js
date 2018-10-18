@@ -14,6 +14,7 @@ const ChildFolderSchema = new Schema({
 const ChildNoteSchema = new Schema({
   name: String,
   noteId: Schema.Types.ObjectId,
+  color: String,
   lastUpdated: {
     type: Date,
     default: Date.now
@@ -35,13 +36,14 @@ const FolderSchema = new Schema({
   }
 });
 
-FolderSchema.statics.getIdsRecursively = function(folderId, ids) {
-  ids.push(folderId);
+FolderSchema.statics.getIdsRecursively = function(folderId, childFolderIds, childNoteIds) {
+  childFolderIds.push(folderId);
   return this
     .findById(folderId)
     .then(folder => {
+      if (folder.childNotes.length) folder.childNotes.forEach(childNote => childNoteIds.push(childNote.noteId));
       if (folder.childFolders.length) {
-        return Promise.all(folder.childFolders.map(childFolder => this.getIdsRecursively(childFolder.folderId, ids)));
+        return Promise.all(folder.childFolders.map(childFolder => this.getIdsRecursively(childFolder.folderId, childFolderIds)));
       }
       return Promise.resolve();
     });
@@ -49,7 +51,7 @@ FolderSchema.statics.getIdsRecursively = function(folderId, ids) {
 
 
 FolderSchema.pre('save', function (next) {
-  this.name = this.name.trim();
+  this.name = this.name ? this.name.trim() : '';
   this.lastUpdated = Date.now();
   if (!this.childFolders.length) this.childFolders = [];
   if (!this.childNotes.length) this.childNotes = [];

@@ -10,7 +10,12 @@ class ChildFolder extends React.Component {
     isPressed: false
   };
 
-  handleColorPicker = () => this.props.openColorPicker(this.props.childFolder);
+  handleColorPicker = () => {
+    const _id = this.props.childFolder.folderId;
+    const { color } = this.props.childFolder;
+    const itemType = 'folder';
+    this.props.openColorPicker({ _id, color }, itemType );
+  };
 
   handleContentPress = () => {
     this.setState(() => ({ isPressed: true }));

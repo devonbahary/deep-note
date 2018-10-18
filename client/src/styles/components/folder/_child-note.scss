@@ -9,6 +9,21 @@
   animation: appear 0.5s ease-out;
   @include animation-fill-mode;
 
+  .ChildNote__colorTag {
+    position: relative;
+
+    .ChildNote__color {
+      position: absolute;
+      height: 90%;
+      width: 90%;
+      top: 50%;
+      left: 10%;
+      transform: translateY(-50%);
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+  }
+
   .ChildNote__content {
     display: grid;
     grid-template-columns: 32px 1fr $button-width;

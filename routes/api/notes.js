@@ -18,12 +18,14 @@ const updateParentFolderWithChildUpdates = (parentId, updatedChildNote) => {
           parentFolder.childNotes.push({ 
             name: updatedChildNote.name, 
             noteId: updatedChildNote.id,
+            color: updatedChildNote.color
           });
           return parentFolder.save().then(updatedParentFolder => updatedParentFolder);
         } else {
           // update ongoing parent with updated child note
           childNote.set({
             name: updatedChildNote.name,
+            color: updatedChildNote.color,
             lastUpdated: Date.now() 
           });
           return parentFolder.save().then(updatedParentFolder => updatedParentFolder);
@@ -66,7 +68,8 @@ router.post('/', (req, res) => {
           if (!parentFolder) throw new Error('Cannot create a note without a parentId.')
           parentFolder.childNotes.push({ 
             name: note.name, 
-            noteId: note.id
+            noteId: note.id,
+            color: note.color
           });
           parentFolder
             .save()
@@ -81,7 +84,7 @@ router.post('/', (req, res) => {
 //            returns an object of updated documents: { note: {...}, parentFolders: [{...}] }
 // @access  public
 router.patch('/:id', (req, res) => {
-  const updates = { name, text, parentId } = req.body;
+  const updates = { name, color, parentId, text } = req.body;
   Note
     .findById(req.params.id)
     .then(note => {
@@ -90,10 +93,10 @@ router.patch('/:id', (req, res) => {
       note
         .save()
         .then(updatedNote => {
-          if (updates.name || updates.parentId) {
+          if (updates.name || updates.color || updates.parentId) {
             if (updatedNote.parentId.equals(prevParentId)) {
               updateParentFolderWithChildUpdates(prevParentId, updatedNote)
-                .then(updatedParentFolder => res.json({ note: updatedNote, parentFolders: [ updatedParentFolder ]}));
+                .then(updatedParentFolder => res.json({ note: updatedNote, parentFolders: [ updatedParentFolder ] }));
             } else {
               Promise.all([
                 updateParentFolderWithChildUpdates(prevParentId, updatedNote),
