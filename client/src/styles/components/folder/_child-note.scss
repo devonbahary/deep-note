@@ -48,6 +48,26 @@
       color: $primary-gray;
     }
   }
+
+  @include mediaLaptop {
+    .ChildNote__content {
+      @include pointer;
+    }
+
+    .ChildNote__content:hover {
+      .ChildNote__icon {
+        background: darken($primary-white, 3);
+      }
+
+      .ChildNote__contents {
+        background: darken($primary-white, 3);
+      }
+
+      .ChildNote__arrow {
+        background: darken($primary-white, 3);
+      }
+    }
+  }
 }
 
 .ChildNote--pressed {

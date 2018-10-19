@@ -28,6 +28,12 @@
       opacity: 0.5;
     }
   }
+
+  @include mediaLaptop {
+    .ColorPicker__option {
+      @include pointer;
+    }
+  }
 }
 
 .ColorPicker.ReactModal__Content--before-close {

@@ -14,6 +14,17 @@
     color: inherit;
   }
 
+  @include mediaLaptop {
+    .FolderHeader__Link {
+      @include pointer;
+      opacity: 0.8;
+    }
+
+    .FolderHeader__Link:hover {
+      opacity: 1;
+    }
+  }
+
   .FolderHeader__name {
     white-space: nowrap;
     overflow: hidden;
@@ -21,10 +32,27 @@
     text-overflow: ellipsis;
   }
 
+  @include mediaLaptop {
+    .FolderHeader__name {
+      @include pointer;
+    }
+  }
+
   .FolderHeader__folderAction {
     text-align: center;
     opacity: 0.8;
     color: inherit;
     font-size: 1.4rem;
+  }
+
+  @include mediaLaptop {
+    .FolderHeader__folderAction {
+      @include pointer;
+      opacity: 0.8;
+    }
+
+    .FolderHeader__folderAction:hover {
+      opacity: 1;
+    }
   }
 }

@@ -27,3 +27,33 @@ $scrollbar-thumb-color: $primary-darkgray;
       -ms-animation-fill-mode: forwards;     /* IE 10+ */
           animation-fill-mode: forwards;
 }
+
+@mixin pointer {
+  cursor: pointer;
+  transition: background-color 0.1s ease-out;
+  transition: opacity 0.1s ease-out;
+}
+
+@mixin mediaPhone {
+  @media screen and (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin mediaTablet {
+  @media screen and (min-width: 769px) and (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin mediaLaptop {
+  @media screen and (min-width: 1025px) {
+    @content;
+  }
+}
+
+@mixin mediaDesktop {
+  @media screen and (min-width: 1824px) {
+    @content;
+  }
+}

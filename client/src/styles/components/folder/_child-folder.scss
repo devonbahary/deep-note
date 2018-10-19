@@ -25,6 +25,12 @@
     }
   }
 
+  @include mediaLaptop {
+    .ChildFolder__colorTag {
+      cursor: pointer;
+    }
+  }
+
   .ChildFolder__content {
     display: grid;
     grid-template-columns: 32px 1fr $button-width;
@@ -49,6 +55,16 @@
     .ChildFolder__arrow {
       text-align: center;
       color: $primary-gray;
+    }
+  }
+
+  @include mediaLaptop {
+    .ChildFolder__content {
+      @include pointer;
+    }
+
+    .ChildFolder__content:hover {
+      background: darken($primary-white, 3);
     }
   }
 }
