@@ -9,36 +9,32 @@
   animation: appear 0.5s ease-out;
   @include animation-fill-mode;
 
-  .ChildNote__colorTag {
-    position: relative;
-
-    .ChildNote__color {
-      position: absolute;
-      height: 90%;
-      width: 6px;
-      top: 50%;
-      right: 0;
-      transform: translateY(-50%);
-      border-top-left-radius: 2px;
-      border-bottom-left-radius: 2px;
-    }
-  }
-
   .ChildNote__content {
     display: grid;
     grid-template-columns: 32px 1fr $button-width;
-    background: $primary-white;
     color: inherit;
     text-decoration: none;
     overflow: hidden;
     border-top-left-radius: 6px;
-    border-bottom-left-radius: 6px;
+    border-bottom-left-radius: 2px;
 
     .ChildNote__icon {
+      position: relative;
+      background: $primary-white;
       padding-left: 6px;
+      border-bottom-left-radius: 12px;
+
+      .ChildNote__cornerColor {
+        position: absolute;
+        bottom: -5px; left: -5px;
+        width: 10px; 
+        height: 10px;
+        transform: rotate(45deg);
+      }
     }
   
     .ChildNote__contents {
+      background: $primary-white;
       color: inherit;
       white-space: nowrap;
       overflow: hidden; 
@@ -47,6 +43,7 @@
     }
 
     .ChildNote__arrow {
+      background: $primary-white;
       text-align: center;
       color: $primary-gray;
     }
