@@ -41,7 +41,7 @@ class ChildFolder extends React.Component {
 
     const childFolderClass = this.state.isPressed ? 'ChildFolder--pressed' : 'ChildFolder';
     const childFolderStyle = { animationDelay: `${FOLDER_CHILD_APPEAR_ANIM_DELAY * index}s` };
-    const childFolderColorTagStyle = { backgroundColor: `${childFolder.color}` };
+    const childFolderColorTagStyle = { backgroundColor: childFolder.color };
 
     return (
       <li className={childFolderClass} style={childFolderStyle} ref={ref => this.refNode = ref}>

@@ -15,12 +15,12 @@
     .ChildNote__color {
       position: absolute;
       height: 90%;
-      width: 90%;
+      width: 6px;
       top: 50%;
-      left: 10%;
+      right: 0;
       transform: translateY(-50%);
-      border-top-left-radius: 5px;
-      border-bottom-left-radius: 5px;
+      border-top-left-radius: 2px;
+      border-bottom-left-radius: 2px;
     }
   }
 

@@ -40,14 +40,13 @@ class ChildNote extends React.Component {
     
     const childNoteClass = this.state.isPressed ? 'ChildNote--pressed' : 'ChildNote';
     const childNoteStyle = { animationDelay: `${FOLDER_CHILD_APPEAR_ANIM_DELAY * index}s` };
-    const childNoteColorTagStyle = { backgroundColor: `${childNote.color}` };
+    const childNoteColorTagStyle = { backgroundColor: childNote.color };
     const childNoteIconStyle = { textShadow: `2px 2px ${childNote.color}` };
     return (
       <li className={childNoteClass} style={childNoteStyle} ref={ref => this.refNode = ref}>
-        {/* <div className="ChildNote__colorTag" onClick={this.handleColorPicker}>
+        <div className="ChildNote__colorTag" onClick={this.handleColorPicker}>
           <div className="ChildNote__color" style={childNoteColorTagStyle}></div>
-        </div> */}
-        <div></div>
+        </div>
         <div className="ChildNote__content"
           onTouchStart={this.handleContentPress}
           onTouchEnd={this.handleContentRelease}
