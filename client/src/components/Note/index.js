@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getNote, saveNote } from '../../actions/notes';
+import { Redirect } from 'react-router';
 import LoadError from '../LoadError';
 import LoadingSpinner from '../Loading';
 import NoteHeader from './NoteHeader';
@@ -37,7 +38,9 @@ class Note extends React.Component {
 
   render() {
     let bodyContents;
-    if (this.props.loadError) {
+    if (this.props.loadError && this.props.loadError.status === 404) {
+      bodyContents = (<Redirect to='/not-found' />);
+    } else if (this.props.loadError) {
       bodyContents = (<LoadError />);
     } else if (this.props.isLoading) {
       bodyContents = (<LoadingSpinner />);

@@ -27,7 +27,7 @@ class ChildNote extends React.Component {
     this.setState(() => ({ isPressed: false }));
     clearTimeout(this.buttonPressTimer);
     if (!this.props.isFolderChildActionOpen) {
-      this.props.history.push(`/folders/${this.props.childNote.parentId}/notes/${this.props.childNote.noteId}`);
+      this.props.history.push(`/folders/${this.props.parentId}/notes/${this.props.childNote.noteId}`);
     }
   };
 
@@ -36,7 +36,7 @@ class ChildNote extends React.Component {
     this.props.openFolderChildAction(this.props.childNote, this.refNode);
   };
   render() {
-    const { childNote, parentId, index } = this.props;
+    const { childNote, index } = this.props;
     
     const childNoteClass = this.state.isPressed ? 'ChildNote--pressed' : 'ChildNote';
     const childNoteStyle = { animationDelay: `${FOLDER_CHILD_APPEAR_ANIM_DELAY * index}s` };

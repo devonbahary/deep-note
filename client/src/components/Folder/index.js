@@ -24,7 +24,9 @@ class Folder extends React.Component {
   render() {
     const { folder, isLoading, error, newNoteId } = this.props;
     let bodyContents;
-    if (error) {
+    if (error && error.status === 404) {
+      bodyContents = (<Redirect to='/not-found' />)
+    } else if (error) {
       bodyContents = (<LoadError />);
     } else if (isLoading) {
       bodyContents = <LoadingSpinner />;
