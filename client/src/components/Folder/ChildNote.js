@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { openColorPicker } from '../../actions/colorPicker';
@@ -56,6 +57,9 @@ class ChildNote extends React.Component {
           </div>
           <div className="ChildNote__contents">
             {childNote.name}
+          </div>
+          <div className="ChildNote__info">
+            {moment(childNote.lastUpdated).fromNow()}
           </div>
           <div className="ChildNote__arrow" >
             <i className="fas fa-chevron-right"></i>

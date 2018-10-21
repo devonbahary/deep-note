@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { openColorPicker } from '../../actions/colorPicker';
@@ -59,6 +60,9 @@ class ChildFolder extends React.Component {
           </div>
           <div className="ChildFolder__name">
             {childFolder.name}
+          </div>
+          <div className="ChildFolder__info">
+            {moment(childFolder.lastUpdated).fromNow()}
           </div>
           <div className="ChildFolder__arrow" >
             <i className="fas fa-chevron-right"></i>

@@ -41,6 +41,10 @@
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
 
+    @include mediaTablet {
+      grid-template-columns: 32px 2fr 1fr $button-width;
+    }
+
     .ChildFolder__icon {
       padding-left: 6px;
     }
@@ -50,6 +54,17 @@
       overflow: hidden; 
       text-align: left;
       text-overflow: ellipsis;
+    }
+
+    .ChildFolder__info {
+      display: none;
+
+      @include mediaTablet {
+        display: block;
+        opacity: 0.6;
+        font-size: 0.8rem;
+        text-align: right;
+      }
     }
 
     .ChildFolder__arrow {
@@ -70,7 +85,8 @@
 }
 
 .ChildFolder--pressed {
-  .ChildFolder__content {
-    background: darken($primary-white, 5);
+  .ChildFolder__content,
+  .ChildFolder__content:hover {
+    background: darken($primary-white, 7);
   }
 }

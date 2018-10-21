@@ -35,19 +35,19 @@ $scrollbar-thumb-color: $primary-darkgray;
 }
 
 @mixin mediaPhone {
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 767px) {
     @content;
   }
 }
 
 @mixin mediaTablet {
-  @media screen and (min-width: 769px) and (max-width: 1024px) {
+  @media screen and (min-width: 768px) {
     @content;
   }
 }
 
 @mixin mediaLaptop {
-  @media screen and (min-width: 1025px) {
+  @media screen and (min-width: 1024px) {
     @content;
   }
 }
