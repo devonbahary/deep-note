@@ -9,6 +9,10 @@
   transition: max-height 0.15s ease-out;
   max-height: 0;
 
+  &:focus {
+    outline: none;
+  }
+
   .FolderChildAction__menu {
     border-radius: 6px;
   }
@@ -67,17 +71,14 @@
     .FolderChildAction__action,
     .FolderChildAction__action--parent {
       @include pointer;
-    }
-    .FolderChildAction__action:hover,
-    .FolderChildAction__action--parent:hover {
-      background: darken($primary-white, 3);
+
+      &:hover {
+        background: darken($primary-white, 3);
+      }
     }
   }
 }
 
-.FolderChildAction--open:focus {
-  outline: none;
-}
 
 .FolderChildAction--open.ReactModal__Content--after-open {
   max-height: calc(4 * #{$item-height});

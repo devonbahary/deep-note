@@ -18,10 +18,10 @@
     .FolderHeader__Link {
       @include pointer;
       opacity: 0.8;
-    }
 
-    .FolderHeader__Link:hover {
-      opacity: 1;
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 
@@ -49,10 +49,10 @@
     .FolderHeader__folderAction {
       @include pointer;
       opacity: 0.8;
-    }
 
-    .FolderHeader__folderAction:hover {
-      opacity: 1;
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 }

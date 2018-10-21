@@ -34,6 +34,25 @@
       @include pointer;
     }
   }
+
+  .ColorPicker__btnClose {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    font-size: 1.5rem;
+    color: $primary-white;
+  }
+
+  @include mediaLaptop {
+    .ColorPicker__btnClose {
+      @include pointer;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
 }
 
 .ColorPicker.ReactModal__Content--before-close {

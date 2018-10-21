@@ -13,8 +13,8 @@ button {
   background: none;
   border: none;
   color: inherit;
-}
 
-button:hover {
-  outline: none;
+  &:hover {
+    outline: none;
+  }
 }

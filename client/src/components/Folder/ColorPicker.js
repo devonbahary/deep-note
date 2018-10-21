@@ -22,6 +22,8 @@ const ColorPicker = ({ activeColor, itemId, isFolder, closeColorPicker, isOpen, 
     closeColorPicker();
   }
 
+  const handleCloseButton = () => closeColorPicker();
+
   const colorsLength = Object.keys(colors).length;
   const animationDelay = 0.05;
   const closeTimeoutMS = colorsLength * animationDelay * 1000;
@@ -63,6 +65,9 @@ const ColorPicker = ({ activeColor, itemId, isFolder, closeColorPicker, isOpen, 
           );
         })}
       </ul>
+      <button type="button" className="ColorPicker__btnClose" onClick={() => handleCloseButton()}>
+        <i className="fas fa-times"></i>
+      </button>
     </Modal>
   );
 };

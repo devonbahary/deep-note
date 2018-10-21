@@ -12,10 +12,10 @@
   /* Handle */
   ::-webkit-scrollbar-thumb {
     background: $scrollbar-thumb-color;
-  }
 
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: darken($scrollbar-thumb-color, 10); 
+    /* Handle on hover */
+    &:hover {
+      background: darken($scrollbar-thumb-color, 10); 
+    }
   }
 }

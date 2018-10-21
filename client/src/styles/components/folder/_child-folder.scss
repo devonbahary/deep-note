@@ -61,10 +61,10 @@
   @include mediaLaptop {
     .ChildFolder__content {
       @include pointer;
-    }
 
-    .ChildFolder__content:hover {
-      background: darken($primary-white, 3);
+      &:hover {
+        background: darken($primary-white, 3);
+      }
     }
   }
 }
