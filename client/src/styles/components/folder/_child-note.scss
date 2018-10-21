@@ -12,6 +12,7 @@
   .ChildNote__content {
     display: grid;
     grid-template-columns: 32px 1fr $button-width;
+    background: $primary-white;
     color: inherit;
     text-decoration: none;
     overflow: hidden;
@@ -19,22 +20,11 @@
     border-bottom-left-radius: 2px;
 
     .ChildNote__icon {
-      position: relative;
-      background: $primary-white;
       padding-left: 6px;
-      border-bottom-left-radius: 12px;
-
-      .ChildNote__cornerColor {
-        position: absolute;
-        bottom: -5px; left: -5px;
-        width: 10px; 
-        height: 10px;
-        transform: rotate(45deg);
-      }
+      text-shadow: 2px 2px $primary-gray;
     }
   
     .ChildNote__contents {
-      background: $primary-white;
       color: inherit;
       white-space: nowrap;
       overflow: hidden; 
@@ -43,8 +33,7 @@
     }
 
     .ChildNote__arrow {
-      background: $primary-white;
-      text-align: center;
+      text-align: center; 
       color: $primary-gray;
     }
   }
@@ -55,17 +44,7 @@
     }
 
     .ChildNote__content:hover {
-      .ChildNote__icon {
-        background: darken($primary-white, 3);
-      }
-
-      .ChildNote__contents {
-        background: darken($primary-white, 3);
-      }
-
-      .ChildNote__arrow {
-        background: darken($primary-white, 3);
-      }
+      background: darken($primary-white, 3);
     }
   }
 }
