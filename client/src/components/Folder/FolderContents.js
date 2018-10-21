@@ -5,8 +5,10 @@ import foldersSelector from '../../selectors/folders';
 import notesSelector from '../../selectors/notes';
 
 const FolderContents = ({ folder }) => {
-  return (
-    <div className="FolderContents">
+  const hasContent = folder.childFolders.length + folder.childNotes.length > 0;
+  let bodyContents;
+  if (hasContent) {
+    bodyContents = (
       <ul>
         {foldersSelector(folder.childFolders).map((childFolder, index) => (
           <ChildFolder key={childFolder._id} childFolder={childFolder} index={index} />
@@ -20,6 +22,15 @@ const FolderContents = ({ folder }) => {
           />
         ))}
       </ul>
+    );
+  } else {
+    bodyContents = (
+      <i className="far fa-folder"></i>
+    );
+  }
+  return (
+    <div className={hasContent ? "FolderContents" : "FolderContents--empty"}>
+      {bodyContents}
     </div>
   );
 };
