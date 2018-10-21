@@ -1,7 +1,7 @@
 import React from 'react';
 
-const LoadingSpinner = () => (
-  <div className="LoadingSpinner"></div>
+const LoadingSpinner = ({ invertColors }) => (
+  <div className={invertColors ? "LoadingSpinner--invert" : "LoadingSpinner"}></div>
 );
 
 export default LoadingSpinner;

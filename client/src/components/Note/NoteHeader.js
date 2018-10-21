@@ -18,7 +18,7 @@ const NoteHeader = ({ note, isSaving, saveError, updateNote, onReattemptSave, is
   let noteHeaderClass, actionButtonContents;
   if (isSaveFadeout) {
     noteHeaderClass = "NoteHeader--savingFadeout";
-    actionButtonContents = (<LoadingSpinner />);
+    actionButtonContents = (<LoadingSpinner invertColors />);
   } else if (saveError) {
     noteHeaderClass = "NoteHeader--saveError";
     actionButtonContents = (
@@ -29,7 +29,7 @@ const NoteHeader = ({ note, isSaving, saveError, updateNote, onReattemptSave, is
     );
   } else if (isSaving) {
     noteHeaderClass = "NoteHeader--saving";
-    actionButtonContents = (<LoadingSpinner />);
+    actionButtonContents = (<LoadingSpinner invertColors />);
   } else {
     noteHeaderClass = "NoteHeader--done";
     actionButtonContents = (<i className="fas fa-check"></i>);
