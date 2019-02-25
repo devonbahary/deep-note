@@ -27,8 +27,20 @@ class Note extends React.Component {
     }
   }
 
+  // allow tab to space text instead of leave <textarea>
+  handleKeyDown = (e) => {
+    if (e.key === 'Tab') {
+      e.preventDefault(); 
+      const { selectionStart, selectionEnd } = e.target;
+      this.setState(prevState => ({
+        textarea: prevState.textarea.substring(0, selectionStart) + '\t' + prevState.textarea.substring(selectionEnd)
+      }), () => this.textareaNode.selectionStart = this.textareaNode.selectionEnd = selectionStart + 1);
+    }
+  }
+
   handleTextareaChange = (e) => {
     e.persist();
+    console.log(e.target.value)
     this.setState(() => ({ textarea: e.target.value }));
     clearTimeout(this.pendingSave);
     this.pendingSave = setTimeout(() => this.props.saveNote(this.state.textarea, this.props.note._id), SAVE_DELAY);
@@ -46,7 +58,8 @@ class Note extends React.Component {
       bodyContents = (<LoadingSpinner />);
     } else if (this.props.note) {
       bodyContents = (
-        <textarea 
+        <textarea
+          ref={node => this.textareaNode = node}
           className="Note__bodyTextarea"
           value={this.state.textarea} 
           onChange={this.handleTextareaChange} 
@@ -56,7 +69,7 @@ class Note extends React.Component {
     }
 
     return (
-      <div className="Note">
+      <div className="Note" onKeyDown={this.handleKeyDown}>
         <NoteHeader 
           note={this.props.note} 
           onReattemptSave={this.handleReattemptSave} 
