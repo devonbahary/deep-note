@@ -28,6 +28,7 @@ class Note extends React.Component {
   }
 
   // allow tab to space text instead of leave <textarea>
+  // solution from: (https://stackoverflow.com/questions/38385936/change-the-cursor-position-in-a-textarea-with-react)
   handleKeyDown = (e) => {
     if (e.key === 'Tab') {
       e.preventDefault(); 
