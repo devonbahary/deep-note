@@ -1,17 +1,17 @@
 {
-  "name": "deep-note",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "devDependencies": {
-    "concurrently": "^8.2.2",
-    "prettier": "^3.2.4"
-  },
-  "scripts": {
-    "dev": "conc 'cd backend && npm run dev' 'cd frontend && npm run dev'",
-    "lint": "cd backend && npm run lint && cd ../frontend && npm run lint",
-    "format": "prettier . --write"
-  },
-  "author": "",
-  "license": "ISC"
+    "name": "deep-note",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "devDependencies": {
+        "concurrently": "^8.2.2",
+        "prettier": "^3.2.4"
+    },
+    "scripts": {
+        "dev": "conc 'cd backend && npm run dev' 'cd frontend && npm run dev'",
+        "lint": "cd backend && npm run lint && cd ../frontend && npm run lint",
+        "format": "prettier . --write"
+    },
+    "author": "",
+    "license": "ISC"
 }
