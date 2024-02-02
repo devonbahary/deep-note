@@ -7,7 +7,10 @@ const noteSchema = new mongoose.Schema(
             type: String,
             default: 'Unnamed note',
         },
-        _folderId: Schema.Types.ObjectId,
+        _folderId: {
+            type: Schema.Types.ObjectId,
+            required: true,
+        },
         content: Object,
     },
     {
