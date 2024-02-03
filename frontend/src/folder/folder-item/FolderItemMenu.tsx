@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { UnorderedList } from './UnorderedList'
-import { Overlay } from './Overlay'
+import { Overlay } from '../Overlay'
 import { FolderItemMenuListItem } from './FolderItemMenuListItem'
 import DeleteIcon from '../../assets/delete-bin-line.svg?react'
 import TextIcon from '../../assets/text.svg?react'

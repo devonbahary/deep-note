@@ -1,26 +1,9 @@
-import { FC } from 'react'
-import ArrowLeftIcon from '../assets/arrow-left-line.svg?react'
-import { useNavigate } from 'react-router-dom'
+import { FC, ReactNode } from 'react'
 
-type HeaderProps = {
-    name: string
-    folderId?: string
-}
-
-export const Header: FC<HeaderProps> = ({ name, folderId }) => {
-    const navigate = useNavigate()
-
-    const goToFolder = () => navigate(`/folders/${folderId}`)
-
+export const Header: FC<{ children: ReactNode }> = ({ children }) => {
     return (
         <div className="bg-zinc-950 text-zinc-100 h-12 items-center flex flex-none shadow-lg gap-2 p-2">
-            <button
-                className={`h-8 min-w-8 p-2 ${folderId ? 'visible' : 'invisible'}`}
-                onClick={goToFolder}
-            >
-                <ArrowLeftIcon />
-            </button>
-            <div>{name}</div>
+            {children}
         </div>
     )
 }

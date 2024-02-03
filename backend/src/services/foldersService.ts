@@ -1,15 +1,19 @@
 import { ObjectId } from 'mongodb'
-import { Folder, FolderType } from '../models/Folder'
 import { UpdateQuery } from 'mongoose'
+import { Folder, FolderType } from '../models/Folder'
 import { Note, NoteType } from '../models/Note'
+
+type FolderWithDescendants = FolderType & {
+    descendants: FolderType[]
+}
 
 export const getDescendantFolders = async (
     rootFolderId: string
 ): Promise<FolderType[]> => {
-    const [rootFolder] = await Folder.aggregate([
+    const [rootFolder] = await Folder.aggregate<FolderWithDescendants>([
         {
             $match: {
-                _id: rootFolderId,
+                _id: new ObjectId(rootFolderId),
             },
         },
         {
@@ -18,12 +22,37 @@ export const getDescendantFolders = async (
                 startWith: '$_id',
                 connectFromField: '_id',
                 connectToField: '_folderId',
-                as: 'heirarchy',
+                as: 'descendants',
             },
         },
     ])
 
-    return rootFolder.heirarchy
+    if (!rootFolder) {
+        throw new Error(`Could not find folder with id ${rootFolderId}`)
+    }
+
+    return rootFolder.descendants
+}
+
+type DescendantsCount = {
+    folders: number
+    notes: number
+}
+
+export const getFolderDescendantsCount = async (
+    rootFolderId: string
+): Promise<DescendantsCount> => {
+    const descendantFolders = await getDescendantFolders(rootFolderId)
+    const descendantNoteCount = await Note.countDocuments({
+        _folderId: {
+            $in: [rootFolderId, ...descendantFolders.map((f) => f._id)],
+        },
+    })
+
+    return {
+        folders: descendantFolders.length,
+        notes: descendantNoteCount,
+    }
 }
 
 export const getFolder = async (id: string): Promise<FolderType | null> => {

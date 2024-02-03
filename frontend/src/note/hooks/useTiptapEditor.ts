@@ -3,12 +3,16 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
 import StarterKit from '@tiptap/starter-kit'
 
-type UseTiptapEditorResponse = Editor | null
+type UseTipTapEditorOptions = {
+    onUpdate?: EditorOptions['onUpdate']
+    editable?: boolean
+}
 
 export const useTiptapEditor = (
     content: Content,
-    onUpdate: EditorOptions['onUpdate']
-): UseTiptapEditorResponse => {
+    options: UseTipTapEditorOptions
+): Editor | null => {
+    const { editable, onUpdate } = options
     const editor = useEditor({
         extensions: [
             Placeholder.configure({
@@ -29,6 +33,7 @@ export const useTiptapEditor = (
             Underline,
         ],
         content,
+        editable,
         editorProps: {
             attributes: {
                 class: 'px-4 pb-4',

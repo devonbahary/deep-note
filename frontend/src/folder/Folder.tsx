@@ -1,14 +1,25 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useFolder } from './hooks/useFolder'
+import { useNavigateFolders } from '../common/hooks/useNavigateFolders'
 import { Header } from '../common/Header'
+import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
 import { FolderItem } from './folder-item/FolderItem'
 import { UnorderedList } from './folder-item/UnorderedList'
 import { TextInput } from './TextInput'
+import { Note } from '../types/Note'
+import { DeleteFolderItemModal } from './delete-modal/DeleteFolderItemModal'
+import { DeleteFolderModalContents } from './delete-modal/DeleteFolderModalContents'
+import { DeleteNoteModalContents } from './delete-modal/DeleteNoteModalContents'
 import FolderAddIcon from '../assets/folder-add-line.svg?react'
 import NoteAddIcon from '../assets/file-add-line.svg?react'
 import FolderIcon from '../assets/folder-fill.svg?react'
 import NoteIcon from '../assets/file-text-fill.svg?react'
+
+enum EditMode {
+    Rename,
+    DeleteFolder,
+    DeleteNote,
+}
 
 export const Folder = () => {
     const {
@@ -24,12 +35,11 @@ export const Folder = () => {
     const [openedMenuFolderItemId, setOpenedMenuFolderItemId] = useState<
         string | null
     >(null)
-
-    const [isRenaming, setIsRenaming] = useState(false)
+    const [editMode, setEditMode] = useState<EditMode | null>(null)
 
     const clearEditing = () => {
         setOpenedMenuFolderItemId(null)
-        setIsRenaming(false)
+        setEditMode(null)
     }
 
     const onUpdateFolder = async (id: string, name: string) => {
@@ -52,13 +62,16 @@ export const Folder = () => {
         clearEditing()
     }
 
-    const navigate = useNavigate()
-    const goToFolder = (id: string) => navigate(`/folders/${id}`)
-    const goToNote = (id: string) => navigate(`/notes/${id}`)
+    const { goToFolder, goToNote } = useNavigateFolders()
+
+    const isInDeleteMode =
+        editMode === EditMode.DeleteNote || editMode === EditMode.DeleteFolder
 
     return (
         <div className="flex flex-col h-full w-full">
-            <Header name={folder.name} folderId={folder._folderId} />
+            <Header>
+                <HeaderFolderItemContents item={folder} />
+            </Header>
             <div className="grow bg-zinc-900 text-zinc-100">
                 <UnorderedList>
                     {folder.folders.map((folder) => {
@@ -69,17 +82,19 @@ export const Folder = () => {
                                 onClick={() => goToFolder(folder._id)}
                                 menu={{
                                     isOpen:
-                                        !isRenaming &&
+                                        editMode !== EditMode.Rename &&
                                         openedMenuFolderItemId === folder._id,
                                     onOpen: () =>
                                         setOpenedMenuFolderItemId(folder._id),
                                     onClose: () =>
                                         setOpenedMenuFolderItemId(null),
-                                    onDelete: () => onDeleteFolder(folder._id),
-                                    onRename: () => setIsRenaming(true),
+                                    onDelete: () =>
+                                        setEditMode(EditMode.DeleteFolder),
+                                    onRename: () =>
+                                        setEditMode(EditMode.Rename),
                                 }}
                             >
-                                {isRenaming &&
+                                {editMode === EditMode.Rename &&
                                 openedMenuFolderItemId === folder._id ? (
                                     <TextInput
                                         defaultValue={folder.name}
@@ -105,17 +120,19 @@ export const Folder = () => {
                                 onClick={() => goToNote(note._id)}
                                 menu={{
                                     isOpen:
-                                        !isRenaming &&
+                                        editMode !== EditMode.Rename &&
                                         openedMenuFolderItemId === note._id,
                                     onOpen: () =>
                                         setOpenedMenuFolderItemId(note._id),
                                     onClose: () =>
                                         setOpenedMenuFolderItemId(null),
-                                    onDelete: () => onDeleteNote(note._id),
-                                    onRename: () => setIsRenaming(true),
+                                    onDelete: () =>
+                                        setEditMode(EditMode.DeleteNote),
+                                    onRename: () =>
+                                        setEditMode(EditMode.Rename),
                                 }}
                             >
-                                {isRenaming &&
+                                {editMode === EditMode.Rename &&
                                 openedMenuFolderItemId === note._id ? (
                                     <TextInput
                                         defaultValue={note.name}
@@ -141,6 +158,40 @@ export const Folder = () => {
                     </FolderItem>
                 </UnorderedList>
             </div>
+            {openedMenuFolderItemId && isInDeleteMode && (
+                <DeleteFolderItemModal
+                    heading={
+                        editMode === EditMode.DeleteFolder
+                            ? 'Delete this folder?'
+                            : editMode === EditMode.DeleteNote
+                              ? 'Delete this note?'
+                              : ''
+                    }
+                    onClose={() => clearEditing()}
+                    onDelete={() => {
+                        if (editMode === EditMode.DeleteFolder) {
+                            onDeleteFolder(openedMenuFolderItemId)
+                        } else if (editMode === EditMode.DeleteNote) {
+                            onDeleteNote(openedMenuFolderItemId)
+                        }
+                    }}
+                >
+                    {editMode === EditMode.DeleteFolder && (
+                        <DeleteFolderModalContents
+                            folderId={openedMenuFolderItemId}
+                        />
+                    )}
+                    {editMode === EditMode.DeleteNote && (
+                        <DeleteNoteModalContents
+                            note={
+                                folder.notes.find(
+                                    (n) => n._id === openedMenuFolderItemId
+                                ) as Note
+                            }
+                        />
+                    )}
+                </DeleteFolderItemModal>
+            )}
         </div>
     )
 }

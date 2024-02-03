@@ -5,6 +5,7 @@ import {
     createFolder,
     deleteFolder,
     getFolder,
+    getFolderDescendantsCount,
     getFolderWithChildItems,
     updateFolder,
 } from './foldersService'
@@ -31,6 +32,28 @@ describe('foldsService', () => {
         it(`a folder with _folderId should default to being named '${DEFAULT_NAME}'`, async () => {
             const folder = await createFolder(parentFolderId)
             expect(folder.name).toBe(DEFAULT_NAME)
+        })
+    })
+
+    describe('getFolderDescendantsCount', () => {
+        it('should return the total number of descendant folders and notes', async () => {
+            const rootFolder = await createFolder()
+
+            const folderDepth1 = await createFolder(rootFolder._id)
+            await createNote(rootFolder._id)
+
+            await createFolder(folderDepth1._id)
+            await createFolder(folderDepth1._id)
+            await createNote(folderDepth1._id)
+
+            const descendantsCount = await getFolderDescendantsCount(
+                rootFolder._id
+            )
+
+            expect(descendantsCount).toMatchObject({
+                folders: 3,
+                notes: 2,
+            })
         })
     })
 

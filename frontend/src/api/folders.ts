@@ -1,7 +1,14 @@
-import { Folder } from '../types/Folder'
+import { Folder, FolderDescendantsCount } from '../types/Folder'
 
 export const getFolder = async (id?: string): Promise<Folder> => {
     const response = await fetch(`/api/folders/${id}`)
+    return response.json()
+}
+
+export const getFolderDescendantsCount = async (
+    id: string
+): Promise<FolderDescendantsCount> => {
+    const response = await fetch(`/api/folders/descendants-count/${id}`)
     return response.json()
 }
 

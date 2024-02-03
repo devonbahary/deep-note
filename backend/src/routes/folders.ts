@@ -3,6 +3,7 @@ import { withErrorHandling } from './errorHandling'
 import {
     createFolder,
     deleteFolder,
+    getFolderDescendantsCount,
     getFolderWithChildItems,
     updateFolder,
 } from '../services/foldersService'
@@ -20,6 +21,16 @@ router.get('/:id', async (req, res, next) => {
         }
 
         res.json(folders[0])
+    }, next)
+})
+
+router.get('/descendants-count/:id', async (req, res, next) => {
+    withErrorHandling(async () => {
+        const { id } = req.params
+
+        const descendantsCount = await getFolderDescendantsCount(id)
+
+        res.json(descendantsCount)
     }, next)
 })
 
