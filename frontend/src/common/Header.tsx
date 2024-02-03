@@ -13,7 +13,7 @@ export const Header: FC<HeaderProps> = ({ name, folderId }) => {
     const goToFolder = () => navigate(`/folders/${folderId}`)
 
     return (
-        <div className="bg-zinc-950 text-zinc-100 h-12 items-center flex px-2flex-none shadow-lg gap-2">
+        <div className="bg-zinc-950 text-zinc-100 h-12 items-center flex flex-none shadow-lg gap-2 p-2">
             <button
                 className={`h-8 min-w-8 p-2 ${folderId ? 'visible' : 'invisible'}`}
                 onClick={goToFolder}
