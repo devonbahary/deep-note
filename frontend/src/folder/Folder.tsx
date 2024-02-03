@@ -62,27 +62,25 @@ export const Folder = () => {
             <div className="grow bg-zinc-900 text-zinc-100">
                 <UnorderedList>
                     {folder.folders.map((folder) => {
-                        const menuProps = {
-                            isOpen:
-                                !isRenaming &&
-                                openedMenuFolderItemId === folder._id,
-                            onOpen: () => setOpenedMenuFolderItemId(folder._id),
-                            onClose: () => setOpenedMenuFolderItemId(null),
-                            onDelete: () => onDeleteFolder(folder._id),
-                            onRename: () => setIsRenaming(true),
-                        }
-
-                        const isRenamingFolder =
-                            isRenaming && openedMenuFolderItemId === folder._id
-
                         return (
                             <FolderItem
                                 key={folder._id}
                                 icon={<FolderIcon />}
                                 onClick={() => goToFolder(folder._id)}
-                                menu={menuProps}
+                                menu={{
+                                    isOpen:
+                                        !isRenaming &&
+                                        openedMenuFolderItemId === folder._id,
+                                    onOpen: () =>
+                                        setOpenedMenuFolderItemId(folder._id),
+                                    onClose: () =>
+                                        setOpenedMenuFolderItemId(null),
+                                    onDelete: () => onDeleteFolder(folder._id),
+                                    onRename: () => setIsRenaming(true),
+                                }}
                             >
-                                {isRenamingFolder ? (
+                                {isRenaming &&
+                                openedMenuFolderItemId === folder._id ? (
                                     <TextInput
                                         defaultValue={folder.name}
                                         onSubmit={async (text) => {
@@ -100,27 +98,25 @@ export const Folder = () => {
                         )
                     })}
                     {folder.notes.map((note) => {
-                        const menuProps = {
-                            isOpen:
-                                !isRenaming &&
-                                openedMenuFolderItemId === note._id,
-                            onOpen: () => setOpenedMenuFolderItemId(note._id),
-                            onClose: () => setOpenedMenuFolderItemId(null),
-                            onDelete: () => onDeleteNote(note._id),
-                            onRename: () => setIsRenaming(true),
-                        }
-
-                        const isRenamingNote =
-                            isRenaming && openedMenuFolderItemId === note._id
-
                         return (
                             <FolderItem
                                 key={note._id}
                                 icon={<NoteIcon />}
                                 onClick={() => goToNote(note._id)}
-                                menu={menuProps}
+                                menu={{
+                                    isOpen:
+                                        !isRenaming &&
+                                        openedMenuFolderItemId === note._id,
+                                    onOpen: () =>
+                                        setOpenedMenuFolderItemId(note._id),
+                                    onClose: () =>
+                                        setOpenedMenuFolderItemId(null),
+                                    onDelete: () => onDeleteNote(note._id),
+                                    onRename: () => setIsRenaming(true),
+                                }}
                             >
-                                {isRenamingNote ? (
+                                {isRenaming &&
+                                openedMenuFolderItemId === note._id ? (
                                     <TextInput
                                         defaultValue={note.name}
                                         onSubmit={async (text) => {
