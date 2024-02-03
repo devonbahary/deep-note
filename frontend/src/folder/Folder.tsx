@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useFolder } from './hooks/useFolder'
+import { useFolderApi } from './hooks/useFolderApi'
 import { useNavigateFolders } from '../common/hooks/useNavigateFolders'
 import { Header } from '../common/Header'
 import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
@@ -30,7 +30,7 @@ export const Folder = () => {
         updateChildNote,
         deleteChildFolder,
         deleteChildNote,
-    } = useFolder()
+    } = useFolderApi()
 
     const [openedMenuFolderItemId, setOpenedMenuFolderItemId] = useState<
         string | null

@@ -4,7 +4,7 @@ import { Folder } from '../../types/Folder'
 import { createFolder, deleteFolder, updateFolder } from '../../api/folders'
 import { createNote, deleteNote, updateNote } from '../../api/notes'
 
-type UseFolderResponse = {
+type UseFolderApiResponse = {
     folder: Folder
     addChildFolder: () => Promise<void>
     addChildNote: () => Promise<void>
@@ -14,7 +14,7 @@ type UseFolderResponse = {
     deleteChildNote: (id: string) => Promise<void>
 }
 
-export const useFolder = (): UseFolderResponse => {
+export const useFolderApi = (): UseFolderApiResponse => {
     const loadedFolder = useLoaderData() as Folder
 
     const [folder, setFolder] = useState<Folder>(loadedFolder)
