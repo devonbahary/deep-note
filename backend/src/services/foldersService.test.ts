@@ -3,10 +3,12 @@ import { DEFAULT_NAME, FolderType } from '../models/Folder'
 import { NoteType } from '../models/Note'
 import {
     createFolder,
+    deleteFolder,
+    getFolder,
     getFolderWithChildItems,
     updateFolder,
 } from './foldersService'
-import { createNote } from './notesService'
+import { createNote, getNote } from './notesService'
 
 describe('foldsService', () => {
     afterAll(async () => {
@@ -66,6 +68,28 @@ describe('foldsService', () => {
             const updatedFolder = await updateFolder(folder._id, name)
 
             expect(updatedFolder?.name).toBe(name.trim())
+        })
+    })
+
+    describe('deleteFolder', () => {
+        it('should delete the folder, all of its child notes and folders, and all of their child notes and folders recursively', async () => {
+            const rootFolder = await createFolder()
+
+            const folderDepth1 = await createFolder(rootFolder._id)
+            const noteDepth1 = await createNote(rootFolder._id)
+
+            const folder1Depth2 = await createFolder(folderDepth1._id)
+            const folder2Depth2 = await createFolder(folderDepth1._id)
+            const noteDepth2 = await createNote(folderDepth1._id)
+
+            await deleteFolder(rootFolder._id)
+
+            expect(await getFolder(rootFolder._id)).toBe(null)
+            expect(await getFolder(folderDepth1._id)).toBe(null)
+            expect(await getNote(noteDepth1._id)).toBe(null)
+            expect(await getFolder(folder1Depth2._id)).toBe(null)
+            expect(await getFolder(folder2Depth2._id)).toBe(null)
+            expect(await getNote(noteDepth2._id)).toBe(null)
         })
     })
 })

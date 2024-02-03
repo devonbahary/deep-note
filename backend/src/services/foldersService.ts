@@ -1,7 +1,34 @@
 import { ObjectId } from 'mongodb'
 import { Folder, FolderType } from '../models/Folder'
 import { UpdateQuery } from 'mongoose'
-import { NoteType } from '../models/Note'
+import { Note, NoteType } from '../models/Note'
+
+export const getDescendantFolders = async (
+    rootFolderId: string
+): Promise<FolderType[]> => {
+    const [rootFolder] = await Folder.aggregate([
+        {
+            $match: {
+                _id: rootFolderId,
+            },
+        },
+        {
+            $graphLookup: {
+                from: Folder.collection.name,
+                startWith: '$_id',
+                connectFromField: '_id',
+                connectToField: '_folderId',
+                as: 'heirarchy',
+            },
+        },
+    ])
+
+    return rootFolder.heirarchy
+}
+
+export const getFolder = async (id: string): Promise<FolderType | null> => {
+    return await Folder.findById(id)
+}
 
 type FolderAggregationDoc = FolderType & {
     folders: FolderType[]
@@ -67,7 +94,18 @@ export const updateFolder = async (
 }
 
 export const deleteFolder = async (id: string): Promise<void> => {
-    await Folder.deleteOne({
-        _id: id,
+    const descendants = await getDescendantFolders(id)
+    const folderIds = [id, ...descendants.map((f) => f._id)]
+
+    await Folder.deleteMany({
+        _id: {
+            $in: folderIds,
+        },
+    })
+
+    await Note.deleteMany({
+        _folderId: {
+            $in: folderIds,
+        },
     })
 }
