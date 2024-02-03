@@ -49,3 +49,9 @@
         @apply opacity-50;
     }
 }
+
+@layer components {
+    .icon-box {
+        @apply h-8 min-w-8 p-2;
+    }
+}

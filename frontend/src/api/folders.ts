@@ -18,3 +18,20 @@ export const createFolder = async (folderId?: string): Promise<Folder> => {
 
     return response.json()
 }
+
+export const updateFolder = async (
+    id: string,
+    name: string
+): Promise<Folder> => {
+    const response = await fetch(`/api/folders/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name,
+        }),
+    })
+
+    return response.json()
+}

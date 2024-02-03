@@ -1,7 +1,13 @@
 import { Router } from 'express'
 import { ObjectId } from 'mongodb'
+import { UpdateQuery } from 'mongoose'
 import { Note } from '../models/Note'
 import { withErrorHandling } from './errorHandling'
+
+type UpdateNoteInput = {
+    content?: string
+    name?: string
+}
 
 const router = Router()
 
@@ -30,18 +36,29 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
     withErrorHandling(async () => {
         const { id } = req.params
-        const { content } = req.body
+        const { content, name } = req.body
 
-        await Note.updateOne(
+        const update: UpdateQuery<UpdateNoteInput> = {}
+
+        if (content) {
+            update.content = content
+        }
+
+        if (name) {
+            update.name = name
+        }
+
+        const updatedNote = await Note.findOneAndUpdate(
             {
                 _id: id,
             },
+            update,
             {
-                content,
+                new: true,
             }
         )
 
-        res.sendStatus(200)
+        res.json(updatedNote)
     }, next)
 })
 

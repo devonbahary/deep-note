@@ -21,13 +21,13 @@ export const Note = () => {
 
     useEffect(() => {
         ;(async () => {
-            await updateNote(note._id, debouncedEditorJSON)
+            await updateNote(note._id, { content: debouncedEditorJSON })
         })()
     }, [note._id, debouncedEditorJSON])
 
     return (
         <div className="flex flex-col h-full w-full">
-            <Header name="Header" folderId={note._folderId} />
+            <Header name={note.name} folderId={note._folderId} />
             <Menu editor={editor} />
             <div
                 className="grow bg-zinc-900 text-zinc-100"

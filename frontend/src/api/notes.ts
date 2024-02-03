@@ -20,17 +20,21 @@ export const createNote = async (folderId?: string): Promise<Note> => {
     return response.json()
 }
 
+type UpdateNoteBody = {
+    content?: Content
+    name?: string
+}
 export const updateNote = async (
     id: string,
-    content: Content
-): Promise<void> => {
-    await fetch(`/api/notes/${id}`, {
+    body: UpdateNoteBody
+): Promise<Note> => {
+    const response = await fetch(`/api/notes/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            content,
-        }),
+        body: JSON.stringify(body),
     })
+
+    return response.json()
 }
