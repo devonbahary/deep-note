@@ -3,12 +3,20 @@ import mongoose from 'mongoose'
 
 dotenv.config()
 
-const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_DB_NAME } = process.env
+const {
+    MONGODB_USER,
+    MONGODB_PASSWORD,
+    MONGODB_DB_NAME,
+    MONGODB_TEST_DB_NAME,
+    NODE_ENV,
+} = process.env
+
+const dbName = NODE_ENV === 'test' ? MONGODB_TEST_DB_NAME : MONGODB_DB_NAME
 
 ;(async () => {
     try {
         await mongoose.connect(
-            `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@deepnotedevcluster.ncspqj5.mongodb.net/${MONGODB_DB_NAME}?retryWrites=true&w=majority`
+            `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@deepnotedevcluster.ncspqj5.mongodb.net/${dbName}?retryWrites=true&w=majority`
         )
         console.log('Connected to mongodb successfully')
     } catch (err) {

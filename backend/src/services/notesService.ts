@@ -29,7 +29,7 @@ export const updateNote = async (
     }
 
     if (name) {
-        update.name = name
+        update.name = name.trim()
     }
 
     return await Note.findOneAndUpdate(

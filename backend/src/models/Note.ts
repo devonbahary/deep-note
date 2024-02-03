@@ -9,11 +9,13 @@ export type NoteType = Document & {
     updatedAt: Date
 }
 
+export const DEFAULT_NAME = 'Unnamed note'
+
 const noteSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            default: 'Unnamed note',
+            default: DEFAULT_NAME,
         },
         _folderId: {
             type: Schema.Types.ObjectId,

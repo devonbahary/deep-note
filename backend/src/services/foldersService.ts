@@ -1,11 +1,17 @@
 import { ObjectId } from 'mongodb'
 import { Folder, FolderType } from '../models/Folder'
 import { UpdateQuery } from 'mongoose'
+import { NoteType } from '../models/Note'
+
+type FolderAggregationDoc = FolderType & {
+    folders: FolderType[]
+    notes: NoteType[]
+}
 
 export const getFolderWithChildItems = async (
     id: string
-): Promise<FolderType[]> => {
-    const folders = await Folder.aggregate<FolderType>([
+): Promise<FolderAggregationDoc[]> => {
+    const folders = await Folder.aggregate<FolderAggregationDoc>([
         {
             $match: {
                 _id: new ObjectId(id),

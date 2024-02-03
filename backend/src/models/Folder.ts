@@ -8,11 +8,13 @@ export type FolderType = Document & {
     updatedAt: Date
 }
 
+export const DEFAULT_NAME = 'Unnamed folder'
+
 const folderSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            default: 'Unnamed folder',
+            default: DEFAULT_NAME,
         },
         _folderId: Schema.Types.ObjectId,
     },
