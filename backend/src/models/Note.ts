@@ -1,5 +1,13 @@
-import { Schema } from 'mongoose'
+import { Document, ObjectId, Schema } from 'mongoose'
 import { mongoose } from '../mongoose'
+
+export type NoteType = Document & {
+    name: string
+    _folderId?: ObjectId
+    content: object
+    createdAt: Date
+    updatedAt: Date
+}
 
 const noteSchema = new mongoose.Schema(
     {
@@ -18,4 +26,4 @@ const noteSchema = new mongoose.Schema(
     }
 )
 
-export const Note = mongoose.model('Note', noteSchema)
+export const Note = mongoose.model<NoteType>('Note', noteSchema)

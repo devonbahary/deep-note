@@ -1,5 +1,12 @@
-import { Schema } from 'mongoose'
+import { Document, ObjectId, Schema } from 'mongoose'
 import { mongoose } from '../mongoose'
+
+export type FolderType = Document & {
+    name: string
+    _folderId: ObjectId
+    createdAt: Date
+    updatedAt: Date
+}
 
 const folderSchema = new mongoose.Schema(
     {
@@ -14,4 +21,4 @@ const folderSchema = new mongoose.Schema(
     }
 )
 
-export const Folder = mongoose.model('Folder', folderSchema)
+export const Folder = mongoose.model<FolderType>('Folder', folderSchema)
