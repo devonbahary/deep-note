@@ -1,22 +1,25 @@
-import { useEffect, useState } from 'react'
-import { useLoaderData, useNavigate } from 'react-router-dom'
-import { Folder as FolderType } from '../types/Folder'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useFolder } from './hooks/useFolder'
 import { Header } from '../common/Header'
 import { FolderItem } from './folder-item/FolderItem'
 import { UnorderedList } from './folder-item/UnorderedList'
 import { TextInput } from './TextInput'
-import { createFolder, deleteFolder, updateFolder } from '../api/folders'
-import { createNote, deleteNote, updateNote } from '../api/notes'
 import FolderAddIcon from '../assets/folder-add-line.svg?react'
 import NoteAddIcon from '../assets/file-add-line.svg?react'
 import FolderIcon from '../assets/folder-fill.svg?react'
 import NoteIcon from '../assets/file-text-fill.svg?react'
 
 export const Folder = () => {
-    const loadedFolder = useLoaderData() as FolderType
-
-    // TODO: can use actions useSubmit() to automatically refetch loadedFolder?
-    const [folder, setFolder] = useState<FolderType>(loadedFolder)
+    const {
+        folder,
+        addChildFolder,
+        addChildNote,
+        updateChildFolder,
+        updateChildNote,
+        deleteChildFolder,
+        deleteChildNote,
+    } = useFolder()
 
     const [openedMenuFolderItemId, setOpenedMenuFolderItemId] = useState<
         string | null
@@ -24,79 +27,34 @@ export const Folder = () => {
 
     const [isRenaming, setIsRenaming] = useState(false)
 
-    const navigate = useNavigate()
-
-    const onAddFolder = async () => {
-        const newFolder = await createFolder(folder._id)
-        setFolder((prev) => ({
-            ...prev,
-            folders: [...prev.folders, newFolder],
-        }))
-    }
-
-    const onAddNote = async () => {
-        const newNote = await createNote(folder._id)
-        setFolder((prev) => ({
-            ...prev,
-            notes: [...prev.notes, newNote],
-        }))
+    const clearEditing = () => {
+        setOpenedMenuFolderItemId(null)
+        setIsRenaming(false)
     }
 
     const onUpdateFolder = async (id: string, name: string) => {
-        const updatedFolder = await updateFolder(id, name)
-
-        setOpenedMenuFolderItemId(null)
-        setIsRenaming(false)
-
-        setFolder((prev) => ({
-            ...prev,
-            folders: prev.folders.map((f) =>
-                f._id === id ? updatedFolder : f
-            ),
-        }))
+        await updateChildFolder(id, name)
+        clearEditing()
     }
 
     const onUpdateNote = async (id: string, name: string) => {
-        const updatedNote = await updateNote(id, { name })
-
-        setOpenedMenuFolderItemId(null)
-        setIsRenaming(false)
-
-        setFolder((prev) => ({
-            ...prev,
-            notes: prev.notes.map((n) => (n._id === id ? updatedNote : n)),
-        }))
+        await updateChildNote(id, name)
+        clearEditing()
     }
 
     const onDeleteFolder = async (id: string) => {
-        await deleteFolder(id)
-
-        setOpenedMenuFolderItemId(null)
-
-        setFolder((prev) => ({
-            ...prev,
-            folders: prev.folders.filter((f) => f._id !== id),
-        }))
+        await deleteChildFolder(id)
+        clearEditing()
     }
 
     const onDeleteNote = async (id: string) => {
-        await deleteNote(id)
-
-        setOpenedMenuFolderItemId(null)
-
-        setFolder((prev) => ({
-            ...prev,
-            notes: prev.notes.filter((n) => n._id !== id),
-        }))
+        await deleteChildNote(id)
+        clearEditing()
     }
 
+    const navigate = useNavigate()
     const goToFolder = (id: string) => navigate(`/folders/${id}`)
-
     const goToNote = (id: string) => navigate(`/notes/${id}`)
-
-    useEffect(() => {
-        setFolder(loadedFolder)
-    }, [loadedFolder])
 
     return (
         <div className="flex flex-col h-full w-full">
@@ -176,10 +134,13 @@ export const Folder = () => {
                             </FolderItem>
                         )
                     })}
-                    <FolderItem icon={<FolderAddIcon />} onClick={onAddFolder}>
+                    <FolderItem
+                        icon={<FolderAddIcon />}
+                        onClick={addChildFolder}
+                    >
                         add folder
                     </FolderItem>
-                    <FolderItem icon={<NoteAddIcon />} onClick={onAddNote}>
+                    <FolderItem icon={<NoteAddIcon />} onClick={addChildNote}>
                         add note
                     </FolderItem>
                 </UnorderedList>
