@@ -52,6 +52,6 @@
 
 @layer components {
     .icon-box {
-        @apply h-8 min-w-8 p-2;
+        @apply h-8 w-8 p-2;
     }
 }
