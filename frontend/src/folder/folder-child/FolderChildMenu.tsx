@@ -1,17 +1,17 @@
 import { FC } from 'react'
-import { UnorderedList } from './UnorderedList'
+import { UnorderedList } from '../UnorderedList'
 import { Overlay } from '../Overlay'
-import { FolderItemMenuListItem } from './FolderItemMenuListItem'
+import { FolderChildMenuListItem } from './FolderChildMenuListItem'
 import DeleteIcon from '../../assets/delete-bin-line.svg?react'
 import TextIcon from '../../assets/text.svg?react'
 
-export type FolderItemMenuProps = {
+export type FolderChildMenuProps = {
     onClose: () => void
     onRename: () => void
     onDelete: () => void
 }
 
-export const FolderItemMenu: FC<FolderItemMenuProps> = ({
+export const FolderChildMenu: FC<FolderChildMenuProps> = ({
     onClose,
     onDelete,
     onRename,
@@ -24,18 +24,18 @@ export const FolderItemMenu: FC<FolderItemMenuProps> = ({
                 onClick={(e) => e.stopPropagation()}
             >
                 <UnorderedList>
-                    <FolderItemMenuListItem
+                    <FolderChildMenuListItem
                         icon={<TextIcon />}
                         onClick={onRename}
                     >
                         Rename
-                    </FolderItemMenuListItem>
-                    <FolderItemMenuListItem
+                    </FolderChildMenuListItem>
+                    <FolderChildMenuListItem
                         icon={<DeleteIcon />}
                         onClick={onDelete}
                     >
                         Delete
-                    </FolderItemMenuListItem>
+                    </FolderChildMenuListItem>
                 </UnorderedList>
             </div>
         </>

@@ -1,19 +1,19 @@
 import { FC, MouseEventHandler, ReactNode } from 'react'
-import { FolderItemMenu, FolderItemMenuProps } from './FolderItemMenu'
-import { ListItem } from './ListItem'
+import { FolderChildMenu, FolderChildMenuProps } from './FolderChildMenu'
+import { FolderChildListItem } from './FolderChildListItem'
 import MenuIcon from '../../assets/more-line.svg?react'
 
-type FolderItemProps = {
+type FolderChildProps = {
     children: ReactNode
     icon: ReactNode
     onClick: () => void
-    menu?: FolderItemMenuProps & {
+    menu?: FolderChildMenuProps & {
         isOpen: boolean
         onOpen: () => void
     }
 }
 
-export const FolderItem: FC<FolderItemProps> = ({
+export const FolderChild: FC<FolderChildProps> = ({
     children,
     icon,
     menu,
@@ -27,7 +27,7 @@ export const FolderItem: FC<FolderItemProps> = ({
     }
 
     return (
-        <ListItem
+        <FolderChildListItem
             onClick={onClick}
             className="border-b-2 border-zinc-700 hover:bg-zinc-800"
         >
@@ -40,13 +40,13 @@ export const FolderItem: FC<FolderItemProps> = ({
                     </div>
                 )}
                 {menu?.isOpen && (
-                    <FolderItemMenu
+                    <FolderChildMenu
                         onClose={menu.onClose}
                         onRename={menu.onRename}
                         onDelete={menu.onDelete}
                     />
                 )}
             </div>
-        </ListItem>
+        </FolderChildListItem>
     )
 }

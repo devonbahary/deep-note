@@ -1,24 +1,24 @@
 import { FC, ReactNode } from 'react'
-import { ListItem } from './ListItem'
+import { FolderChildListItem } from './FolderChildListItem'
 
-type FolderItemMenuListItemProps = {
+type FolderChildMenuListItemProps = {
     icon: ReactNode
     children: ReactNode
     onClick: React.MouseEventHandler<HTMLLIElement>
 }
 
-export const FolderItemMenuListItem: FC<FolderItemMenuListItemProps> = ({
+export const FolderChildMenuListItem: FC<FolderChildMenuListItemProps> = ({
     children,
     icon,
     onClick,
 }) => {
     return (
-        <ListItem
+        <FolderChildListItem
             className="bg-zinc-800 hover:bg-zinc-700 border-b-2 border-zinc-700 last-of-type:border-none"
             onClick={onClick}
         >
             <div className="icon-box">{icon}</div>
             {children}
-        </ListItem>
+        </FolderChildListItem>
     )
 }

@@ -3,8 +3,8 @@ import { useFolderApi } from './hooks/useFolderApi'
 import { useNavigateFolders } from '../common/hooks/useNavigateFolders'
 import { Header } from '../common/Header'
 import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
-import { FolderItem } from './folder-item/FolderItem'
-import { UnorderedList } from './folder-item/UnorderedList'
+import { FolderChild } from './folder-child/FolderChild'
+import { UnorderedList } from './UnorderedList'
 import { TextInput } from './TextInput'
 import { Note } from '../types/Note'
 import { DeleteFolderItemModal } from './delete-modal/DeleteFolderItemModal'
@@ -76,7 +76,7 @@ export const Folder = () => {
                 <UnorderedList>
                     {folder.folders.map((folder) => {
                         return (
-                            <FolderItem
+                            <FolderChild
                                 key={folder._id}
                                 icon={<FolderIcon />}
                                 onClick={() => goToFolder(folder._id)}
@@ -109,12 +109,12 @@ export const Folder = () => {
                                 ) : (
                                     folder.name
                                 )}
-                            </FolderItem>
+                            </FolderChild>
                         )
                     })}
                     {folder.notes.map((note) => {
                         return (
-                            <FolderItem
+                            <FolderChild
                                 key={note._id}
                                 icon={<NoteIcon />}
                                 onClick={() => goToNote(note._id)}
@@ -144,18 +144,18 @@ export const Folder = () => {
                                 ) : (
                                     note.name
                                 )}
-                            </FolderItem>
+                            </FolderChild>
                         )
                     })}
-                    <FolderItem
+                    <FolderChild
                         icon={<FolderAddIcon />}
                         onClick={addChildFolder}
                     >
                         add folder
-                    </FolderItem>
-                    <FolderItem icon={<NoteAddIcon />} onClick={addChildNote}>
+                    </FolderChild>
+                    <FolderChild icon={<NoteAddIcon />} onClick={addChildNote}>
                         add note
-                    </FolderItem>
+                    </FolderChild>
                 </UnorderedList>
             </div>
             {openedMenuFolderItemId && isInDeleteMode && (

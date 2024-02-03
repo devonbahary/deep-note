@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-export const ListItem: FC<
+export const FolderChildListItem: FC<
     React.DetailedHTMLProps<
         React.LiHTMLAttributes<HTMLLIElement>,
         HTMLLIElement
