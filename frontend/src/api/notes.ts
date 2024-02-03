@@ -38,3 +38,9 @@ export const updateNote = async (
 
     return response.json()
 }
+
+export const deleteNote = async (id: string): Promise<void> => {
+    await fetch(`/api/notes/${id}`, {
+        method: 'DELETE',
+    })
+}

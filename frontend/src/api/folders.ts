@@ -35,3 +35,9 @@ export const updateFolder = async (
 
     return response.json()
 }
+
+export const deleteFolder = async (id: string): Promise<void> => {
+    await fetch(`/api/folders/${id}`, {
+        method: 'DELETE',
+    })
+}

@@ -5,8 +5,8 @@ import { Header } from '../common/Header'
 import { FolderItem } from './folder-item/FolderItem'
 import { UnorderedList } from './folder-item/UnorderedList'
 import { TextInput } from './TextInput'
-import { createFolder, updateFolder } from '../api/folders'
-import { createNote, updateNote } from '../api/notes'
+import { createFolder, deleteFolder, updateFolder } from '../api/folders'
+import { createNote, deleteNote, updateNote } from '../api/notes'
 import FolderAddIcon from '../assets/folder-add-line.svg?react'
 import NoteAddIcon from '../assets/file-add-line.svg?react'
 import FolderIcon from '../assets/folder-fill.svg?react'
@@ -68,6 +68,28 @@ export const Folder = () => {
         }))
     }
 
+    const onDeleteFolder = async (id: string) => {
+        await deleteFolder(id)
+
+        setOpenedMenuFolderItemId(null)
+
+        setFolder((prev) => ({
+            ...prev,
+            folders: prev.folders.filter((f) => f._id !== id),
+        }))
+    }
+
+    const onDeleteNote = async (id: string) => {
+        await deleteNote(id)
+
+        setOpenedMenuFolderItemId(null)
+
+        setFolder((prev) => ({
+            ...prev,
+            notes: prev.notes.filter((n) => n._id !== id),
+        }))
+    }
+
     const goToFolder = (id: string) => navigate(`/folders/${id}`)
 
     const goToNote = (id: string) => navigate(`/notes/${id}`)
@@ -88,9 +110,8 @@ export const Folder = () => {
                                 openedMenuFolderItemId === folder._id,
                             onOpen: () => setOpenedMenuFolderItemId(folder._id),
                             onClose: () => setOpenedMenuFolderItemId(null),
-                            onRename: () => {
-                                setIsRenaming(true)
-                            },
+                            onDelete: () => onDeleteFolder(folder._id),
+                            onRename: () => setIsRenaming(true),
                         }
 
                         const isRenamingFolder =
@@ -127,9 +148,8 @@ export const Folder = () => {
                                 openedMenuFolderItemId === note._id,
                             onOpen: () => setOpenedMenuFolderItemId(note._id),
                             onClose: () => setOpenedMenuFolderItemId(null),
-                            onRename: () => {
-                                setIsRenaming(true)
-                            },
+                            onDelete: () => onDeleteNote(note._id),
+                            onRename: () => setIsRenaming(true),
                         }
 
                         const isRenamingNote =

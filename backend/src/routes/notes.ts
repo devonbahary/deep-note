@@ -62,4 +62,16 @@ router.put('/:id', async (req, res, next) => {
     }, next)
 })
 
+router.delete('/:id', async (req, res, next) => {
+    withErrorHandling(async () => {
+        const { id } = req.params
+
+        await Note.deleteOne({
+            _id: new ObjectId(id),
+        })
+
+        res.sendStatus(200)
+    }, next)
+})
+
 export default router

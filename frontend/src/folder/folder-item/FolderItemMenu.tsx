@@ -8,10 +8,12 @@ import TextIcon from '../../assets/text.svg?react'
 export type FolderItemMenuProps = {
     onClose: () => void
     onRename: () => void
+    onDelete: () => void
 }
 
 export const FolderItemMenu: FC<FolderItemMenuProps> = ({
     onClose,
+    onDelete,
     onRename,
 }) => {
     return (
@@ -28,10 +30,9 @@ export const FolderItemMenu: FC<FolderItemMenuProps> = ({
                     >
                         Rename
                     </FolderItemMenuListItem>
-                    {/* TODO: onDelete */}
                     <FolderItemMenuListItem
                         icon={<DeleteIcon />}
-                        onClick={onRename}
+                        onClick={onDelete}
                     >
                         Delete
                     </FolderItemMenuListItem>

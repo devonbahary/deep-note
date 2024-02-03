@@ -43,6 +43,7 @@ export const FolderItem: FC<FolderItemProps> = ({
                     <FolderItemMenu
                         onClose={menu.onClose}
                         onRename={menu.onRename}
+                        onDelete={menu.onDelete}
                     />
                 )}
             </div>
