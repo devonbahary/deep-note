@@ -9,18 +9,18 @@ type HeaderFolderItemContentsProps = {
 }
 
 export const HeaderFolderItemContents: FC<HeaderFolderItemContentsProps> = ({
-    item: { _folderId, name },
+    item: { _parentFolderId, name },
 }) => {
     const { goToFolder } = useNavigateFolders()
 
     const goToParentFolder = () => {
-        if (_folderId) goToFolder(_folderId)
+        if (_parentFolderId) goToFolder(_parentFolderId)
     }
 
     return (
         <>
             <button
-                className={`icon-box ${_folderId ? 'visible' : 'invisible'}`}
+                className={`icon-box ${_parentFolderId ? 'visible' : 'invisible'}`}
                 onClick={goToParentFolder}
             >
                 <ArrowLeftIcon />

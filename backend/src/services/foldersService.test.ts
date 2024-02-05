@@ -24,12 +24,12 @@ describe('foldsService', () => {
             parentFolderId = folder._id
         })
 
-        it('a folder with no _folderId should default to being named `root`', async () => {
+        it('a folder with no _parentFolderId should default to being named `root`', async () => {
             const folder = await createFolder()
             expect(folder.name).toBe('root')
         })
 
-        it(`a folder with _folderId should default to being named '${DEFAULT_NAME}'`, async () => {
+        it(`a folder with _parentFolderId should default to being named '${DEFAULT_NAME}'`, async () => {
             const folder = await createFolder(parentFolderId)
             expect(folder.name).toBe(DEFAULT_NAME)
         })
@@ -58,20 +58,20 @@ describe('foldsService', () => {
     })
 
     describe('getFolderWithChildItems', () => {
-        let folderId: string
+        let parentFolderId: string
         let childFolder: FolderType
         let childNote: NoteType
 
         beforeAll(async () => {
             const folder = await createFolder()
-            folderId = folder._id
+            parentFolderId = folder._id
 
-            childFolder = await createFolder(folderId)
-            childNote = await createNote(folderId)
+            childFolder = await createFolder(parentFolderId)
+            childNote = await createNote(parentFolderId)
         })
 
         it('should retrieve the folder with all child items', async () => {
-            const [folder] = await getFolderWithChildItems(folderId)
+            const [folder] = await getFolderWithChildItems(parentFolderId)
 
             expect(folder.folders).toContainEqual(childFolder.toJSON())
             expect(folder.notes).toContainEqual(childNote.toJSON())
@@ -93,14 +93,14 @@ describe('foldsService', () => {
             expect(updatedFolder?.name).toBe(name.trim())
         })
 
-        it('should update the _folderId field, returning the updated document', async () => {
+        it('should update the _parentFolderId field, returning the updated document', async () => {
             const childFolderToBe = await createFolder()
-            expect(childFolderToBe._folderId).toBe(undefined)
+            expect(childFolderToBe._parentFolderId).toBe(undefined)
 
             const updatedFolder = await updateFolder(childFolderToBe._id, {
-                folderId: folder._id,
+                parentFolderId: folder._id,
             })
-            expect(updatedFolder?._folderId.toString()).toBe(
+            expect(updatedFolder?._parentFolderId.toString()).toBe(
                 folder._id.toString()
             )
         })

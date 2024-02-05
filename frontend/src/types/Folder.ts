@@ -2,7 +2,7 @@ import { Note } from './Note'
 
 export type Folder = {
     _id: string
-    _folderId?: string
+    _parentFolderId?: string
     name: string
     // TODO: correct timestamps
     updated: Date

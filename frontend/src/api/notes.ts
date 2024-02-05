@@ -7,14 +7,14 @@ export const getNote = async (id?: string): Promise<Note> => {
     return response.json()
 }
 
-export const createNote = async (folderId?: string): Promise<Note> => {
+export const createNote = async (parentFolderId: string): Promise<Note> => {
     const response = await fetch('/api/notes', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            folderId,
+            parentFolderId,
         }),
     })
 

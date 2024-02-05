@@ -124,7 +124,7 @@ export const FolderChild: FC<FolderChildProps> = ({
                     parentFolder={parentFolder}
                     onClose={reset}
                     onMove={(toParentId: string) =>
-                        onUpdateChild({ folderId: toParentId })
+                        onUpdateChild({ parentFolderId: toParentId })
                     }
                 />
             )}

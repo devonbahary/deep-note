@@ -16,16 +16,16 @@ describe('notesService', () => {
     })
 
     describe('createNote', () => {
-        it('should fail without a _folderId', async () => {
+        it('should fail without a _parentFolderId', async () => {
             await expect(createNote('fake_folder_id')).rejects.toThrow()
         })
 
-        it('should succeed a _folderId, with a default name', async () => {
+        it('should succeed a _parentFolderId, with a default name', async () => {
             const note = await createNote(parentFolderId)
 
             expect(note.toJSON()).toMatchObject({
                 name: DEFAULT_NAME,
-                _folderId: parentFolderId,
+                _parentFolderId: parentFolderId,
             })
         })
     })
@@ -60,14 +60,14 @@ describe('notesService', () => {
             expect(updatedNote?.name).toBe(noteBeforeContentUpdate?.name)
         })
 
-        it('should update the _folderId field, returning the updated document', async () => {
+        it('should update the _parentFolderId field, returning the updated document', async () => {
             const newParentFolder = await createFolder()
 
             const updatedNote = await updateNote(noteId, {
-                folderId: newParentFolder._id,
+                parentFolderId: newParentFolder._id,
             })
 
-            expect(updatedNote?._folderId?.toString()).toBe(
+            expect(updatedNote?._parentFolderId?.toString()).toBe(
                 newParentFolder._id.toString()
             )
         })

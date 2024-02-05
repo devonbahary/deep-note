@@ -21,9 +21,9 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     withErrorHandling(async () => {
-        const { folderId } = req.body
+        const { parentFolderId } = req.body
 
-        const newNote = await createNote(folderId)
+        const newNote = await createNote(parentFolderId)
 
         res.json(newNote)
     }, next)

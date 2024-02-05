@@ -5,23 +5,23 @@ export const getNote = async (id: string): Promise<NoteType | null> => {
     return await Note.findById(id)
 }
 
-export const createNote = async (folderId: string): Promise<NoteType> => {
+export const createNote = async (parentFolderId: string): Promise<NoteType> => {
     return await Note.create({
-        _folderId: folderId,
+        _parentFolderId: parentFolderId,
     })
 }
 
 type UpdateNoteInput = {
     content?: string
     name?: string
-    folderId?: string
+    parentFolderId?: string
 }
 
 export const updateNote = async (
     id: string,
     input: UpdateNoteInput
 ): Promise<NoteType | null> => {
-    const { content, name, folderId } = input
+    const { content, name, parentFolderId } = input
 
     const update: UpdateQuery<NoteType> = {}
 
@@ -33,8 +33,8 @@ export const updateNote = async (
         update.name = name.trim()
     }
 
-    if (folderId) {
-        update._folderId = folderId
+    if (parentFolderId) {
+        update._parentFolderId = parentFolderId
     }
 
     return await Note.findOneAndUpdate(

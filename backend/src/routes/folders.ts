@@ -36,9 +36,9 @@ router.get('/descendants-count/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     withErrorHandling(async () => {
-        const { folderId } = req.body
+        const { parentFolderId } = req.body
 
-        const newFolder = await createFolder(folderId)
+        const newFolder = await createFolder(parentFolderId)
 
         res.json(newFolder)
     }, next)

@@ -3,7 +3,7 @@ import { mongoose } from '../mongoose'
 
 export type FolderType = Document & {
     name: string
-    _folderId: ObjectId
+    _parentFolderId: ObjectId
     createdAt: Date
     updatedAt: Date
 }
@@ -16,7 +16,7 @@ const folderSchema = new mongoose.Schema(
             type: String,
             default: DEFAULT_NAME,
         },
-        _folderId: Schema.Types.ObjectId,
+        _parentFolderId: Schema.Types.ObjectId,
     },
     {
         timestamps: true,

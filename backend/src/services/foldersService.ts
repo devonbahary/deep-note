@@ -21,7 +21,7 @@ export const getDescendantFolders = async (
                 from: Folder.collection.name,
                 startWith: '$_id',
                 connectFromField: '_id',
-                connectToField: '_folderId',
+                connectToField: '_parentFolderId',
                 as: 'descendants',
             },
         },
@@ -44,7 +44,7 @@ export const getFolderDescendantsCount = async (
 ): Promise<DescendantsCount> => {
     const descendantFolders = await getDescendantFolders(rootFolderId)
     const descendantNoteCount = await Note.countDocuments({
-        _folderId: {
+        _parentFolderId: {
             $in: [rootFolderId, ...descendantFolders.map((f) => f._id)],
         },
     })
@@ -77,7 +77,7 @@ export const getFolderWithChildItems = async (
             $lookup: {
                 from: 'notes',
                 localField: '_id',
-                foreignField: '_folderId',
+                foreignField: '_parentFolderId',
                 as: 'notes',
             },
         },
@@ -85,7 +85,7 @@ export const getFolderWithChildItems = async (
             $lookup: {
                 from: 'folders',
                 localField: '_id',
-                foreignField: '_folderId',
+                foreignField: '_parentFolderId',
                 as: 'folders',
             },
         },
@@ -94,23 +94,25 @@ export const getFolderWithChildItems = async (
     return folders
 }
 
-export const createFolder = async (folderId?: string): Promise<FolderType> => {
+export const createFolder = async (
+    parentFolderId?: string
+): Promise<FolderType> => {
     return await Folder.create({
-        name: folderId ? undefined : 'root',
-        _folderId: folderId,
+        name: parentFolderId ? undefined : 'root',
+        _parentFolderId: parentFolderId,
     })
 }
 
 type UpdateFolderInput = {
     name?: string
-    folderId?: string
+    parentFolderId?: string
 }
 
 export const updateFolder = async (
     id: string,
     input: UpdateFolderInput
 ): Promise<FolderType | null> => {
-    const { name, folderId } = input
+    const { name, parentFolderId } = input
 
     const update: UpdateQuery<FolderType> = {}
 
@@ -118,8 +120,8 @@ export const updateFolder = async (
         update.name = name.trim()
     }
 
-    if (folderId) {
-        update._folderId = folderId
+    if (parentFolderId) {
+        update._parentFolderId = parentFolderId
     }
 
     return await Folder.findOneAndUpdate(
@@ -135,17 +137,17 @@ export const updateFolder = async (
 
 export const deleteFolder = async (id: string): Promise<void> => {
     const descendants = await getDescendantFolders(id)
-    const folderIds = [id, ...descendants.map((f) => f._id)]
+    const parentFolderIds = [id, ...descendants.map((f) => f._id)]
 
     await Folder.deleteMany({
         _id: {
-            $in: folderIds,
+            $in: parentFolderIds,
         },
     })
 
     await Note.deleteMany({
-        _folderId: {
-            $in: folderIds,
+        _parentFolderId: {
+            $in: parentFolderIds,
         },
     })
 }

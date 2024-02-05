@@ -3,7 +3,7 @@ import { mongoose } from '../mongoose'
 
 export type NoteType = Document & {
     name: string
-    _folderId?: ObjectId
+    _parentFolderId?: ObjectId
     content: object
     createdAt: Date
     updatedAt: Date
@@ -17,7 +17,7 @@ const noteSchema = new mongoose.Schema(
             type: String,
             default: DEFAULT_NAME,
         },
-        _folderId: {
+        _parentFolderId: {
             type: Schema.Types.ObjectId,
             required: true,
         },

@@ -5,7 +5,7 @@ export const canMoveFolderChild = (
     parentFolder: Folder,
     folderChild: Folder | Note
 ): boolean => {
-    if (parentFolder._folderId) {
+    if (parentFolder._parentFolderId) {
         return true
     }
 
