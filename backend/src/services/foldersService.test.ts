@@ -88,9 +88,21 @@ describe('foldsService', () => {
         it('should update and trim the name field, returning the updated document', async () => {
             const name = 'name  '
 
-            const updatedFolder = await updateFolder(folder._id, name)
+            const updatedFolder = await updateFolder(folder._id, { name })
 
             expect(updatedFolder?.name).toBe(name.trim())
+        })
+
+        it('should update the _folderId field, returning the updated document', async () => {
+            const childFolderToBe = await createFolder()
+            expect(childFolderToBe._folderId).toBe(undefined)
+
+            const updatedFolder = await updateFolder(childFolderToBe._id, {
+                folderId: folder._id,
+            })
+            expect(updatedFolder?._folderId.toString()).toBe(
+                folder._id.toString()
+            )
         })
     })
 

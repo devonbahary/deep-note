@@ -59,5 +59,17 @@ describe('notesService', () => {
             expect(updatedNote?.content).toBe(content)
             expect(updatedNote?.name).toBe(noteBeforeContentUpdate?.name)
         })
+
+        it('should update the _folderId field, returning the updated document', async () => {
+            const newParentFolder = await createFolder()
+
+            const updatedNote = await updateNote(noteId, {
+                folderId: newParentFolder._id,
+            })
+
+            expect(updatedNote?._folderId?.toString()).toBe(
+                newParentFolder._id.toString()
+            )
+        })
     })
 })

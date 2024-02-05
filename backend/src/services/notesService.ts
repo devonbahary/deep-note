@@ -14,15 +14,16 @@ export const createNote = async (folderId: string): Promise<NoteType> => {
 type UpdateNoteInput = {
     content?: string
     name?: string
+    folderId?: string
 }
 
 export const updateNote = async (
     id: string,
     input: UpdateNoteInput
 ): Promise<NoteType | null> => {
-    const { content, name } = input
+    const { content, name, folderId } = input
 
-    const update: UpdateQuery<UpdateNoteInput> = {}
+    const update: UpdateQuery<NoteType> = {}
 
     if (content) {
         update.content = content
@@ -30,6 +31,10 @@ export const updateNote = async (
 
     if (name) {
         update.name = name.trim()
+    }
+
+    if (folderId) {
+        update._folderId = folderId
     }
 
     return await Note.findOneAndUpdate(

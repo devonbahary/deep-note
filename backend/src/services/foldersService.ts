@@ -101,14 +101,25 @@ export const createFolder = async (folderId?: string): Promise<FolderType> => {
     })
 }
 
+type UpdateFolderInput = {
+    name?: string
+    folderId?: string
+}
+
 export const updateFolder = async (
     id: string,
-    name?: string
+    input: UpdateFolderInput
 ): Promise<FolderType | null> => {
+    const { name, folderId } = input
+
     const update: UpdateQuery<FolderType> = {}
 
     if (name) {
         update.name = name.trim()
+    }
+
+    if (folderId) {
+        update._folderId = folderId
     }
 
     return await Folder.findOneAndUpdate(

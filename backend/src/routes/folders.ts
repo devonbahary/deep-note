@@ -47,9 +47,8 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
     withErrorHandling(async () => {
         const { id } = req.params
-        const { name } = req.body
 
-        const updatedFolder = await updateFolder(id, name)
+        const updatedFolder = await updateFolder(id, req.body)
 
         if (!updateFolder) {
             res.sendStatus(404)
