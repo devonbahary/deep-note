@@ -1,11 +1,10 @@
 import { Note } from './Note'
+import { Timestamps } from './types'
 
-export type Folder = {
+export type Folder = Timestamps & {
     _id: string
     _parentFolderId?: string
     name: string
-    // TODO: correct timestamps
-    updated: Date
     folders: Folder[]
     notes: Note[]
 }
