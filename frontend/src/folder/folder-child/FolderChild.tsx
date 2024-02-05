@@ -1,52 +1,133 @@
-import { FC, MouseEventHandler, ReactNode } from 'react'
-import { FolderChildMenu, FolderChildMenuProps } from './FolderChildMenu'
-import { FolderChildListItem } from './FolderChildListItem'
+import { FC, ReactNode, useState } from 'react'
+import { useBoolean } from 'usehooks-ts'
+import { canMoveFolderChild } from '../utility'
+import { Folder } from '../../types/Folder'
+import { Note } from '../../types/Note'
+import { UpdateFolderChildInput } from '../../types/types'
+import { TextInput } from '../TextInput'
+import { DeleteFolderItemModal } from '../delete-modal/DeleteFolderItemModal'
+import { MoveToFolderModal } from '../MoveToFolderModal'
+import { FolderChildMenu } from './FolderChildMenu'
+import { ListItem } from '../ListItem'
 import MenuIcon from '../../assets/more-line.svg?react'
 
-type FolderChildProps = {
-    children: ReactNode
+export type FolderChildProps = {
     icon: ReactNode
-    onClick: () => void
-    menu?: FolderChildMenuProps & {
-        isOpen: boolean
-        onOpen: () => void
-    }
+    navigateTo: () => void
+    updateChild: (id: string, input: UpdateFolderChildInput) => void
+    deleteChild: (id: string) => void
+    parentFolder: Folder
+    child: Note | Folder
+    editProps: EditProps
+}
+
+type EditProps = {
+    deleteModalHeading: string
+    deleteModalContents: ReactNode
+    nameInputPlaceholder: string
+}
+
+enum EditMode {
+    Rename,
+    Move,
+    Delete,
 }
 
 export const FolderChild: FC<FolderChildProps> = ({
-    children,
     icon,
-    menu,
-    onClick,
+    navigateTo,
+    parentFolder,
+    updateChild,
+    deleteChild,
+    child,
+    editProps,
 }) => {
-    const onMenuClick: MouseEventHandler<HTMLDivElement> = (e) => {
-        if (menu) {
-            e.stopPropagation()
-            menu.onOpen()
-        }
+    const {
+        value: isMenuOpen,
+        setFalse: closeMenu,
+        setTrue: openMenu,
+    } = useBoolean(false)
+
+    const [editMode, setEditMode] = useState<EditMode | null>(null)
+
+    const reset = () => {
+        setEditMode(null)
+        closeMenu()
     }
 
+    const beginEditing = (editMode: EditMode) => {
+        setEditMode(editMode)
+        closeMenu()
+    }
+
+    const onUpdateChild = async (input: UpdateFolderChildInput) => {
+        await updateChild(child._id, input)
+        reset()
+    }
+
+    const onDeleteChild = async () => {
+        await deleteChild(child._id)
+        reset()
+    }
+
+    const canMove = canMoveFolderChild(parentFolder, child)
+
     return (
-        <FolderChildListItem
-            onClick={onClick}
-            className="border-b-2 border-zinc-700 hover:bg-zinc-800"
+        <ListItem
+            className="bg-zinc-900 hover:bg-zinc-800 border-zinc-700"
+            icon={icon}
+            onClick={navigateTo}
         >
-            <div className="h-8 min-w-8 p-2">{icon}</div>
-            <div className="flex flex-gap-2 w-full items-center">
-                <div className="flex-1">{children}</div>
-                {menu && (
-                    <div className="icon-box" onClick={onMenuClick}>
-                        <MenuIcon />
-                    </div>
-                )}
-                {menu?.isOpen && (
-                    <FolderChildMenu
-                        onClose={menu.onClose}
-                        onRename={menu.onRename}
-                        onDelete={menu.onDelete}
-                    />
-                )}
+            <div className="flex w-full items-center">
+                <div className="flex-grow">
+                    {editMode === EditMode.Rename ? (
+                        <TextInput
+                            defaultValue={child.name}
+                            onSubmit={async (name) => onUpdateChild({ name })}
+                            placeholder={editProps.nameInputPlaceholder}
+                        />
+                    ) : (
+                        child.name
+                    )}
+                </div>
+                <div
+                    className="icon-box"
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        openMenu()
+                    }}
+                >
+                    <MenuIcon />
+                </div>
             </div>
-        </FolderChildListItem>
+            {isMenuOpen && (
+                <FolderChildMenu
+                    canMove={canMove}
+                    onClose={closeMenu}
+                    onDelete={() => beginEditing(EditMode.Delete)}
+                    onMove={() => beginEditing(EditMode.Move)}
+                    onRename={() => beginEditing(EditMode.Rename)}
+                />
+            )}
+            {editMode === EditMode.Delete && (
+                <DeleteFolderItemModal
+                    heading={editProps.deleteModalHeading}
+                    onClose={reset}
+                    onDelete={onDeleteChild}
+                >
+                    {editProps.deleteModalContents}
+                </DeleteFolderItemModal>
+            )}
+            {editMode === EditMode.Move && (
+                <MoveToFolderModal
+                    childFolderId={child._id}
+                    parentFolder={parentFolder}
+                    onClose={reset}
+                    onMove={(toParentId: string) =>
+                        onUpdateChild({ folderId: toParentId })
+                    }
+                />
+            )}
+        </ListItem>
     )
 }

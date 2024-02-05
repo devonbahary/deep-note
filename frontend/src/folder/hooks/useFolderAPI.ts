@@ -3,16 +3,19 @@ import { useLoaderData } from 'react-router-dom'
 import { Folder } from '../../types/Folder'
 import { createFolder, deleteFolder, updateFolder } from '../../api/folders'
 import { createNote, deleteNote, updateNote } from '../../api/notes'
+import { UpdateFolderChildInput } from '../../types/types'
 
-type UseFolderAPIResponse = {
+export type UseFolderAPIResponse = {
     folder: Folder
     addChildFolder: () => Promise<void>
     addChildNote: () => Promise<void>
-    updateChildFolder: (id: string, name: string) => Promise<void>
-    updateChildNote: (id: string, name: string) => Promise<void>
+    updateChildFolder: UpdateChild
+    updateChildNote: UpdateChild
     deleteChildFolder: (id: string) => Promise<void>
     deleteChildNote: (id: string) => Promise<void>
 }
+
+type UpdateChild = (id: string, input: UpdateFolderChildInput) => void
 
 export const useFolderAPI = (): UseFolderAPIResponse => {
     const loadedFolder = useLoaderData() as Folder
@@ -37,8 +40,8 @@ export const useFolderAPI = (): UseFolderAPIResponse => {
         }))
     }
 
-    const updateChildFolder = async (id: string, name: string) => {
-        const updatedFolder = await updateFolder(id, name)
+    const updateChildFolder: UpdateChild = async (id, input) => {
+        const updatedFolder = await updateFolder(id, input)
 
         setFolder((prev) => ({
             ...prev,
@@ -48,8 +51,8 @@ export const useFolderAPI = (): UseFolderAPIResponse => {
         }))
     }
 
-    const updateChildNote = async (id: string, name: string) => {
-        const updatedNote = await updateNote(id, { name })
+    const updateChildNote: UpdateChild = async (id, input) => {
+        const updatedNote = await updateNote(id, input)
 
         setFolder((prev) => ({
             ...prev,

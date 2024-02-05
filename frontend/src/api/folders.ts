@@ -1,4 +1,5 @@
 import { Folder, FolderDescendantsCount } from '../types/Folder'
+import { UpdateFolderChildInput } from '../types/types'
 
 export const getFolder = async (id?: string): Promise<Folder> => {
     const response = await fetch(`/api/folders/${id}`)
@@ -28,16 +29,14 @@ export const createFolder = async (folderId?: string): Promise<Folder> => {
 
 export const updateFolder = async (
     id: string,
-    name: string
+    input: UpdateFolderChildInput
 ): Promise<Folder> => {
     const response = await fetch(`/api/folders/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            name,
-        }),
+        body: JSON.stringify(input),
     })
 
     return response.json()

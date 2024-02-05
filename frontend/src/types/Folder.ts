@@ -4,6 +4,7 @@ export type Folder = {
     _id: string
     _folderId?: string
     name: string
+    // TODO: correct timestamps
     updated: Date
     folders: Folder[]
     notes: Note[]

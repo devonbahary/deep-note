@@ -1,5 +1,6 @@
 import { Content } from '@tiptap/react'
 import { Note } from '../types/Note'
+import { UpdateFolderChildInput } from '../types/types'
 
 export const getNote = async (id?: string): Promise<Note> => {
     const response = await fetch(`/api/notes/${id}`)
@@ -20,9 +21,8 @@ export const createNote = async (folderId?: string): Promise<Note> => {
     return response.json()
 }
 
-type UpdateNoteBody = {
+type UpdateNoteBody = UpdateFolderChildInput & {
     content?: Content
-    name?: string
 }
 export const updateNote = async (
     id: string,
