@@ -4,6 +4,7 @@ type Document = {
 
 export type FolderChild = Document &
     Timestamps & {
+        _parentFolderId: string
         name: string
         tailwindColor?: string
     }
