@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react'
-import { Modal } from '../Modal'
-import { ConfirmOrCancelButtons } from './ConfirmOrCancelButtons'
+import { Modal } from '../../modal/Modal'
+import { ConfirmOrCancelButtons } from '../../modal/ConfirmOrCancelButtons'
 
 type DeleteFolderItemModalProps = {
     children: ReactNode

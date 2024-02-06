@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from 'react'
-import { FolderDescendantsCount } from '../../types/Folder'
-import { getFolderDescendantsCount } from '../../api/folders'
-import FolderIcon from '../../assets/folder-fill.svg?react'
-import NoteIcon from '../../assets/file-text-fill.svg?react'
+import { FolderDescendantsCount } from '../../../types/Folder'
+import { getFolderDescendantsCount } from '../../../api/folders'
+import FolderIcon from '../../../assets/folder-fill.svg?react'
+import NoteIcon from '../../../assets/file-text-fill.svg?react'
 
 type DeleteFolderModalContentsProps = {
     folderId: string

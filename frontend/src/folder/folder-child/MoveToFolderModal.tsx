@@ -1,9 +1,9 @@
 import { FC } from 'react'
-import { Modal } from './Modal'
-import { UnorderedList } from './UnorderedList'
-import { Folder } from '../types/Folder'
-import { ListItem } from './ListItem'
-import FolderIcon from '../assets/folder-fill.svg?react'
+import { Modal } from '../modal/Modal'
+import { UnorderedList } from '../UnorderedList'
+import { Folder } from '../../types/Folder'
+import { ListItem } from '../ListItem'
+import FolderIcon from '../../assets/folder-fill.svg?react'
 
 type MoveToFolderModalProps = {
     childFolderId: string

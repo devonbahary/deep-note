@@ -1,9 +1,7 @@
 import { Content } from '@tiptap/react'
-import { Timestamps } from './types'
+import { FolderChild } from './types'
 
-export type Note = Timestamps & {
-    _id: string
+export type Note = FolderChild & {
     _parentFolderId: string
-    name: string
-    content: Content
+    content?: Content
 }

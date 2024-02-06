@@ -1,13 +1,13 @@
 import { FC } from 'react'
 import { useNavigateFolders } from '../../common/hooks/useNavigateFolders'
 import { FolderChild, FolderChildProps } from './FolderChild'
-import { DeleteNoteModalContents } from '../delete-modal/DeleteNoteModalContents'
+import { DeleteNoteModalContents } from './delete-modal/DeleteNoteModalContents'
 import { Note } from '../../types/Note'
 import NoteIcon from '../../assets/file-text-fill.svg?react'
 
 type FolderChildNoteProps = Omit<
     FolderChildProps,
-    'icon' | 'editProps' | 'child' | 'navigateTo'
+    'Icon' | 'editProps' | 'child' | 'navigateTo'
 > & {
     note: Note
 }
@@ -20,7 +20,7 @@ export const FolderChildNote: FC<FolderChildNoteProps> = ({
 
     return (
         <FolderChild
-            icon={<NoteIcon />}
+            Icon={NoteIcon}
             child={note}
             editProps={{
                 nameInputPlaceholder: 'note name',

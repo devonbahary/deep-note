@@ -1,10 +1,7 @@
 import { Note } from './Note'
-import { Timestamps } from './types'
+import { FolderChild } from './types'
 
-export type Folder = Timestamps & {
-    _id: string
-    _parentFolderId?: string
-    name: string
+export type Folder = FolderChild & {
     folders: Folder[]
     notes: Note[]
 }
