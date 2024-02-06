@@ -48,6 +48,19 @@
     button:disabled {
         @apply opacity-50;
     }
+
+    ::-webkit-scrollbar {
+        @apply w-4;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-neutral-900 opacity-50;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        /* Customize the scrollbar thumb */
+        @apply bg-neutral-700 opacity-5 shadow-md;
+    }
 }
 
 @layer components {
