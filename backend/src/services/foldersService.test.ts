@@ -100,9 +100,19 @@ describe('foldsService', () => {
             const updatedFolder = await updateFolder(childFolderToBe._id, {
                 parentFolderId: folder._id,
             })
-            expect(updatedFolder?._parentFolderId.toString()).toBe(
+            expect(updatedFolder?._parentFolderId?.toString()).toBe(
                 folder._id.toString()
             )
+        })
+
+        it('should update the tailwindColor field, returning the updated document', async () => {
+            const tailwindColor = 'bg-red-500'
+
+            const updatedFolder = await updateFolder(folder._id, {
+                tailwindColor,
+            })
+
+            expect(updatedFolder?.tailwindColor).toBe(tailwindColor)
         })
     })
 

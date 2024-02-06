@@ -32,9 +32,8 @@ router.post('/', async (req, res, next) => {
 router.put('/:id', async (req, res, next) => {
     withErrorHandling(async () => {
         const { id } = req.params
-        const { content, name } = req.body
 
-        const updatedNote = await updateNote(id, { content, name })
+        const updatedNote = await updateNote(id, req.body)
 
         res.json(updatedNote)
     }, next)

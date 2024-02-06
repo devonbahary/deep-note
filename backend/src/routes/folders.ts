@@ -50,7 +50,7 @@ router.put('/:id', async (req, res, next) => {
 
         const updatedFolder = await updateFolder(id, req.body)
 
-        if (!updateFolder) {
+        if (!updatedFolder) {
             res.sendStatus(404)
         }
 

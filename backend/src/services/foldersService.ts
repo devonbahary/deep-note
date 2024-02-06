@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb'
 import { UpdateQuery } from 'mongoose'
 import { Folder, FolderType } from '../models/Folder'
 import { Note, NoteType } from '../models/Note'
+import { UpdateFolderChildInput } from '../types/types'
 
 type FolderWithDescendants = FolderType & {
     descendants: FolderType[]
@@ -103,16 +104,11 @@ export const createFolder = async (
     })
 }
 
-type UpdateFolderInput = {
-    name?: string
-    parentFolderId?: string
-}
-
 export const updateFolder = async (
     id: string,
-    input: UpdateFolderInput
+    input: UpdateFolderChildInput
 ): Promise<FolderType | null> => {
-    const { name, parentFolderId } = input
+    const { name, parentFolderId, tailwindColor } = input
 
     const update: UpdateQuery<FolderType> = {}
 
@@ -122,6 +118,10 @@ export const updateFolder = async (
 
     if (parentFolderId) {
         update._parentFolderId = parentFolderId
+    }
+
+    if (tailwindColor) {
+        update.tailwindColor = tailwindColor
     }
 
     return await Folder.findOneAndUpdate(

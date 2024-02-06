@@ -1,22 +1,21 @@
-import { Document, ObjectId, Schema } from 'mongoose'
+import { Document, Schema } from 'mongoose'
 import { mongoose } from '../mongoose'
+import { FolderChild } from '../types/types'
 
-export type FolderType = Document & {
-    name: string
-    _parentFolderId: ObjectId
-    createdAt: Date
-    updatedAt: Date
-}
+export type FolderType = Document & FolderChild
 
 export const DEFAULT_NAME = 'Unnamed folder'
 
-const folderSchema = new mongoose.Schema(
+const folderSchema = new mongoose.Schema<FolderType>(
     {
         name: {
             type: String,
             default: DEFAULT_NAME,
         },
         _parentFolderId: Schema.Types.ObjectId,
+        tailwindColor: {
+            type: String,
+        },
     },
     {
         timestamps: true,

@@ -71,5 +71,13 @@ describe('notesService', () => {
                 newParentFolder._id.toString()
             )
         })
+
+        it('should update the tailwindColor field, returning the updated document', async () => {
+            const tailwindColor = 'bg-red-500'
+
+            const updatedNote = await updateNote(noteId, { tailwindColor })
+
+            expect(updatedNote?.tailwindColor).toBe(tailwindColor)
+        })
     })
 })

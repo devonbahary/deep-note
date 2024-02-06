@@ -1,5 +1,6 @@
 import { Note, NoteType } from '../models/Note'
 import { UpdateQuery } from 'mongoose'
+import { UpdateFolderChildInput } from '../types/types'
 
 export const getNote = async (id: string): Promise<NoteType | null> => {
     return await Note.findById(id)
@@ -11,17 +12,15 @@ export const createNote = async (parentFolderId: string): Promise<NoteType> => {
     })
 }
 
-type UpdateNoteInput = {
+type UpdateNoteInput = UpdateFolderChildInput & {
     content?: string
-    name?: string
-    parentFolderId?: string
 }
 
 export const updateNote = async (
     id: string,
     input: UpdateNoteInput
 ): Promise<NoteType | null> => {
-    const { content, name, parentFolderId } = input
+    const { content, name, parentFolderId, tailwindColor } = input
 
     const update: UpdateQuery<NoteType> = {}
 
@@ -35,6 +34,10 @@ export const updateNote = async (
 
     if (parentFolderId) {
         update._parentFolderId = parentFolderId
+    }
+
+    if (tailwindColor) {
+        update.tailwindColor = tailwindColor
     }
 
     return await Note.findOneAndUpdate(
