@@ -2,6 +2,7 @@ import { FC, ReactNode } from 'react'
 import { UnorderedList } from '../common/UnorderedList'
 import { Overlay } from '../common/Overlay'
 import { ListItem } from '../common/ListItem'
+import { useMoveElementOnScreen } from '../hooks/useMoveElementOnScreen'
 import DeleteIcon from '../../assets/delete-bin-5-fill.svg?react'
 import ColorIcon from '../../assets/palette-fill.svg?react'
 import FolderMoveIcon from '../../assets/folder-transfer-fill.svg?react'
@@ -30,6 +31,8 @@ export const FolderChildMenu: FC<FolderChildMenuProps> = ({
     onMove,
     onDelete,
 }) => {
+    const ref = useMoveElementOnScreen()
+
     const menuItems: MenuItem[] = [
         {
             name: 'Rename',
@@ -63,6 +66,7 @@ export const FolderChildMenu: FC<FolderChildMenuProps> = ({
             <div
                 className="fixed right-0 border-2 border-zinc-950 rounded-md"
                 onClick={(e) => e.stopPropagation()}
+                ref={ref}
             >
                 <UnorderedList>
                     {menuItems.map(({ name, ...rest }) => (
