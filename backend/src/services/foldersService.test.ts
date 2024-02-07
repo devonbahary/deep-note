@@ -9,6 +9,7 @@ import {
     updateFolder,
 } from './foldersService'
 import { createNote, getNote } from './notesService'
+import { ObjectId } from 'mongodb'
 
 describe('foldsService', () => {
     afterAll(async () => {
@@ -31,6 +32,11 @@ describe('foldsService', () => {
         it(`a folder with _parentFolderId should default to being named '${DEFAULT_NAME}'`, async () => {
             const folder = await createFolder(parentFolderId)
             expect(folder.name).toBe(DEFAULT_NAME)
+        })
+
+        it(`should not create a folder with invalid parentFolderId`, async () => {
+            const randomId = new ObjectId()
+            await expect(createFolder(randomId.toString())).rejects.toThrow()
         })
     })
 
@@ -131,6 +137,18 @@ describe('foldsService', () => {
             const folder = await createFolder()
             await expect(
                 updateFolder(folder._id, { parentFolderId: folder._id })
+            ).rejects.toThrow()
+        })
+
+        it('should not update with an invalid parentFolderId', async () => {
+            const folder = await createFolder()
+
+            const randomId = new ObjectId()
+
+            await expect(
+                updateFolder(folder._id, {
+                    parentFolderId: randomId.toString(),
+                })
             ).rejects.toThrow()
         })
 

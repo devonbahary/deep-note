@@ -1,12 +1,15 @@
 import { Note, NoteType } from '../models/Note'
 import { UpdateQuery } from 'mongoose'
 import { UpdateFolderChildInput } from '../types/types'
+import { validateParentFolder } from '../validators/parentFolderValidator'
 
 export const getNote = async (id: string): Promise<NoteType | null> => {
     return await Note.findById(id)
 }
 
 export const createNote = async (parentFolderId: string): Promise<NoteType> => {
+    await validateParentFolder(parentFolderId)
+
     return await Note.create({
         _parentFolderId: parentFolderId,
     })
@@ -33,6 +36,8 @@ export const updateNote = async (
     }
 
     if (parentFolderId) {
+        await validateParentFolder(parentFolderId)
+
         update._parentFolderId = parentFolderId
     }
 

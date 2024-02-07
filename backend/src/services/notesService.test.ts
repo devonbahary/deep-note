@@ -2,6 +2,7 @@ import { mongoose } from '../mongoose'
 import { DEFAULT_NAME } from '../models/Note'
 import { createFolder } from './foldersService'
 import { createNote, updateNote } from './notesService'
+import { ObjectId } from 'mongodb'
 
 describe('notesService', () => {
     afterAll(async () => {
@@ -27,6 +28,11 @@ describe('notesService', () => {
                 name: DEFAULT_NAME,
                 _parentFolderId: parentFolderId,
             })
+        })
+
+        it(`should not create a note with invalid parentFolderId`, async () => {
+            const randomId = new ObjectId()
+            await expect(createNote(randomId.toString())).rejects.toThrow()
         })
     })
 
@@ -70,6 +76,13 @@ describe('notesService', () => {
             expect(updatedNote?._parentFolderId?.toString()).toBe(
                 newParentFolder._id.toString()
             )
+        })
+
+        it(`should not update with an invalid parentFolderId`, async () => {
+            const randomId = new ObjectId()
+            await expect(
+                updateNote(noteId, { parentFolderId: randomId.toString() })
+            ).rejects.toThrow()
         })
 
         it('should update the tailwindColor field, returning the updated document', async () => {

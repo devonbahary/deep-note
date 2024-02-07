@@ -3,6 +3,7 @@ import { UpdateQuery } from 'mongoose'
 import { Folder, FolderType } from '../models/Folder'
 import { Note, NoteType } from '../models/Note'
 import { UpdateFolderChildInput } from '../types/types'
+import { validateParentFolder } from '../validators/parentFolderValidator'
 
 type FolderWithDescendants = FolderType & {
     descendants: FolderType[]
@@ -119,6 +120,10 @@ export const getFolderWithFamily = async (
 export const createFolder = async (
     parentFolderId?: string
 ): Promise<FolderType> => {
+    if (parentFolderId) {
+        await validateParentFolder(parentFolderId)
+    }
+
     return await Folder.create({
         name: parentFolderId ? undefined : 'root',
         _parentFolderId: parentFolderId,
@@ -138,8 +143,10 @@ export const updateFolder = async (
     }
 
     if (parentFolderId) {
-        if (parentFolderId === id) {
-            throw new Error(`Folder cannot be its own parent`)
+        await validateParentFolder(parentFolderId)
+
+        if (id === parentFolderId) {
+            throw new Error(`Folder cannot be a parent to itself`)
         }
 
         update._parentFolderId = parentFolderId
