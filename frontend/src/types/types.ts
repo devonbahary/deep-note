@@ -1,3 +1,5 @@
+import { FunctionComponent } from 'react'
+
 type Document = {
     _id: string
 }
@@ -19,3 +21,9 @@ export type Timestamps = {
     createdAt: Date
     updatedAt: Date
 }
+
+export type SVGIcon = FunctionComponent<
+    React.SVGProps<SVGSVGElement> & {
+        title?: string | undefined
+    }
+>

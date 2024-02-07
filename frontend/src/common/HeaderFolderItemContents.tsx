@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react'
 import { useNavigateFolders } from './hooks/useNavigateFolders'
 import ArrowLeftIcon from '../assets/arrow-left-line.svg?react'
+import { TruncatedTextDiv } from './TruncatedTextDiv'
 
 type HeaderFolderItemContentsProps = {
     _parentFolderId?: string
@@ -25,9 +26,9 @@ export const HeaderFolderItemContents: FC<HeaderFolderItemContentsProps> = ({
             >
                 <ArrowLeftIcon />
             </button>
-            <div className="flex-1 max-w-[320px] md:max-w-[700px] lg:max-w-[900px] text-ellipsis text-nowrap overflow-hidden">
+            <TruncatedTextDiv className="flex-1 max-w-[220px] xs:max-w-[320px] md:max-w-[660px] lg:max-w-[900px]">
                 {children}
-            </div>
+            </TruncatedTextDiv>
         </>
     )
 }

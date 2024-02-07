@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Folder } from '../../types/Folder'
+import { FolderWithFamily } from '../../types/Folder'
 import { createFolder, deleteFolder, updateFolder } from '../../api/folders'
 import { createNote, deleteNote, updateNote } from '../../api/notes'
 import { UpdateFolderChildInput } from '../../types/types'
 
 export type UseFolderAPIResponse = {
-    folder: Folder
+    folder: FolderWithFamily
     addChildFolder: () => Promise<void>
     addChildNote: () => Promise<void>
     updateChildFolder: UpdateChild
@@ -14,10 +14,16 @@ export type UseFolderAPIResponse = {
     deleteChildNote: (id: string) => Promise<void>
 }
 
-type UpdateChild = (id: string, input: UpdateFolderChildInput) => void
+export type UpdateChild = (
+    id: string,
+    input: UpdateFolderChildInput,
+    removeFromFolder?: boolean
+) => void
 
-export const useFolderAPI = (loadedFolder: Folder): UseFolderAPIResponse => {
-    const [folder, setFolder] = useState<Folder>(loadedFolder)
+export const useFolderAPI = (
+    loadedFolder: FolderWithFamily
+): UseFolderAPIResponse => {
+    const [folder, setFolder] = useState<FolderWithFamily>(loadedFolder)
 
     const addChildFolder = async () => {
         const newFolder = await createFolder(folder._id)
@@ -37,42 +43,64 @@ export const useFolderAPI = (loadedFolder: Folder): UseFolderAPIResponse => {
         }))
     }
 
-    const updateChildFolder: UpdateChild = async (id, input) => {
-        const updatedFolder = await updateFolder(id, input)
-
-        setFolder((prev) => ({
-            ...prev,
-            folders: prev.folders.map((f) =>
-                f._id === id ? updatedFolder : f
-            ),
-        }))
-    }
-
-    const updateChildNote: UpdateChild = async (id, input) => {
-        const updatedNote = await updateNote(id, input)
-
-        setFolder((prev) => ({
-            ...prev,
-            notes: prev.notes.map((n) => (n._id === id ? updatedNote : n)),
-        }))
-    }
-
-    const deleteChildFolder = async (id: string) => {
-        await deleteFolder(id)
-
+    const removeChildFolder = (id: string) => {
         setFolder((prev) => ({
             ...prev,
             folders: prev.folders.filter((f) => f._id !== id),
         }))
     }
 
-    const deleteChildNote = async (id: string) => {
-        await deleteNote(id)
-
+    const removeChildNote = (id: string) => {
         setFolder((prev) => ({
             ...prev,
             notes: prev.notes.filter((n) => n._id !== id),
         }))
+    }
+
+    const updateChildFolder: UpdateChild = async (
+        id,
+        input,
+        removeFromFolder = false
+    ) => {
+        const updatedFolder = await updateFolder(id, input)
+
+        if (removeFromFolder) {
+            removeChildFolder(id)
+        } else {
+            setFolder((prev) => ({
+                ...prev,
+                folders: prev.folders.map((f) =>
+                    f._id === id ? updatedFolder : f
+                ),
+            }))
+        }
+    }
+
+    const updateChildNote: UpdateChild = async (
+        id,
+        input,
+        removeFromFolder = false
+    ) => {
+        const updatedNote = await updateNote(id, input)
+
+        if (removeFromFolder) {
+            removeChildNote(id)
+        } else {
+            setFolder((prev) => ({
+                ...prev,
+                notes: prev.notes.map((n) => (n._id === id ? updatedNote : n)),
+            }))
+        }
+    }
+
+    const deleteChildFolder = async (id: string) => {
+        await deleteFolder(id)
+        removeChildFolder(id)
+    }
+
+    const deleteChildNote = async (id: string) => {
+        await deleteNote(id)
+        removeChildNote(id)
     }
 
     useEffect(() => {

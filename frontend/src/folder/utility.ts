@@ -1,8 +1,8 @@
-import { Folder } from '../types/Folder'
+import { Folder, FolderWithFamily } from '../types/Folder'
 import { Note } from '../types/Note'
 
 export const canMoveFolderChild = (
-    parentFolder: Folder,
+    parentFolder: FolderWithFamily,
     folderChild: Folder | Note
 ): boolean => {
     if (parentFolder._parentFolderId) {

@@ -6,13 +6,13 @@ import { UnorderedList } from './common/UnorderedList'
 import { FolderChildFolder } from './folder-child/FolderChildFolder'
 import { FolderChildNote } from './folder-child/FolderChildNote'
 import { ListItem } from './common/ListItem'
-import { Folder as FolderType } from '../types/Folder'
+import { FolderWithFamily } from '../types/Folder'
 import { ViewContainer } from '../common/ViewContainer'
 import FolderAddIcon from '../assets/folder-add-line.svg?react'
 import NoteAddIcon from '../assets/file-add-line.svg?react'
 
 type FolderProps = {
-    folder: FolderType
+    folder: FolderWithFamily
 }
 
 export const Folder: FC<FolderProps> = ({ folder: loadedFolder }) => {

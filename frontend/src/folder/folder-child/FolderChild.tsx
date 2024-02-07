@@ -1,29 +1,25 @@
-import { FC, FunctionComponent, ReactNode, useState } from 'react'
+import { FC, ReactNode, useState } from 'react'
 import { useBoolean } from 'usehooks-ts'
 import { canMoveFolderChild } from '../utility'
-import { Folder } from '../../types/Folder'
+import { Folder, FolderWithFamily } from '../../types/Folder'
 import { Note } from '../../types/Note'
-import { UpdateFolderChildInput } from '../../types/types'
+import { SVGIcon, UpdateFolderChildInput } from '../../types/types'
 import { TextInput } from './TextInput'
 import { DeleteFolderItemModal } from './delete-modal/DeleteFolderItemModal'
 import { ColorModal } from './color-modal/ColorModal'
 import { MoveToFolderModal } from './MoveToFolderModal'
 import { FolderChildMenu } from './FolderChildMenu'
-import { ListItem } from '../common/ListItem'
+import { TruncatedTextDiv } from '../../common/TruncatedTextDiv'
+import { UpdateChild } from '../hooks/useFolderAPI'
+import { FolderListItem } from '../FolderListItem'
 import MenuIcon from '../../assets/more-line.svg?react'
-
-type SVGIcon = FunctionComponent<
-    React.SVGProps<SVGSVGElement> & {
-        title?: string | undefined
-    }
->
 
 export type FolderChildProps = {
     Icon: SVGIcon
     navigateTo: () => void
-    updateChild: (id: string, input: UpdateFolderChildInput) => void
+    updateChild: UpdateChild
     deleteChild: (id: string) => void
-    parentFolder: Folder
+    parentFolder: FolderWithFamily
     child: Note | Folder
     editProps: EditProps
 }
@@ -68,8 +64,11 @@ export const FolderChild: FC<FolderChildProps> = ({
         closeMenu()
     }
 
-    const onUpdateChild = async (input: UpdateFolderChildInput) => {
-        await updateChild(child._id, input)
+    const onUpdateChild = async (
+        input: UpdateFolderChildInput,
+        removeFromFolder = false
+    ) => {
+        await updateChild(child._id, input, removeFromFolder)
         reset()
     }
 
@@ -80,19 +79,16 @@ export const FolderChild: FC<FolderChildProps> = ({
 
     const canMove = canMoveFolderChild(parentFolder, child)
 
-    const iconClassName = child.tailwindColor
-        ? `text-${child.tailwindColor}`
-        : ''
-
     return (
-        <ListItem
+        <FolderListItem
             className="bg-zinc-900 hover:bg-zinc-800 border-zinc-700"
-            icon={<Icon className={iconClassName} />}
+            Icon={Icon}
+            item={child}
             onClick={navigateTo}
         >
             <div className="flex w-full items-center">
                 <div className="flex-grow">
-                    <div className="max-w-[260px] md:max-w-[680px] lg:max-w-[880px] text-ellipsis text-nowrap overflow-hidden">
+                    <TruncatedTextDiv className="max-w-[200px] xs:max-w-[300px] md:max-w-[660px] lg:max-w-[880px]">
                         {editMode === EditMode.Rename ? (
                             <TextInput
                                 defaultValue={child.name}
@@ -104,7 +100,7 @@ export const FolderChild: FC<FolderChildProps> = ({
                         ) : (
                             child.name
                         )}
-                    </div>
+                    </TruncatedTextDiv>
                 </div>
                 <div
                     className="icon-box"
@@ -140,7 +136,7 @@ export const FolderChild: FC<FolderChildProps> = ({
                     parentFolder={parentFolder}
                     onClose={reset}
                     onMove={(toParentId: string) =>
-                        onUpdateChild({ parentFolderId: toParentId })
+                        onUpdateChild({ parentFolderId: toParentId }, true)
                     }
                 />
             )}
@@ -153,6 +149,6 @@ export const FolderChild: FC<FolderChildProps> = ({
                     {editProps.deleteModalContents}
                 </DeleteFolderItemModal>
             )}
-        </ListItem>
+        </FolderListItem>
     )
 }

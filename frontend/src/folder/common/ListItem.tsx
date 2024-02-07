@@ -1,13 +1,18 @@
 import { FC, ReactNode } from 'react'
 
-export const ListItem: FC<
-    React.DetailedHTMLProps<
-        React.LiHTMLAttributes<HTMLLIElement>,
-        HTMLLIElement
-    > & {
-        icon: ReactNode
-    }
-> = ({ className, icon, children, ...props }) => {
+export type ListItemProps = React.DetailedHTMLProps<
+    React.LiHTMLAttributes<HTMLLIElement>,
+    HTMLLIElement
+> & {
+    icon: ReactNode
+}
+
+export const ListItem: FC<ListItemProps> = ({
+    className,
+    icon,
+    children,
+    ...props
+}) => {
     return (
         <li
             className={
