@@ -1,3 +1,4 @@
+import clsx from 'clsx/lite'
 import { FC, ReactNode } from 'react'
 
 export type ListItemProps = React.DetailedHTMLProps<
@@ -13,14 +14,13 @@ export const ListItem: FC<ListItemProps> = ({
     children,
     ...props
 }) => {
+    const liClassName = clsx(
+        'flex gap-2 items-center cursor-pointer p-2 border-b-2 transition ease-out duration-200',
+        className
+    )
+
     return (
-        <li
-            className={
-                'flex gap-2 items-center cursor-pointer p-2 border-b-2 transition ease-out duration-200' +
-                (className ? ` ${className}` : '')
-            }
-            {...props}
-        >
+        <li className={liClassName} {...props}>
             <div className="flex-none icon-box">{icon}</div>
             {children}
         </li>

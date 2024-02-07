@@ -1,3 +1,4 @@
+import clsx from 'clsx/lite'
 import { DetailedHTMLProps, FC, HTMLAttributes } from 'react'
 import { getRandNum } from './skeletonUtility'
 
@@ -26,13 +27,10 @@ export const SkeletonBox: FC<SkeltonBoxProps> = ({
 }) => {
     const width = getWidthForSize(size)
 
-    return (
-        <div
-            className={
-                `animate-pulse w-${width} h-4 bg-zinc-500 rounded-md` +
-                (className ? ` ${className}` : '')
-            }
-            {...rest}
-        />
+    const divClassName = clsx(
+        `animate-pulse w-${width} h-4 bg-zinc-500 rounded-md`,
+        className
     )
+
+    return <div className={divClassName} {...rest} />
 }

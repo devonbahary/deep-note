@@ -1,3 +1,4 @@
+import clsx from 'clsx/lite'
 import { FC } from 'react'
 import { Modal } from '../modal/Modal'
 import { UnorderedList } from '../common/UnorderedList'
@@ -48,10 +49,18 @@ export const MoveToFolderModal: FC<MoveToFolderModalProps> = ({
 
                     const isDisabled = isParent || f._id === childFolderId
 
+                    const folderListItemClassName = clsx(
+                        paddingLeft,
+                        isDisabled
+                            ? 'opacity-50 cursor-default'
+                            : 'hover:bg-zinc-700',
+                        'bg-zinc-800 border-zinc-950 last-of-type:border-none'
+                    )
+
                     return (
                         <FolderListItem
                             key={f._id}
-                            className={`${paddingLeft} ${isDisabled ? 'opacity-50 cursor-default' : ''} bg-zinc-800 border-zinc-950 ${isDisabled ? '' : 'hover:bg-zinc-700'} last-of-type:border-none`}
+                            className={folderListItemClassName}
                             Icon={FolderIcon}
                             item={f}
                             onClick={() => onMove(f._id)}

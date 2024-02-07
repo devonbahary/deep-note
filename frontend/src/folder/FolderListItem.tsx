@@ -1,3 +1,4 @@
+import clsx from 'clsx/lite'
 import { FC } from 'react'
 import { Folder } from '../types/Folder'
 import { Note } from '../types/Note'
@@ -16,7 +17,9 @@ export const FolderListItem: FC<FolderListItemProps> = ({
     Icon,
     ...rest
 }) => {
-    const iconClassName = item.tailwindColor ? `text-${item.tailwindColor}` : ''
+    const iconClassName = clsx(
+        item.tailwindColor && `text-${item.tailwindColor}`
+    )
 
     return <ListItem {...rest} icon={<Icon className={iconClassName} />} />
 }
