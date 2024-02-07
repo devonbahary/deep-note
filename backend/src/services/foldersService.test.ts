@@ -127,6 +127,13 @@ describe('foldsService', () => {
             )
         })
 
+        it('should not allow a folder to become its own parent', async () => {
+            const folder = await createFolder()
+            await expect(
+                updateFolder(folder._id, { parentFolderId: folder._id })
+            ).rejects.toThrow()
+        })
+
         it('should update the tailwindColor field, returning the updated document', async () => {
             const tailwindColor = 'bg-red-500'
 

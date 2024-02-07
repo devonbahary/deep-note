@@ -138,6 +138,10 @@ export const updateFolder = async (
     }
 
     if (parentFolderId) {
+        if (parentFolderId === id) {
+            throw new Error(`Folder cannot be its own parent`)
+        }
+
         update._parentFolderId = parentFolderId
     }
 
