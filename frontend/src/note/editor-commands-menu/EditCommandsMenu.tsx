@@ -18,16 +18,29 @@ export const EditorCommandsMenu: FC<EditorCommandsMenuProps> = ({ editor }) => {
         <EditCommandsMenuContainer>
             {COMMAND_BUTTON_GROUPS.map((group, groupIdx) => (
                 <CommandButtonGroup key={groupIdx}>
-                    {group.map(({ name, command, icon, disabled }, idx) => {
+                    {group.map((commandProps, idx) => {
+                        const {
+                            name,
+                            command,
+                            icon,
+                            disabled,
+                            isActiveAttributes,
+                        } = commandProps
+
                         const runCommand = () => {
                             const chainedCommand = editor.chain().focus()
                             command(chainedCommand).run()
                         }
 
+                        const isActive = editor.isActive(
+                            name,
+                            isActiveAttributes
+                        )
+
                         return (
                             <CommandButton
                                 key={`${name}-${groupIdx}-${idx}`}
-                                isActive={editor.isActive(name)}
+                                isActive={isActive}
                                 onClick={runCommand}
                                 disabled={disabled ? disabled(editor) : false}
                             >
