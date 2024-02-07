@@ -1,14 +1,21 @@
+import { FC } from 'react'
 import { useFolderAPI } from './hooks/useFolderAPI'
 import { Header } from '../common/Header'
 import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
-import { UnorderedList } from './UnorderedList'
+import { UnorderedList } from './common/UnorderedList'
 import { FolderChildFolder } from './folder-child/FolderChildFolder'
 import { FolderChildNote } from './folder-child/FolderChildNote'
-import { ListItem } from './ListItem'
+import { ListItem } from './common/ListItem'
+import { Folder as FolderType } from '../types/Folder'
+import { FolderContainer } from './FolderContainer'
 import FolderAddIcon from '../assets/folder-add-line.svg?react'
 import NoteAddIcon from '../assets/file-add-line.svg?react'
 
-export const Folder = () => {
+type FolderProps = {
+    folder: FolderType
+}
+
+export const Folder: FC<FolderProps> = ({ folder: loadedFolder }) => {
     const {
         folder,
         addChildFolder,
@@ -17,12 +24,16 @@ export const Folder = () => {
         updateChildNote,
         deleteChildFolder,
         deleteChildNote,
-    } = useFolderAPI()
+    } = useFolderAPI(loadedFolder)
 
     return (
-        <div className="flex flex-col h-full w-full text-zinc-100">
+        <FolderContainer>
             <Header>
-                <HeaderFolderItemContents item={folder} />
+                <HeaderFolderItemContents
+                    _parentFolderId={folder._parentFolderId}
+                >
+                    {folder.name}
+                </HeaderFolderItemContents>
             </Header>
             <UnorderedList className="grow bg-zinc-900">
                 {folder.folders.map((child) => (
@@ -58,6 +69,6 @@ export const Folder = () => {
                     add note
                 </ListItem>
             </UnorderedList>
-        </div>
+        </FolderContainer>
     )
 }

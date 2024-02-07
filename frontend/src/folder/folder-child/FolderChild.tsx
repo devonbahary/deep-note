@@ -4,12 +4,12 @@ import { canMoveFolderChild } from '../utility'
 import { Folder } from '../../types/Folder'
 import { Note } from '../../types/Note'
 import { UpdateFolderChildInput } from '../../types/types'
-import { TextInput } from '../TextInput'
+import { TextInput } from './TextInput'
 import { DeleteFolderItemModal } from './delete-modal/DeleteFolderItemModal'
 import { ColorModal } from './color-modal/ColorModal'
 import { MoveToFolderModal } from './MoveToFolderModal'
 import { FolderChildMenu } from './FolderChildMenu'
-import { ListItem } from '../ListItem'
+import { ListItem } from '../common/ListItem'
 import MenuIcon from '../../assets/more-line.svg?react'
 
 type SVGIcon = FunctionComponent<
@@ -92,15 +92,19 @@ export const FolderChild: FC<FolderChildProps> = ({
         >
             <div className="flex w-full items-center">
                 <div className="flex-grow">
-                    {editMode === EditMode.Rename ? (
-                        <TextInput
-                            defaultValue={child.name}
-                            onSubmit={async (name) => onUpdateChild({ name })}
-                            placeholder={editProps.nameInputPlaceholder}
-                        />
-                    ) : (
-                        child.name
-                    )}
+                    <div className="max-w-[280px] md:max-w-[680px] lg:max-w-[880px] text-ellipsis text-nowrap overflow-hidden">
+                        {editMode === EditMode.Rename ? (
+                            <TextInput
+                                defaultValue={child.name}
+                                onSubmit={async (name) =>
+                                    onUpdateChild({ name })
+                                }
+                                placeholder={editProps.nameInputPlaceholder}
+                            />
+                        ) : (
+                            child.name
+                        )}
+                    </div>
                 </div>
                 <div
                     className="icon-box"

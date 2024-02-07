@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useLoaderData } from 'react-router-dom'
 import { Folder } from '../../types/Folder'
 import { createFolder, deleteFolder, updateFolder } from '../../api/folders'
 import { createNote, deleteNote, updateNote } from '../../api/notes'
@@ -17,9 +16,7 @@ export type UseFolderAPIResponse = {
 
 type UpdateChild = (id: string, input: UpdateFolderChildInput) => void
 
-export const useFolderAPI = (): UseFolderAPIResponse => {
-    const loadedFolder = useLoaderData() as Folder
-
+export const useFolderAPI = (loadedFolder: Folder): UseFolderAPIResponse => {
     const [folder, setFolder] = useState<Folder>(loadedFolder)
 
     const addChildFolder = async () => {

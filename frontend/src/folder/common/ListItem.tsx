@@ -11,12 +11,12 @@ export const ListItem: FC<
     return (
         <li
             className={
-                'flex gap-2 items-center cursor-pointer p-2 border-b-2' +
+                'flex gap-2 items-center cursor-pointer p-2 border-b-2 transition ease-out duration-200' +
                 (className ? ` ${className}` : '')
             }
             {...props}
         >
-            <div className="icon-box">{icon}</div>
+            <div className="flex-none icon-box">{icon}</div>
             {children}
         </li>
     )

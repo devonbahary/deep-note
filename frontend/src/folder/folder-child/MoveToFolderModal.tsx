@@ -1,8 +1,8 @@
 import { FC } from 'react'
 import { Modal } from '../modal/Modal'
-import { UnorderedList } from '../UnorderedList'
+import { UnorderedList } from '../common/UnorderedList'
 import { Folder } from '../../types/Folder'
-import { ListItem } from '../ListItem'
+import { ListItem } from '../common/ListItem'
 import FolderIcon from '../../assets/folder-fill.svg?react'
 
 type MoveToFolderModalProps = {

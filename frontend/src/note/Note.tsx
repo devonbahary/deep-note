@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Content } from '@tiptap/react'
-import { useLoaderData } from 'react-router-dom'
 import { useDebounce } from 'usehooks-ts'
 import { Menu } from './Menu'
 import { NoteContent } from './NoteContent'
@@ -9,14 +8,17 @@ import { Note as NoteType } from '../types/Note'
 import { updateNote } from '../api/notes'
 import { Header } from '../common/Header'
 import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
+import { NoteContainer } from './NoteContainer'
 
-export const Note = () => {
-    const note = useLoaderData() as NoteType
+type NoteProps = {
+    note: NoteType
+}
 
+export const Note: FC<NoteProps> = ({ note }) => {
     const [editorJSON, setEditorJSON] = useState<Content>(null)
     const debouncedEditorJSON = useDebounce(editorJSON)
 
-    const editor = useTiptapEditor(note.content, {
+    const editor = useTiptapEditor(note.content ?? null, {
         onUpdate: ({ editor }) => {
             setEditorJSON(editor.getJSON())
         },
@@ -31,12 +33,16 @@ export const Note = () => {
     }, [note._id, debouncedEditorJSON])
 
     return (
-        <div className="flex flex-col h-full w-full">
+        <NoteContainer>
             <Header>
-                <HeaderFolderItemContents item={note} />
+                <HeaderFolderItemContents
+                    _parentFolderId={note._parentFolderId}
+                >
+                    {note.name}
+                </HeaderFolderItemContents>
             </Header>
             <Menu editor={editor} />
             <NoteContent editor={editor} />
-        </div>
+        </NoteContainer>
     )
 }

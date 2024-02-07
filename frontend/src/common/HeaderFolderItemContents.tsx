@@ -1,15 +1,15 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { useNavigateFolders } from './hooks/useNavigateFolders'
-import { Note } from '../types/Note'
-import { Folder } from '../types/Folder'
 import ArrowLeftIcon from '../assets/arrow-left-line.svg?react'
 
 type HeaderFolderItemContentsProps = {
-    item: Folder | Note
+    _parentFolderId?: string
+    children: ReactNode
 }
 
 export const HeaderFolderItemContents: FC<HeaderFolderItemContentsProps> = ({
-    item: { _parentFolderId, name },
+    _parentFolderId,
+    children,
 }) => {
     const { goToFolder } = useNavigateFolders()
 
@@ -20,12 +20,14 @@ export const HeaderFolderItemContents: FC<HeaderFolderItemContentsProps> = ({
     return (
         <>
             <button
-                className={`icon-box ${_parentFolderId ? 'visible' : 'invisible'}`}
+                className={`flex-none icon-box ${_parentFolderId ? 'visible' : 'invisible'}`}
                 onClick={goToParentFolder}
             >
                 <ArrowLeftIcon />
             </button>
-            <div>{name}</div>
+            <div className="flex-1 max-w-[320px] md:max-w-[700px] lg:max-w-[900px] text-ellipsis text-nowrap overflow-hidden">
+                {children}
+            </div>
         </>
     )
 }

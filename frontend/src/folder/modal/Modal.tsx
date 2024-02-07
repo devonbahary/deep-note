@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react'
-import { Overlay } from '../Overlay'
+import { Overlay } from '../common/Overlay'
 import { Header } from '../../common/Header'
 
 type ModalProps = {

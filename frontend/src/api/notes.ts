@@ -1,46 +1,26 @@
 import { Content } from '@tiptap/react'
 import { Note } from '../types/Note'
 import { UpdateFolderChildInput } from '../types/types'
+import { create, destroy, toJSONOrThrow, update } from './apiUtility'
 
 export const getNote = async (id?: string): Promise<Note> => {
-    const response = await fetch(`/api/notes/${id}`)
-    return response.json()
+    return await toJSONOrThrow(`/api/notes/${id}`)
 }
 
 export const createNote = async (parentFolderId: string): Promise<Note> => {
-    const response = await fetch('/api/notes', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            parentFolderId,
-        }),
-    })
-
-    return response.json()
+    return await create('/api/notes', parentFolderId)
 }
 
-type UpdateNoteBody = UpdateFolderChildInput & {
+type UpdateNoteInput = UpdateFolderChildInput & {
     content?: Content
 }
 export const updateNote = async (
     id: string,
-    body: UpdateNoteBody
+    input: UpdateNoteInput
 ): Promise<Note> => {
-    const response = await fetch(`/api/notes/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-    })
-
-    return response.json()
+    return await update(`/api/notes/${id}`, input)
 }
 
 export const deleteNote = async (id: string): Promise<void> => {
-    await fetch(`/api/notes/${id}`, {
-        method: 'DELETE',
-    })
+    await destroy(`/api/notes/${id}`)
 }
