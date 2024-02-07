@@ -8,7 +8,7 @@ import { Note as NoteType } from '../types/Note'
 import { updateNote } from '../api/notes'
 import { Header } from '../common/Header'
 import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
-import { NoteContainer } from './NoteContainer'
+import { ViewContainer } from '../common/ViewContainer'
 
 type NoteProps = {
     note: NoteType
@@ -33,16 +33,20 @@ export const Note: FC<NoteProps> = ({ note }) => {
     }, [note._id, debouncedEditorJSON])
 
     return (
-        <NoteContainer>
-            <Header>
-                <HeaderFolderItemContents
-                    _parentFolderId={note._parentFolderId}
-                >
-                    {note.name}
-                </HeaderFolderItemContents>
-            </Header>
-            <EditorCommandsMenu editor={editor} />
-            <NoteContent editor={editor} />
-        </NoteContainer>
+        <ViewContainer
+            fixedContent={
+                <>
+                    <Header>
+                        <HeaderFolderItemContents
+                            _parentFolderId={note._parentFolderId}
+                        >
+                            {note.name}
+                        </HeaderFolderItemContents>
+                    </Header>
+                    <EditorCommandsMenu editor={editor} />
+                </>
+            }
+            scrollableContent={<NoteContent editor={editor} />}
+        />
     )
 }

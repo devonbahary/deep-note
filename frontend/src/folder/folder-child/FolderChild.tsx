@@ -92,7 +92,7 @@ export const FolderChild: FC<FolderChildProps> = ({
         >
             <div className="flex w-full items-center">
                 <div className="flex-grow">
-                    <div className="max-w-[280px] md:max-w-[680px] lg:max-w-[880px] text-ellipsis text-nowrap overflow-hidden">
+                    <div className="max-w-[260px] md:max-w-[680px] lg:max-w-[880px] text-ellipsis text-nowrap overflow-hidden">
                         {editMode === EditMode.Rename ? (
                             <TextInput
                                 defaultValue={child.name}

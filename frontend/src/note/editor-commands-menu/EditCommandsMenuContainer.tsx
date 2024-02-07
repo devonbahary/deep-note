@@ -6,4 +6,8 @@ type EditCommandsMenuContainerProps = {
 
 export const EditCommandsMenuContainer: FC<EditCommandsMenuContainerProps> = ({
     children,
-}) => <div className="bg-zinc-900 px-4 py-4">{children}</div>
+}) => (
+    <div className="bg-zinc-900 px-4 py-2 shadow-lg shadow-zinc-950 relative">
+        {children}
+    </div>
+)
