@@ -67,7 +67,7 @@ type FolderAggregationDoc = FolderType & {
 
 export const getFolderWithChildItems = async (
     id: string
-): Promise<FolderAggregationDoc[]> => {
+): Promise<FolderAggregationDoc> => {
     const folders = await Folder.aggregate<FolderAggregationDoc>([
         {
             $match: {
@@ -92,7 +92,7 @@ export const getFolderWithChildItems = async (
         },
     ])
 
-    return folders
+    return folders[0]
 }
 
 export const createFolder = async (

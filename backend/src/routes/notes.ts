@@ -1,52 +1,28 @@
 import { Router } from 'express'
-import { withErrorHandling } from './errorHandling'
 import {
     createNote,
     deleteNote,
     getNote,
     updateNote,
 } from '../services/notesService'
+import { create, destroy, getById, update } from './crudUtility'
 
 const router = Router()
 
 router.get('/:id', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const { id } = req.params
-
-        const note = await getNote(id)
-
-        res.json(note)
-    }, next)
+    await getById(req, res, next, getNote)
 })
 
 router.post('/', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const { parentFolderId } = req.body
-
-        const newNote = await createNote(parentFolderId)
-
-        res.json(newNote)
-    }, next)
+    await create(req, res, next, createNote)
 })
 
 router.put('/:id', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const { id } = req.params
-
-        const updatedNote = await updateNote(id, req.body)
-
-        res.json(updatedNote)
-    }, next)
+    await update(req, res, next, updateNote)
 })
 
 router.delete('/:id', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const { id } = req.params
-
-        await deleteNote(id)
-
-        res.sendStatus(200)
-    }, next)
+    await destroy(req, res, next, deleteNote)
 })
 
 export default router

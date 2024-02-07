@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import { withErrorHandling } from './errorHandling'
 import {
     createFolder,
     deleteFolder,
@@ -7,65 +6,28 @@ import {
     getFolderWithChildItems,
     updateFolder,
 } from '../services/foldersService'
+import { create, destroy, getById, update } from './crudUtility'
 
 const router = Router()
 
 router.get('/:id', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const { id } = req.params
-
-        const folders = await getFolderWithChildItems(id)
-
-        if (!folders.length) {
-            res.sendStatus(404)
-        }
-
-        res.json(folders[0])
-    }, next)
+    await getById(req, res, next, getFolderWithChildItems)
 })
 
 router.get('/descendants-count/:id', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const { id } = req.params
-
-        const descendantsCount = await getFolderDescendantsCount(id)
-
-        res.json(descendantsCount)
-    }, next)
+    await getById(req, res, next, getFolderDescendantsCount)
 })
 
 router.post('/', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const { parentFolderId } = req.body
-
-        const newFolder = await createFolder(parentFolderId)
-
-        res.json(newFolder)
-    }, next)
+    await create(req, res, next, createFolder)
 })
 
 router.put('/:id', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const { id } = req.params
-
-        const updatedFolder = await updateFolder(id, req.body)
-
-        if (!updatedFolder) {
-            res.sendStatus(404)
-        }
-
-        res.json(updatedFolder)
-    }, next)
+    await update(req, res, next, updateFolder)
 })
 
 router.delete('/:id', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const { id } = req.params
-
-        await deleteFolder(id)
-
-        res.sendStatus(200)
-    }, next)
+    await destroy(req, res, next, deleteFolder)
 })
 
 export default router
