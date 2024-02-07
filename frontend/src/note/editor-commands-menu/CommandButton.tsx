@@ -1,13 +1,13 @@
 import { FC, ReactNode } from 'react'
 
-type MenuButtonProps = {
+type CommandButtonProps = {
     children: ReactNode
     disabled?: boolean
     isActive?: boolean
     onClick: React.DOMAttributes<HTMLButtonElement>['onClick']
 }
 
-export const MenuButton: FC<MenuButtonProps> = ({
+export const CommandButton: FC<CommandButtonProps> = ({
     children,
     disabled = false,
     isActive = false,

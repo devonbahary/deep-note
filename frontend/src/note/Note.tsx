@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react'
 import { Content } from '@tiptap/react'
 import { useDebounce } from 'usehooks-ts'
-import { Menu } from './Menu'
+import { EditorCommandsMenu } from './editor-commands-menu/EditCommandsMenu'
 import { NoteContent } from './NoteContent'
 import { useTiptapEditor } from './hooks/useTiptapEditor'
 import { Note as NoteType } from '../types/Note'
@@ -41,7 +41,7 @@ export const Note: FC<NoteProps> = ({ note }) => {
                     {note.name}
                 </HeaderFolderItemContents>
             </Header>
-            <Menu editor={editor} />
+            <EditorCommandsMenu editor={editor} />
             <NoteContent editor={editor} />
         </NoteContainer>
     )
