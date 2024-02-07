@@ -60,15 +60,16 @@ export const getFolder = async (id: string): Promise<FolderType | null> => {
     return await Folder.findById(id)
 }
 
-type FolderAggregationDoc = FolderType & {
+type FolderWithFamily = FolderType & {
+    parent?: FolderType
     folders: FolderType[]
     notes: NoteType[]
 }
 
-export const getFolderWithChildItems = async (
+export const getFolderWithFamily = async (
     id: string
-): Promise<FolderAggregationDoc> => {
-    const folders = await Folder.aggregate<FolderAggregationDoc>([
+): Promise<FolderWithFamily> => {
+    const folders = await Folder.aggregate<FolderWithFamily>([
         {
             $match: {
                 _id: new ObjectId(id),
@@ -88,6 +89,26 @@ export const getFolderWithChildItems = async (
                 localField: '_id',
                 foreignField: '_parentFolderId',
                 as: 'folders',
+            },
+        },
+        {
+            $lookup: {
+                from: 'folders',
+                localField: '_parentFolderId',
+                foreignField: '_id',
+                as: 'parents',
+            },
+        },
+        {
+            $unwind: {
+                path: '$parents',
+                preserveNullAndEmptyArrays: true,
+            },
+        },
+        {
+            $set: {
+                parent: '$parents',
+                parents: '$$REMOVE',
             },
         },
     ])

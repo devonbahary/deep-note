@@ -3,7 +3,7 @@ import {
     createFolder,
     deleteFolder,
     getFolderDescendantsCount,
-    getFolderWithChildItems,
+    getFolderWithFamily,
     updateFolder,
 } from '../services/foldersService'
 import { create, destroy, getById, update } from './crudUtility'
@@ -11,7 +11,7 @@ import { create, destroy, getById, update } from './crudUtility'
 const router = Router()
 
 router.get('/:id', async (req, res, next) => {
-    await getById(req, res, next, getFolderWithChildItems)
+    await getById(req, res, next, getFolderWithFamily)
 })
 
 router.get('/descendants-count/:id', async (req, res, next) => {

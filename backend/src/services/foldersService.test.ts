@@ -1,12 +1,11 @@
 import { mongoose } from '../mongoose'
 import { DEFAULT_NAME, FolderType } from '../models/Folder'
-import { NoteType } from '../models/Note'
 import {
     createFolder,
     deleteFolder,
     getFolder,
     getFolderDescendantsCount,
-    getFolderWithChildItems,
+    getFolderWithFamily,
     updateFolder,
 } from './foldersService'
 import { createNote, getNote } from './notesService'
@@ -57,24 +56,47 @@ describe('foldsService', () => {
         })
     })
 
-    describe('getFolderWithChildItems', () => {
-        let parentFolderId: string
-        let childFolder: FolderType
-        let childNote: NoteType
+    describe('getFolderWithFamily', () => {
+        it('should retrieve the folder with parent and all child items', async () => {
+            const grandparentFolder = await createFolder()
 
-        beforeAll(async () => {
-            const folder = await createFolder()
-            parentFolderId = folder._id
+            const folder = await createFolder(grandparentFolder._id)
+            const parentFolderId = folder._id
 
-            childFolder = await createFolder(parentFolderId)
-            childNote = await createNote(parentFolderId)
+            const childFolder = await createFolder(parentFolderId)
+            const childNote = await createNote(parentFolderId)
+
+            const folderWithParentAndChildren =
+                await getFolderWithFamily(parentFolderId)
+
+            expect(folderWithParentAndChildren.parent).toMatchObject(
+                grandparentFolder.toJSON()
+            )
+            expect(folderWithParentAndChildren.folders).toContainEqual(
+                childFolder.toJSON()
+            )
+            expect(folderWithParentAndChildren.notes).toContainEqual(
+                childNote.toJSON()
+            )
         })
 
-        it('should retrieve the folder with all child items', async () => {
-            const [folder] = await getFolderWithChildItems(parentFolderId)
+        it('should retrieve the folder with no parent if does not exist and all child items', async () => {
+            const folder = await createFolder()
+            const parentFolderId = folder._id
 
-            expect(folder.folders).toContainEqual(childFolder.toJSON())
-            expect(folder.notes).toContainEqual(childNote.toJSON())
+            const childFolder = await createFolder(parentFolderId)
+            const childNote = await createNote(parentFolderId)
+
+            const folderWithParentAndChildren =
+                await getFolderWithFamily(parentFolderId)
+
+            expect(folderWithParentAndChildren.parent).toBeUndefined()
+            expect(folderWithParentAndChildren.folders).toContainEqual(
+                childFolder.toJSON()
+            )
+            expect(folderWithParentAndChildren.notes).toContainEqual(
+                childNote.toJSON()
+            )
         })
     })
 
