@@ -4,6 +4,7 @@ import { getFolder } from './api/folders'
 import { FolderRoute } from './folder/FolderRoute'
 import { NoteRoute } from './note/NoteRoute'
 import { AsyncErrorElement } from './common/AsyncErrorElement'
+import { LandingPage } from './landing-page/LandingPage'
 
 const router = createBrowserRouter([
     {
@@ -26,8 +27,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/',
-        // TODO: landing page
-        element: <h1>Hello World</h1>,
+        element: <LandingPage />,
         errorElement: <AsyncErrorElement />,
     },
 ])
