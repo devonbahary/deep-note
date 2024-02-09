@@ -1,22 +1,32 @@
 import { FC } from 'react'
 import { useNavigateFolders } from '../../common/hooks/useNavigateFolders'
-import { FolderChild, FolderChildProps } from './FolderChild'
+import { FolderChild } from './FolderChild'
 import { DeleteNoteModalContents } from './delete-modal/DeleteNoteModalContents'
 import { Note } from '../../types/Note'
+import { FolderWithFamily } from '../../types/Folder'
+import {
+    useDeleteChildNote,
+    useReparentChildNote,
+    useUpdateChildNote,
+} from '../hooks/useFolderQueries'
 import NoteIcon from '../../assets/file-text-fill.svg?react'
 
-type FolderChildNoteProps = Omit<
-    FolderChildProps,
-    'Icon' | 'editProps' | 'child' | 'navigateTo'
-> & {
+type FolderChildNoteProps = {
     note: Note
+    parentFolder: FolderWithFamily
 }
 
 export const FolderChildNote: FC<FolderChildNoteProps> = ({
     note,
-    ...rest
+    parentFolder,
 }) => {
     const { goToNote } = useNavigateFolders()
+
+    const updateChildNote = useUpdateChildNote(parentFolder._id)
+
+    const reparentChildNote = useReparentChildNote(parentFolder._id)
+
+    const deleteChildNote = useDeleteChildNote(parentFolder._id)
 
     return (
         <FolderChild
@@ -28,7 +38,10 @@ export const FolderChildNote: FC<FolderChildNoteProps> = ({
                 deleteModalContents: <DeleteNoteModalContents note={note} />,
             }}
             navigateTo={() => goToNote(note._id)}
-            {...rest}
+            parentFolder={parentFolder}
+            reparentChild={reparentChildNote}
+            updateChild={updateChildNote}
+            deleteChild={deleteChildNote}
         />
     )
 }

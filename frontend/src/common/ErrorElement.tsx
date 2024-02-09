@@ -1,5 +1,11 @@
-import { useAsyncError } from 'react-router-dom'
 import SadIcon from '../assets/emotion-sad-line.svg?react'
+import { FC } from 'react'
+
+// TODO: consolidate with AsyncErrorElement
+
+type ErrorElementProps = {
+    error: Error
+}
 
 const getErrDetails = (errMessage?: string): string => {
     if (errMessage === '404') {
@@ -13,10 +19,9 @@ const getErrDetails = (errMessage?: string): string => {
     return errMessage || ''
 }
 
-export const AsyncErrorElement = () => {
-    const asyncErr = useAsyncError()
-
-    const msg = getErrDetails((asyncErr as Error)?.message)
+export const ErrorElement: FC<ErrorElementProps> = ({ error }) => {
+    console.log(error)
+    const msg = getErrDetails(error.message)
 
     return (
         <div className="bg-zinc-900 w-full h-full text-zinc-300 flex items-center justify-center">

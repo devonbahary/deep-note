@@ -1,36 +1,18 @@
-import { FC, useEffect, useState } from 'react'
-import { Content } from '@tiptap/react'
-import { useDebounce } from 'usehooks-ts'
-import { EditorCommandsMenu } from './editor-commands-menu/EditCommandsMenu'
-import { NoteContent } from './NoteContent'
-import { useTiptapEditor } from './hooks/useTiptapEditor'
+import { FC } from 'react'
 import { Note as NoteType } from '../types/Note'
-import { updateNote } from '../api/notes'
+import { useTiptapEditor } from './hooks/useTiptapEditor'
+import { ViewContainer } from '../common/ViewContainer'
 import { Header } from '../common/Header'
 import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
-import { ViewContainer } from '../common/ViewContainer'
+import { EditorCommandsMenu } from './editor-commands-menu/EditCommandsMenu'
+import { NoteContent } from './NoteContent'
 
 type NoteProps = {
     note: NoteType
 }
 
 export const Note: FC<NoteProps> = ({ note }) => {
-    const [editorJSON, setEditorJSON] = useState<Content>(null)
-    const debouncedEditorJSON = useDebounce(editorJSON)
-
-    const editor = useTiptapEditor(note.content ?? null, {
-        onUpdate: ({ editor }) => {
-            setEditorJSON(editor.getJSON())
-        },
-    })
-
-    useEffect(() => {
-        const onDebouncedChange = async () => {
-            await updateNote(note._id, { content: debouncedEditorJSON })
-        }
-
-        onDebouncedChange()
-    }, [note._id, debouncedEditorJSON])
+    const editor = useTiptapEditor(note.content ?? null, note._id, true)
 
     return (
         <ViewContainer

@@ -12,6 +12,7 @@ export type FolderChild = Document &
     }
 
 export type UpdateFolderChildInput = {
+    id: string
     name?: string
     parentFolderId?: string
     tailwindColor?: string

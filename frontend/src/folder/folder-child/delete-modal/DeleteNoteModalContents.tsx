@@ -11,7 +11,7 @@ type DeleteNoteModalContentsProps = {
 export const DeleteNoteModalContents: FC<DeleteNoteModalContentsProps> = ({
     note,
 }) => {
-    const editor = useTiptapEditor(note.content ?? null, { editable: false })
+    const editor = useTiptapEditor(note.content ?? null, note._id, false)
 
     return (
         <ModalScrollableContent className="pt-2">

@@ -1,18 +1,21 @@
-import { Suspense } from 'react'
-import { Await, useLoaderData } from 'react-router-dom'
-import { FolderWithFamily } from '../types/Folder'
-import { Folder } from './Folder'
+import { useParams } from 'react-router-dom'
 import { FolderSkeleton } from './FolderSkeleton'
-import { AsyncErrorElement } from '../common/AsyncErrorElement'
+import { ErrorElement } from '../common/ErrorElement'
+import { useGetFolder } from './hooks/useFolderQueries'
+import { Folder } from './Folder'
 
 export const FolderRoute = () => {
-    const data = useLoaderData() as { folder: FolderWithFamily }
+    const { id } = useParams()
 
-    return (
-        <Suspense fallback={<FolderSkeleton />}>
-            <Await resolve={data.folder} errorElement={<AsyncErrorElement />}>
-                {(folder) => <Folder folder={folder} />}
-            </Await>
-        </Suspense>
-    )
+    const { isPending, isError, data: folder, error } = useGetFolder(id)
+
+    if (isPending) {
+        return <FolderSkeleton />
+    }
+
+    if (isError) {
+        return <ErrorElement error={error} />
+    }
+
+    return <Folder folder={folder} />
 }

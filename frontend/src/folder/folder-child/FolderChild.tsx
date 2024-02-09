@@ -2,6 +2,7 @@ import { FC, ReactNode, useState } from 'react'
 import { useBoolean } from 'usehooks-ts'
 import { canMoveFolderChild } from '../utility'
 import { Folder, FolderWithFamily } from '../../types/Folder'
+import { ReparentInput } from '../hooks/useFolderQueries'
 import { Note } from '../../types/Note'
 import { SVGIcon, UpdateFolderChildInput } from '../../types/types'
 import { TextInput } from './TextInput'
@@ -10,14 +11,14 @@ import { ColorModal } from './color-modal/ColorModal'
 import { MoveToFolderModal } from './MoveToFolderModal'
 import { FolderChildMenu } from './FolderChildMenu'
 import { TruncatedTextDiv } from '../../common/TruncatedTextDiv'
-import { UpdateChild } from '../hooks/useFolderAPI'
 import { FolderListItem } from '../FolderListItem'
 import MenuIcon from '../../assets/more-line.svg?react'
 
-export type FolderChildProps = {
+type FolderChildProps = {
     Icon: SVGIcon
     navigateTo: () => void
-    updateChild: UpdateChild
+    updateChild: (input: UpdateFolderChildInput) => void
+    reparentChild: (input: ReparentInput) => void
     deleteChild: (id: string) => void
     parentFolder: FolderWithFamily
     child: Note | Folder
@@ -41,6 +42,7 @@ export const FolderChild: FC<FolderChildProps> = ({
     Icon,
     navigateTo,
     parentFolder,
+    reparentChild,
     updateChild,
     deleteChild,
     child,
@@ -64,11 +66,13 @@ export const FolderChild: FC<FolderChildProps> = ({
         closeMenu()
     }
 
-    const onUpdateChild = async (
-        input: UpdateFolderChildInput,
-        removeFromFolder = false
-    ) => {
-        await updateChild(child._id, input, removeFromFolder)
+    const onReparentChild = async (parentFolderId: string) => {
+        await reparentChild({ id: child._id, parentFolderId })
+        reset()
+    }
+
+    const onUpdateChild = async (input: UpdateFolderChildInput) => {
+        await updateChild(input)
         reset()
     }
 
@@ -93,7 +97,7 @@ export const FolderChild: FC<FolderChildProps> = ({
                             <TextInput
                                 defaultValue={child.name}
                                 onSubmit={async (name) =>
-                                    onUpdateChild({ name })
+                                    onUpdateChild({ id: child._id, name })
                                 }
                                 placeholder={editProps.nameInputPlaceholder}
                             />
@@ -126,7 +130,7 @@ export const FolderChild: FC<FolderChildProps> = ({
                 <ColorModal
                     onClose={reset}
                     onColor={(color: string) => {
-                        onUpdateChild({ tailwindColor: color })
+                        onUpdateChild({ id: child._id, tailwindColor: color })
                     }}
                 />
             )}
@@ -135,9 +139,7 @@ export const FolderChild: FC<FolderChildProps> = ({
                     childFolderId={child._id}
                     parentFolder={parentFolder}
                     onClose={reset}
-                    onMove={(toParentId: string) =>
-                        onUpdateChild({ parentFolderId: toParentId }, true)
-                    }
+                    onMove={onReparentChild}
                 />
             )}
             {editMode === EditMode.Delete && (

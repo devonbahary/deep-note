@@ -1,22 +1,31 @@
 import { FC } from 'react'
+import {
+    useDeleteChildFolder,
+    useReparentChildFolder,
+    useUpdateChildFolder,
+} from '../hooks/useFolderQueries'
 import { useNavigateFolders } from '../../common/hooks/useNavigateFolders'
-import { FolderChild, FolderChildProps } from './FolderChild'
+import { FolderChild } from './FolderChild'
 import { DeleteFolderModalContents } from './delete-modal/DeleteFolderModalContents'
-import { Folder } from '../../types/Folder'
+import { Folder, FolderWithFamily } from '../../types/Folder'
 import FolderIcon from '../../assets/folder-fill.svg?react'
 
-type FolderChildFolderProps = Omit<
-    FolderChildProps,
-    'Icon' | 'editProps' | 'child' | 'navigateTo'
-> & {
+type FolderChildFolderProps = {
     folder: Folder
+    parentFolder: FolderWithFamily
 }
 
 export const FolderChildFolder: FC<FolderChildFolderProps> = ({
     folder,
-    ...rest
+    parentFolder,
 }) => {
     const { goToFolder } = useNavigateFolders()
+
+    const updateChildFolder = useUpdateChildFolder(parentFolder._id)
+
+    const reparentChildFolder = useReparentChildFolder(parentFolder._id)
+
+    const deleteChildFolder = useDeleteChildFolder(parentFolder._id)
 
     return (
         <FolderChild
@@ -30,7 +39,10 @@ export const FolderChildFolder: FC<FolderChildFolderProps> = ({
                 ),
             }}
             navigateTo={() => goToFolder(folder._id)}
-            {...rest}
+            parentFolder={parentFolder}
+            reparentChild={reparentChildFolder}
+            updateChild={updateChildFolder}
+            deleteChild={deleteChildFolder}
         />
     )
 }
