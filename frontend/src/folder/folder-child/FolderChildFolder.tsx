@@ -4,7 +4,7 @@ import {
     useReparentChildFolder,
     useUpdateChildFolder,
 } from '../hooks/useFolderQueries'
-import { useNavigateFolders } from '../../common/hooks/useNavigateFolders'
+import { useNavigation } from '../../common/hooks/useNavigateFolders'
 import { FolderChild } from './FolderChild'
 import { DeleteFolderModalContents } from './delete-modal/DeleteFolderModalContents'
 import { Folder, FolderWithFamily } from '../../types/Folder'
@@ -20,7 +20,7 @@ export const FolderChildFolder: FC<FolderChildFolderProps> = ({
     folder,
     parentFolder,
 }) => {
-    const { goToFolder } = useNavigateFolders()
+    const { goToFolder } = useNavigation()
 
     const {
         mutate: updateChildFolder,

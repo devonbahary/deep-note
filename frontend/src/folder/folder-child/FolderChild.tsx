@@ -10,7 +10,7 @@ import { DeleteFolderItemModal } from './delete-modal/DeleteFolderItemModal'
 import { ColorModal } from './color-modal/ColorModal'
 import { MoveToFolderModal } from './MoveToFolderModal'
 import { FolderChildMenu } from './FolderChildMenu'
-import { TruncatedTextDiv } from '../../common/TruncatedTextDiv'
+import { TruncatedTextDiv } from '../../common/components/TruncatedTextDiv'
 import { FolderListItem } from '../FolderListItem'
 import MenuIcon from '../../assets/more-line.svg?react'
 

@@ -1,6 +1,6 @@
 import clsx from 'clsx/lite'
 import { DetailedHTMLProps, FC, HTMLAttributes } from 'react'
-import { getRandNum } from './skeletonUtility'
+import { getRandNum } from '../skeletonUtility'
 
 type SkeltonBoxProps = DetailedHTMLProps<
     HTMLAttributes<HTMLDivElement>,

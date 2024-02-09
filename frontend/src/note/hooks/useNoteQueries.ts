@@ -1,12 +1,16 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { getNote, updateNote } from '../../api/notes'
 import { Content } from '@tiptap/react'
+import { useGet, useUpdate } from '../../common/hooks/useApi'
+import { Note } from '../../types/Note'
+import { UpdateNoteContentInput } from '../../types/types'
 
 export const useGetNote = (id?: string) => {
+    const get = useGet<Note>('/api/notes')
+
     return useQuery({
         queryKey: ['note', id],
         queryFn: () => {
-            if (id) return getNote(id)
+            if (id) return get(id)
             throw new Error(`Cannot get note without id`)
         },
         enabled: Boolean(id),
@@ -15,7 +19,9 @@ export const useGetNote = (id?: string) => {
 }
 
 export const useUpdateContent = (noteId: string) => {
+    const update = useUpdate<Note, UpdateNoteContentInput>('/api/notes')
+
     return useMutation({
-        mutationFn: (content: Content) => updateNote({ id: noteId, content }),
+        mutationFn: (content: Content) => update(noteId, { content }),
     })
 }

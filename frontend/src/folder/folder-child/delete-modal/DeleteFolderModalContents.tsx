@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { FolderDescendantsCount } from '../../../types/Folder'
-import { getFolderDescendantsCount } from '../../../api/folders'
+import { useGet } from '../../../common/hooks/useApi'
 import FolderIcon from '../../../assets/folder-fill.svg?react'
 import NoteIcon from '../../../assets/file-text-fill.svg?react'
 
@@ -14,9 +14,12 @@ export const DeleteFolderModalContents: FC<DeleteFolderModalContentsProps> = ({
     const [folderDescendantsCount, setFolderDescendantsCount] =
         useState<FolderDescendantsCount | null>(null)
 
+    // TODO: useQuery hook
+    const get = useGet<FolderDescendantsCount>('/api/folders/descendants-count')
+
     useEffect(() => {
         const loadFolderDescendantsCount = async () => {
-            const count = await getFolderDescendantsCount(folderId)
+            const count = await get(folderId)
             setFolderDescendantsCount(count)
         }
 

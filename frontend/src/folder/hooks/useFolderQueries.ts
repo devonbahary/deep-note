@@ -1,13 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { FolderWithFamily } from './../../types/Folder'
+import { Folder, FolderWithFamily } from './../../types/Folder'
 import {
-    createFolder,
-    deleteFolder,
-    getFolder,
-    updateFolder,
-} from '../../api/folders'
-import { createNote, deleteNote, updateNote } from '../../api/notes'
-import { UpdateFolderChildInput } from '../../types/types'
+    CreateFolderChildInput,
+    UpdateFolderChildInput,
+} from '../../types/types'
+import {
+    useCreate,
+    useDelete,
+    useGet,
+    useUpdate,
+} from '../../common/hooks/useApi'
+import { Note } from '../../types/Note'
 
 export type ReparentInput = Pick<
     UpdateFolderChildInput,
@@ -27,10 +30,12 @@ const useUpdateFolderCache = (): UpdateParent => {
 }
 
 export const useGetFolder = (id?: string) => {
+    const get = useGet<FolderWithFamily>('/api/folders')
+
     return useQuery({
         queryKey: ['folder', id],
         queryFn: () => {
-            if (id) return getFolder(id)
+            if (id) return get(id)
             throw new Error(`Cannot get folder without id`)
         },
         enabled: Boolean(id),
@@ -40,8 +45,10 @@ export const useGetFolder = (id?: string) => {
 export const useAddChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
+    const create = useCreate<Folder, CreateFolderChildInput>('/api/folders')
+
     return useMutation({
-        mutationFn: () => createFolder(parentFolderId),
+        mutationFn: () => create({ parentFolderId }),
         onSuccess: (createdFolder) => {
             updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
                 ...oldData,
@@ -54,8 +61,10 @@ export const useAddChildFolder = (parentFolderId: string) => {
 export const useAddChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
+    const create = useCreate<Note, CreateFolderChildInput>('/api/notes')
+
     return useMutation({
-        mutationFn: () => createNote(parentFolderId),
+        mutationFn: () => create({ parentFolderId }),
         onSuccess: (createdNote) => {
             updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
                 ...oldData,
@@ -68,8 +77,10 @@ export const useAddChildNote = (parentFolderId: string) => {
 export const useUpdateChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
+    const update = useUpdate<Folder, UpdateFolderChildInput>(`/api/folders`)
+
     return useMutation({
-        mutationFn: updateFolder,
+        mutationFn: (input: UpdateFolderChildInput) => update(input.id, input),
         onSuccess: (updatedFolder, { id }) => {
             updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
                 ...oldData,
@@ -84,8 +95,10 @@ export const useUpdateChildFolder = (parentFolderId: string) => {
 export const useUpdateChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
+    const update = useUpdate<Note, UpdateFolderChildInput>(`/api/notes`)
+
     return useMutation({
-        mutationFn: updateNote,
+        mutationFn: (input: UpdateFolderChildInput) => update(input.id, input),
         onSuccess: (updatedNote, { id }) => {
             updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
                 ...oldData,
@@ -100,8 +113,10 @@ export const useUpdateChildNote = (parentFolderId: string) => {
 export const useReparentChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
+    const update = useUpdate<Folder, UpdateFolderChildInput>(`/api/folders`)
+
     return useMutation({
-        mutationFn: (input: ReparentInput) => updateFolder(input),
+        mutationFn: (input: ReparentInput) => update(input.id, input),
         onSuccess: (_, { id }) => {
             filterChildFolderFromParentFolder(updateParent, parentFolderId, id)
         },
@@ -111,8 +126,10 @@ export const useReparentChildFolder = (parentFolderId: string) => {
 export const useReparentChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
+    const update = useUpdate<Note, UpdateFolderChildInput>(`/api/notes`)
+
     return useMutation({
-        mutationFn: (input: ReparentInput) => updateNote(input),
+        mutationFn: (input: ReparentInput) => update(input.id, input),
         onSuccess: (_, { id }) => {
             filterChildNoteFromParentFolder(updateParent, parentFolderId, id)
         },
@@ -121,6 +138,8 @@ export const useReparentChildNote = (parentFolderId: string) => {
 
 export const useDeleteChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
+
+    const deleteFolder = useDelete('/api/folders')
 
     return useMutation({
         mutationFn: deleteFolder,
@@ -132,6 +151,8 @@ export const useDeleteChildFolder = (parentFolderId: string) => {
 
 export const useDeleteChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
+
+    const deleteNote = useDelete('/api/notes')
 
     return useMutation({
         mutationFn: deleteNote,

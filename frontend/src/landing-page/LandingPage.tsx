@@ -1,9 +1,12 @@
 import { useBoolean, useLocalStorage } from 'usehooks-ts'
-import { createFolder } from '../api/folders'
-import { useNavigateFolders } from '../common/hooks/useNavigateFolders'
+import { useNavigation } from '../common/hooks/useNavigateFolders'
 import FolderIcon from '../assets/folder-line.svg?react'
 import FolderAddIcon from '../assets/folder-add-line.svg?react'
+import { useCreate } from '../common/hooks/useApi'
+import { Folder } from '../types/Folder'
+import { CreateFolderChildInput } from '../types/types'
 
+// TODO: rework to account for authentication
 export const LandingPage = () => {
     const [rootFolderId, setRootFolderId] = useLocalStorage<string | null>(
         'rootFolderId',
@@ -12,14 +15,16 @@ export const LandingPage = () => {
 
     const { value: isCreating, setTrue: setIsCreating } = useBoolean(false)
 
-    const { goToFolder } = useNavigateFolders()
+    const { goToFolder } = useNavigation()
+
+    const create = useCreate<Folder, CreateFolderChildInput>('/api/folders')
 
     const onCreateRootFolder = async () => {
         if (isCreating) return
 
         setIsCreating()
 
-        const rootFolder = await createFolder()
+        const rootFolder = await create({})
 
         setRootFolderId(rootFolder._id)
 

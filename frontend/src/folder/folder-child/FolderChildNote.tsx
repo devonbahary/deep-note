@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { useNavigateFolders } from '../../common/hooks/useNavigateFolders'
+import { useNavigation } from '../../common/hooks/useNavigateFolders'
 import { FolderChild } from './FolderChild'
 import { DeleteNoteModalContents } from './delete-modal/DeleteNoteModalContents'
 import { Note } from '../../types/Note'
@@ -21,7 +21,7 @@ export const FolderChildNote: FC<FolderChildNoteProps> = ({
     note,
     parentFolder,
 }) => {
-    const { goToNote } = useNavigateFolders()
+    const { goToNote } = useNavigation()
 
     const {
         mutate: updateChildNote,

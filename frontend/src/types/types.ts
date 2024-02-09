@@ -1,3 +1,4 @@
+import { Content } from '@tiptap/react'
 import { FunctionComponent } from 'react'
 
 type Document = {
@@ -11,11 +12,19 @@ export type FolderChild = Document &
         tailwindColor?: string
     }
 
+export type CreateFolderChildInput = {
+    parentFolderId?: string
+}
+
 export type UpdateFolderChildInput = {
     id: string
     name?: string
     parentFolderId?: string
     tailwindColor?: string
+}
+
+export type UpdateNoteContentInput = {
+    content: Content
 }
 
 export type Timestamps = {

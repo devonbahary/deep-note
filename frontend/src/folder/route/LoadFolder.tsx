@@ -1,10 +1,10 @@
 import { useParams } from 'react-router-dom'
+import { useGetFolder } from '../hooks/useFolderQueries'
 import { FolderSkeleton } from './FolderSkeleton'
-import { ErrorElement } from '../common/ErrorElement'
-import { useGetFolder } from './hooks/useFolderQueries'
-import { Folder } from './Folder'
+import { ErrorElement } from '../../common/components/ErrorElement'
+import { Folder } from '../Folder'
 
-export const FolderRoute = () => {
+export const LoadFolder = () => {
     const { id } = useParams()
 
     const { isPending, isError, data: folder, error } = useGetFolder(id)
