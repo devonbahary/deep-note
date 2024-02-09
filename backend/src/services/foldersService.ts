@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import { UpdateQuery } from 'mongoose'
 import { Folder, FolderType } from '../models/Folder'
 import { Note, NoteType } from '../models/Note'
-import { UpdateFolderChildInput } from '../types/types'
+import { CreateInput, Protected, UpdateFolderChildInput } from '../types/types'
 import { validateParentFolder } from '../validators/parentFolderValidator'
 
 type FolderWithDescendants = FolderType & {
@@ -36,7 +36,7 @@ export const getDescendantFolders = async (
     return rootFolder.descendants
 }
 
-type DescendantsCount = {
+type DescendantsCount = Protected & {
     folders: number
     notes: number
 }
@@ -44,6 +44,8 @@ type DescendantsCount = {
 export const getFolderDescendantsCount = async (
     rootFolderId: string
 ): Promise<DescendantsCount> => {
+    const rootFolder = await getFolder(rootFolderId)
+
     const descendantFolders = await getDescendantFolders(rootFolderId)
     const descendantNoteCount = await Note.countDocuments({
         _parentFolderId: {
@@ -54,6 +56,7 @@ export const getFolderDescendantsCount = async (
     return {
         folders: descendantFolders.length,
         notes: descendantNoteCount,
+        userId: rootFolder?.userId,
     }
 }
 
@@ -76,6 +79,7 @@ export const getFolderWithFamily = async (
                 _id: new ObjectId(id),
             },
         },
+        // TODO: don't send content (could be forbidden)
         {
             $lookup: {
                 from: 'notes',
@@ -117,9 +121,9 @@ export const getFolderWithFamily = async (
     return folders[0]
 }
 
-export const createFolder = async (
-    parentFolderId?: string
-): Promise<FolderType> => {
+export const createFolder = async (input: CreateInput): Promise<FolderType> => {
+    const { parentFolderId, userId } = input
+
     if (parentFolderId) {
         await validateParentFolder(parentFolderId)
     }
@@ -127,6 +131,7 @@ export const createFolder = async (
     return await Folder.create({
         name: parentFolderId ? undefined : 'root',
         _parentFolderId: parentFolderId,
+        userId,
     })
 }
 

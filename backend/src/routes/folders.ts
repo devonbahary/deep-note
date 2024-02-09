@@ -2,6 +2,7 @@ import { Router } from 'express'
 import {
     createFolder,
     deleteFolder,
+    getFolder,
     getFolderDescendantsCount,
     getFolderWithFamily,
     updateFolder,
@@ -23,11 +24,11 @@ router.post('/', async (req, res, next) => {
 })
 
 router.put('/:id', async (req, res, next) => {
-    await update(req, res, next, updateFolder)
+    await update(req, res, next, getFolder, updateFolder)
 })
 
 router.delete('/:id', async (req, res, next) => {
-    await destroy(req, res, next, deleteFolder)
+    await destroy(req, res, next, getFolder, deleteFolder)
 })
 
 export default router

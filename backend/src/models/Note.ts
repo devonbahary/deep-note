@@ -19,6 +19,9 @@ const noteSchema = new mongoose.Schema<NoteType>(
             type: Schema.Types.ObjectId,
             required: true,
         },
+        userId: {
+            type: String,
+        },
         tailwindColor: {
             type: String,
         },

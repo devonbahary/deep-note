@@ -13,6 +13,9 @@ const folderSchema = new mongoose.Schema<FolderType>(
             default: DEFAULT_NAME,
         },
         _parentFolderId: Schema.Types.ObjectId,
+        userId: {
+            type: String,
+        },
         tailwindColor: {
             type: String,
         },

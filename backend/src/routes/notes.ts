@@ -18,11 +18,11 @@ router.post('/', async (req, res, next) => {
 })
 
 router.put('/:id', async (req, res, next) => {
-    await update(req, res, next, updateNote)
+    await update(req, res, next, getNote, updateNote)
 })
 
 router.delete('/:id', async (req, res, next) => {
-    await destroy(req, res, next, deleteNote)
+    await destroy(req, res, next, getNote, deleteNote)
 })
 
 export default router
