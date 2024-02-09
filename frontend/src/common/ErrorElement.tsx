@@ -1,8 +1,6 @@
 import SadIcon from '../assets/emotion-sad-line.svg?react'
 import { FC } from 'react'
 
-// TODO: consolidate with AsyncErrorElement
-
 type ErrorElementProps = {
     error: Error
 }
@@ -20,7 +18,6 @@ const getErrDetails = (errMessage?: string): string => {
 }
 
 export const ErrorElement: FC<ErrorElementProps> = ({ error }) => {
-    console.log(error)
     const msg = getErrDetails(error.message)
 
     return (

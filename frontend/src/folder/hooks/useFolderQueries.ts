@@ -40,7 +40,7 @@ export const useGetFolder = (id?: string) => {
 export const useAddChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const { mutate: addChildFolder } = useMutation({
+    return useMutation({
         mutationFn: () => createFolder(parentFolderId),
         onSuccess: (createdFolder) => {
             updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
@@ -49,14 +49,12 @@ export const useAddChildFolder = (parentFolderId: string) => {
             }))
         },
     })
-
-    return addChildFolder
 }
 
 export const useAddChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const { mutate: addChildNote } = useMutation({
+    return useMutation({
         mutationFn: () => createNote(parentFolderId),
         onSuccess: (createdNote) => {
             updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
@@ -65,14 +63,12 @@ export const useAddChildNote = (parentFolderId: string) => {
             }))
         },
     })
-
-    return addChildNote
 }
 
 export const useUpdateChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const { mutate: updateChildFolder } = useMutation({
+    return useMutation({
         mutationFn: updateFolder,
         onSuccess: (updatedFolder, { id }) => {
             updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
@@ -83,14 +79,12 @@ export const useUpdateChildFolder = (parentFolderId: string) => {
             }))
         },
     })
-
-    return updateChildFolder
 }
 
 export const useUpdateChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const { mutate: updateChildNote } = useMutation({
+    return useMutation({
         mutationFn: updateNote,
         onSuccess: (updatedNote, { id }) => {
             updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
@@ -101,60 +95,50 @@ export const useUpdateChildNote = (parentFolderId: string) => {
             }))
         },
     })
-
-    return updateChildNote
 }
 
 export const useReparentChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const { mutate: reparentChildFolder } = useMutation({
+    return useMutation({
         mutationFn: (input: ReparentInput) => updateFolder(input),
         onSuccess: (_, { id }) => {
             filterChildFolderFromParentFolder(updateParent, parentFolderId, id)
         },
     })
-
-    return reparentChildFolder
 }
 
 export const useReparentChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const { mutate: reparentChildNote } = useMutation({
+    return useMutation({
         mutationFn: (input: ReparentInput) => updateNote(input),
         onSuccess: (_, { id }) => {
             filterChildNoteFromParentFolder(updateParent, parentFolderId, id)
         },
     })
-
-    return reparentChildNote
 }
 
 export const useDeleteChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const { mutate: deleteChildFolder } = useMutation({
+    return useMutation({
         mutationFn: deleteFolder,
         onSuccess: (_, id) => {
             filterChildFolderFromParentFolder(updateParent, parentFolderId, id)
         },
     })
-
-    return deleteChildFolder
 }
 
 export const useDeleteChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const { mutate: deleteChildNote } = useMutation({
+    return useMutation({
         mutationFn: deleteNote,
         onSuccess: (_, id) => {
             filterChildNoteFromParentFolder(updateParent, parentFolderId, id)
         },
     })
-
-    return deleteChildNote
 }
 
 const filterChildFolderFromParentFolder = (

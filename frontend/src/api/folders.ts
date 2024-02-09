@@ -4,17 +4,16 @@ import {
     Folder,
 } from '../types/Folder'
 import { UpdateFolderChildInput } from '../types/types'
-import { create, destroy, toJSONOrThrow, update } from './apiUtility'
+import { create, destroy, get, update } from './apiUtility'
 
 export const getFolder = async (id: string): Promise<FolderWithFamily> => {
-    return await toJSONOrThrow(`/api/folders/${id}`)
+    return await get(`/api/folders/${id}`)
 }
 
 export const getFolderDescendantsCount = async (
     id: string
 ): Promise<FolderDescendantsCount> => {
-    const response = await fetch(`/api/folders/descendants-count/${id}`)
-    return response.json()
+    return await get(`/api/folders/descendants-count/${id}`)
 }
 
 export const createFolder = async (

@@ -1,3 +1,4 @@
+import clsx from 'clsx/lite'
 import { FC } from 'react'
 import { Header } from '../common/Header'
 import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
@@ -16,9 +17,23 @@ type FolderProps = {
 }
 
 export const Folder: FC<FolderProps> = ({ folder }) => {
-    const addChildFolder = useAddChildFolder(folder._id)
+    const { mutate: addChildFolder, isPending: isAddFolderPending } =
+        useAddChildFolder(folder._id)
 
-    const addChildNote = useAddChildNote(folder._id)
+    const { mutate: addChildNote, isPending: isAddNotePending } =
+        useAddChildNote(folder._id)
+
+    const liClassName = 'bg-zinc-900 hover:bg-zinc-800 border-zinc-700'
+
+    const addFolderClassName = clsx(
+        liClassName,
+        isAddFolderPending ? 'opacity-50 cursor-default' : 'hover:bg-zinc-800'
+    )
+
+    const addNoteClassName = clsx(
+        liClassName,
+        isAddNotePending ? 'opacity-50 cursor-default' : 'hover:bg-zinc-800'
+    )
 
     return (
         <ViewContainer
@@ -48,16 +63,20 @@ export const Folder: FC<FolderProps> = ({ folder }) => {
                         />
                     ))}
                     <ListItem
-                        className="bg-zinc-900 hover:bg-zinc-800 border-zinc-700"
+                        className={addFolderClassName}
                         icon={<FolderAddIcon />}
-                        onClick={() => addChildFolder()}
+                        onClick={() => {
+                            if (!isAddFolderPending) addChildFolder()
+                        }}
                     >
                         add folder
                     </ListItem>
                     <ListItem
-                        className="bg-zinc-900 hover:bg-zinc-800 border-zinc-700"
+                        className={addNoteClassName}
                         icon={<NoteAddIcon />}
-                        onClick={() => addChildNote()}
+                        onClick={() => {
+                            if (!isAddNotePending) addChildNote()
+                        }}
                     >
                         add note
                     </ListItem>

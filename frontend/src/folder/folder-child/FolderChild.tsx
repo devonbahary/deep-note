@@ -23,6 +23,7 @@ type FolderChildProps = {
     parentFolder: FolderWithFamily
     child: Note | Folder
     editProps: EditProps
+    isPending: boolean
 }
 
 type EditProps = {
@@ -47,6 +48,7 @@ export const FolderChild: FC<FolderChildProps> = ({
     deleteChild,
     child,
     editProps,
+    isPending,
 }) => {
     const {
         value: isMenuOpen,
@@ -89,6 +91,7 @@ export const FolderChild: FC<FolderChildProps> = ({
             Icon={Icon}
             item={child}
             onClick={navigateTo}
+            isPending={isPending}
         >
             <div className="flex w-full items-center">
                 <div className="flex-grow">

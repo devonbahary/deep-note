@@ -1,10 +1,10 @@
 import { Content } from '@tiptap/react'
 import { Note } from '../types/Note'
 import { UpdateFolderChildInput } from '../types/types'
-import { create, destroy, toJSONOrThrow, update } from './apiUtility'
+import { create, destroy, get, update } from './apiUtility'
 
 export const getNote = async (id: string): Promise<Note> => {
-    return await toJSONOrThrow(`/api/notes/${id}`)
+    return await get(`/api/notes/${id}`)
 }
 
 export const createNote = async (parentFolderId: string): Promise<Note> => {

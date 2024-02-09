@@ -6,13 +6,18 @@ import { Header } from '../common/Header'
 import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
 import { EditorCommandsMenu } from './editor-commands-menu/EditCommandsMenu'
 import { NoteContent } from './NoteContent'
+import { ErrorPopup } from '../folder/common/ErrorPopup'
 
 type NoteProps = {
     note: NoteType
 }
 
 export const Note: FC<NoteProps> = ({ note }) => {
-    const editor = useTiptapEditor(note.content ?? null, note._id, true)
+    const { editor, updateError } = useTiptapEditor(
+        note.content ?? null,
+        note._id,
+        true
+    )
 
     return (
         <ViewContainer
@@ -28,7 +33,15 @@ export const Note: FC<NoteProps> = ({ note }) => {
                     <EditorCommandsMenu editor={editor} />
                 </>
             }
-            scrollableContent={<NoteContent editor={editor} />}
+            scrollableContent={
+                <>
+                    <NoteContent editor={editor} />
+                    <ErrorPopup
+                        error={updateError}
+                        prependMsg="Failed to update:"
+                    />
+                </>
+            }
         />
     )
 }

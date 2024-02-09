@@ -4,15 +4,22 @@ import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
 import StarterKit from '@tiptap/starter-kit'
 import { useDebounce } from 'usehooks-ts'
-import { updateNote } from '../../api/notes'
+import { useUpdateContent } from './useNoteQueries'
+
+type UseTipTapEditorResponse = {
+    editor: Editor | null
+    updateError: Error | null
+}
 
 export const useTiptapEditor = (
     content: Content,
     noteId: string,
     editable: boolean
-): Editor | null => {
+): UseTipTapEditorResponse => {
     const [editorJSON, setEditorJSON] = useState<Content>(null)
     const debouncedEditorJSON = useDebounce(editorJSON)
+
+    const { mutate: updateContent, error } = useUpdateContent(noteId)
 
     const editor = useEditor({
         extensions: [
@@ -45,7 +52,7 @@ export const useTiptapEditor = (
 
     useEffect(() => {
         const onDebouncedChange = async () => {
-            await updateNote({ id: noteId, content: debouncedEditorJSON })
+            await updateContent(debouncedEditorJSON)
         }
 
         if (editable) {
@@ -53,5 +60,8 @@ export const useTiptapEditor = (
         }
     }, [noteId, debouncedEditorJSON])
 
-    return editor
+    return {
+        editor,
+        updateError: error,
+    }
 }
