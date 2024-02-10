@@ -48,9 +48,7 @@ export const getFolderDescendantsCount = async (
 
     const descendantFolders = await getDescendantFolders(rootFolderId)
     const descendantNoteCount = await Note.countDocuments({
-        _parentFolderId: {
-            $in: [rootFolderId, ...descendantFolders.map((f) => f._id)],
-        },
+        _parentFolderId: [rootFolderId, ...descendantFolders.map((f) => f._id)],
     })
 
     return {
@@ -177,14 +175,10 @@ export const deleteFolder = async (id: string): Promise<void> => {
     const parentFolderIds = [id, ...descendants.map((f) => f._id)]
 
     await Folder.deleteMany({
-        _id: {
-            $in: parentFolderIds,
-        },
+        _id: parentFolderIds,
     })
 
     await Note.deleteMany({
-        _parentFolderId: {
-            $in: parentFolderIds,
-        },
+        _parentFolderId: parentFolderIds,
     })
 }
