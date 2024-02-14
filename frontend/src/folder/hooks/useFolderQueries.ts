@@ -34,7 +34,7 @@ const useUpdateFolderCache = (): UpdateParent => {
 }
 
 export const useGetFolder = (id?: string) => {
-    const get = useGet<FolderWithFamily>('/api/folders')
+    const get = useGet<FolderWithFamily>('/folders')
 
     return useQuery({
         queryKey: ['folder', id],
@@ -47,7 +47,7 @@ export const useGetFolder = (id?: string) => {
 }
 
 export const useGetFolderDescendantsCount = (id?: string) => {
-    const get = useGet<FolderDescendantsCount>('/api/folders/descendants-count')
+    const get = useGet<FolderDescendantsCount>('/folders/descendants-count')
 
     return useQuery({
         queryKey: ['folder-descendants-count', id],
@@ -62,7 +62,7 @@ export const useGetFolderDescendantsCount = (id?: string) => {
 export const useAddChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const create = useCreate<Folder, CreateFolderChildInput>('/api/folders')
+    const create = useCreate<Folder, CreateFolderChildInput>('/folders')
 
     return useMutation({
         mutationFn: () => create({ parentFolderId }),
@@ -78,7 +78,7 @@ export const useAddChildFolder = (parentFolderId: string) => {
 export const useAddChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const create = useCreate<Note, CreateFolderChildInput>('/api/notes')
+    const create = useCreate<Note, CreateFolderChildInput>('/notes')
 
     return useMutation({
         mutationFn: () => create({ parentFolderId }),
@@ -94,7 +94,7 @@ export const useAddChildNote = (parentFolderId: string) => {
 export const useUpdateChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Folder, UpdateFolderChildInput>(`/api/folders`)
+    const update = useUpdate<Folder, UpdateFolderChildInput>(`/folders`)
 
     return useMutation({
         mutationFn: (input: UpdateFolderChildInput) => update(input.id, input),
@@ -111,7 +111,7 @@ export const useUpdateChildFolder = (parentFolderId: string) => {
 export const useUpdateChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Note, UpdateFolderChildInput>(`/api/notes`)
+    const update = useUpdate<Note, UpdateFolderChildInput>(`/notes`)
 
     return useMutation({
         mutationFn: (input: UpdateFolderChildInput) => update(input.id, input),
@@ -128,7 +128,7 @@ export const useUpdateChildNote = (parentFolderId: string) => {
 export const useReparentChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Folder, UpdateFolderChildInput>(`/api/folders`)
+    const update = useUpdate<Folder, UpdateFolderChildInput>(`/folders`)
 
     return useMutation({
         mutationFn: (input: ReparentInput) => update(input.id, input),
@@ -141,7 +141,7 @@ export const useReparentChildFolder = (parentFolderId: string) => {
 export const useReparentChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Note, UpdateFolderChildInput>(`/api/notes`)
+    const update = useUpdate<Note, UpdateFolderChildInput>(`/notes`)
 
     return useMutation({
         mutationFn: (input: ReparentInput) => update(input.id, input),
@@ -154,7 +154,7 @@ export const useReparentChildNote = (parentFolderId: string) => {
 export const useClaimChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Folder, {}>('/api/user/claim-folder')
+    const update = useUpdate<Folder, {}>('/user/claim-folder')
 
     return useMutation({
         mutationFn: (id: string) => update(id, {}),
@@ -171,7 +171,7 @@ export const useClaimChildFolder = (parentFolderId: string) => {
 export const useClaimChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Note, {}>('/api/user/claim-note')
+    const update = useUpdate<Note, {}>('/user/claim-note')
 
     return useMutation({
         mutationFn: (id: string) => update(id, {}),
@@ -188,7 +188,7 @@ export const useClaimChildNote = (parentFolderId: string) => {
 export const useUnclaimChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Folder, {}>('/api/user/unclaim-folder')
+    const update = useUpdate<Folder, {}>('/user/unclaim-folder')
 
     return useMutation({
         mutationFn: (id: string) => update(id, {}),
@@ -205,7 +205,7 @@ export const useUnclaimChildFolder = (parentFolderId: string) => {
 export const useUnclaimChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Note, {}>('/api/user/unclaim-note')
+    const update = useUpdate<Note, {}>('/user/unclaim-note')
 
     return useMutation({
         mutationFn: (id: string) => update(id, {}),
@@ -222,7 +222,7 @@ export const useUnclaimChildNote = (parentFolderId: string) => {
 export const useDeleteChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const deleteFolder = useDelete('/api/folders')
+    const deleteFolder = useDelete('/folders')
 
     return useMutation({
         mutationFn: deleteFolder,
@@ -235,7 +235,7 @@ export const useDeleteChildFolder = (parentFolderId: string) => {
 export const useDeleteChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const deleteNote = useDelete('/api/notes')
+    const deleteNote = useDelete('/notes')
 
     return useMutation({
         mutationFn: deleteNote,

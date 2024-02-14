@@ -1,5 +1,8 @@
 import { useContext } from 'react'
 import { AccessTokenContext } from '../components/AccessTokenProvider'
+const { DEV } = import.meta.env
+
+const BASE_URL = DEV ? '/api' : ''
 
 const useAuthHeaders = (): HeadersInit => {
     const { accessToken } = useContext(AccessTokenContext)
@@ -15,9 +18,12 @@ export const useGet = <T>(url: string) => {
     const headers = useAuthHeaders()
 
     const get = async (id?: string): Promise<T> => {
-        const response = await fetch(id ? `${url}/${id}` : url, {
-            headers,
-        })
+        const response = await fetch(
+            id ? `${BASE_URL}${url}/${id}` : `${BASE_URL}${url}`,
+            {
+                headers,
+            }
+        )
 
         if (response.ok) {
             return response.json()
@@ -33,7 +39,7 @@ export const useCreate = <T, I>(url: string) => {
     const headers = useAuthHeaders()
 
     const create = async (input: I): Promise<T> => {
-        const response = await fetch(url, {
+        const response = await fetch(`${BASE_URL}${url}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +62,7 @@ export const useUpdate = <T, I>(url: string) => {
     const headers = useAuthHeaders()
 
     const update = async (id: string, input: I): Promise<T> => {
-        const response = await fetch(`${url}/${id}`, {
+        const response = await fetch(`${BASE_URL}${url}/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -79,7 +85,7 @@ export const useDelete = (url: string) => {
     const headers = useAuthHeaders()
 
     const destroy = async (id: string): Promise<void> => {
-        const response = await fetch(`${url}/${id}`, {
+        const response = await fetch(`${BASE_URL}${url}/${id}`, {
             method: 'DELETE',
             headers,
         })

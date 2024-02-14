@@ -27,7 +27,7 @@ enum EditMode {
 export const RootFolderListItem: FC<RootFolderListItemProps> = ({ folder }) => {
     const [editMode, setEditMode] = useState<EditMode | null>(null)
 
-    const destroy = useDelete('/api/folders')
+    const destroy = useDelete('/folders')
 
     const queryClient = useQueryClient()
 
@@ -46,7 +46,7 @@ export const RootFolderListItem: FC<RootFolderListItemProps> = ({ folder }) => {
         },
     })
 
-    const updateClaimFolder = useUpdate<Folder, {}>(`/api/user/claim-folder`)
+    const updateClaimFolder = useUpdate<Folder, {}>(`/user/claim-folder`)
 
     const { mutate: claimFolder, error: claimFolderError } = useMutation({
         mutationFn: () => updateClaimFolder(folder._id, {}),

@@ -5,6 +5,8 @@
     "main": "dist/index.js",
     "scripts": {
         "dev": "nodemon src/server.ts",
+        "build": "tsc",
+        "serve": "node dist/server.js",
         "migrate-up": "migrate-mongo up",
         "migrate-down": "migrate-mongo down",
         "test": "jest",
