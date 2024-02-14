@@ -8,10 +8,11 @@ import {
     getFolderWithFamily,
     updateFolder,
 } from '../services/foldersService'
-import { createNote } from '../services/notesService'
+import { createNote, updateNote } from '../services/notesService'
 import {
     checkUpdatedItem,
     createFamily,
+    createNoteWithContent,
     flattenFamily,
     getDescendantCount,
 } from './testsUtility'
@@ -64,7 +65,7 @@ describe('foldersService', () => {
     })
 
     describe('getFolderWithFamily', () => {
-        it('should retrieve the folder with parent and all child items', async () => {
+        it('should retrieve the folder with parent and all child items, hiding note content', async () => {
             const grandparentFolder = await createFolder({})
 
             const folder = await createFolder({
@@ -73,7 +74,10 @@ describe('foldersService', () => {
             const parentFolderId = folder._id
 
             const childFolder = await createFolder({ parentFolderId })
-            const childNote = await createNote({ parentFolderId })
+            const childNote = await createNoteWithContent(
+                { parentFolderId },
+                'this is content'
+            )
 
             const folderWithParentAndChildren =
                 await getFolderWithFamily(parentFolderId)
@@ -84,17 +88,28 @@ describe('foldersService', () => {
             expect(folderWithParentAndChildren.folders).toContainEqual(
                 childFolder.toJSON()
             )
-            expect(folderWithParentAndChildren.notes).toContainEqual(
-                childNote.toJSON()
+
+            const expectedChildNote = folderWithParentAndChildren.notes.find(
+                (n) => n._id.equals(childNote._id)
             )
+            expect(expectedChildNote).toBeDefined()
+
+            const match = { ...childNote?.toJSON() }
+            delete match.content
+
+            expect(expectedChildNote).toMatchObject(match)
+            expect(expectedChildNote).not.toHaveProperty('content')
         })
 
-        it('should retrieve the folder with no parent if does not exist and all child items', async () => {
+        it('should retrieve the folder with no parent if does not exist and all child items, hiding note content', async () => {
             const folder = await createFolder({})
             const parentFolderId = folder._id
 
             const childFolder = await createFolder({ parentFolderId })
-            const childNote = await createNote({ parentFolderId })
+            const childNote = await createNoteWithContent(
+                { parentFolderId },
+                'this is content'
+            )
 
             const folderWithParentAndChildren =
                 await getFolderWithFamily(parentFolderId)
@@ -103,9 +118,17 @@ describe('foldersService', () => {
             expect(folderWithParentAndChildren.folders).toContainEqual(
                 childFolder.toJSON()
             )
-            expect(folderWithParentAndChildren.notes).toContainEqual(
-                childNote.toJSON()
+
+            const expectedChildNote = folderWithParentAndChildren.notes.find(
+                (n) => n._id.equals(childNote._id)
             )
+            expect(expectedChildNote).toBeDefined()
+
+            const match = { ...childNote?.toJSON() }
+            delete match.content
+
+            expect(expectedChildNote).toMatchObject(match)
+            expect(expectedChildNote).not.toHaveProperty('content')
         })
     })
 

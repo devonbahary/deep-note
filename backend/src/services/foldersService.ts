@@ -79,13 +79,20 @@ export const getFolderWithFamily = async (
                 _id: new ObjectId(id),
             },
         },
-        // TODO: don't send content (could be forbidden)
         {
             $lookup: {
                 from: 'notes',
                 localField: '_id',
                 foreignField: '_parentFolderId',
                 as: 'notes',
+                pipeline: [
+                    {
+                        // content should only be shown to authorized users of a note
+                        $project: {
+                            content: 0,
+                        },
+                    },
+                ],
             },
         },
         {

@@ -3,7 +3,7 @@ import { FolderDescendantsCount } from './../../../frontend/src/types/Folder'
 import { Folder, FolderType } from '../models/Folder'
 import { Note, NoteType } from '../models/Note'
 import { createFolder, getFolder } from '../services/foldersService'
-import { createNote, getNote } from '../services/notesService'
+import { createNote, getNote, updateNote } from '../services/notesService'
 import { CreateInput } from '../types/types'
 
 type Siblings = (FolderType | NoteType)[]
@@ -82,6 +82,21 @@ export const getDescendantCount = (
         folders: folderCount,
         notes: noteCount,
     }
+}
+
+export const createNoteWithContent = async (
+    input: CreateInput,
+    content: string
+): Promise<NoteType> => {
+    const note = await createNote(input)
+
+    const updatedNote = await updateNote(note._id, { content })
+
+    if (!updatedNote) {
+        throw new Error(`could not find note with id ${note._id}`)
+    }
+
+    return updatedNote
 }
 
 export const getMockRequest = (userId: string): Request => {
