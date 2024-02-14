@@ -1,15 +1,20 @@
+import { ObjectId } from 'mongodb'
 import { mongoose } from '../mongoose'
 import { DEFAULT_NAME, FolderType } from '../models/Folder'
 import {
     createFolder,
     deleteFolder,
-    getFolder,
     getFolderDescendantsCount,
     getFolderWithFamily,
     updateFolder,
-} from './foldersService'
-import { createNote, getNote } from './notesService'
-import { ObjectId } from 'mongodb'
+} from '../services/foldersService'
+import { createNote } from '../services/notesService'
+import {
+    checkUpdatedItem,
+    createFamily,
+    flattenFamily,
+    getDescendantCount,
+} from './testsUtility'
 
 describe('foldersService', () => {
     afterAll(async () => {
@@ -44,25 +49,17 @@ describe('foldersService', () => {
 
     describe('getFolderDescendantsCount', () => {
         it('should return the total number of descendant folders and notes', async () => {
-            const rootFolder = await createFolder({})
+            const family = await createFamily()
 
-            const folderDepth1 = await createFolder({
-                parentFolderId: rootFolder._id,
-            })
-            await createNote({ parentFolderId: rootFolder._id })
-
-            await createFolder({ parentFolderId: folderDepth1._id })
-            await createFolder({ parentFolderId: folderDepth1._id })
-            await createNote({ parentFolderId: folderDepth1._id })
+            const [[rootFolder], ...generations] = family
 
             const descendantsCount = await getFolderDescendantsCount(
                 rootFolder._id
             )
 
-            expect(descendantsCount).toMatchObject({
-                folders: 3,
-                notes: 2,
-            })
+            expect(descendantsCount).toMatchObject(
+                getDescendantCount(generations)
+            )
         })
     })
 
@@ -171,33 +168,15 @@ describe('foldersService', () => {
 
     describe('deleteFolder', () => {
         it('should delete the folder, all of its child notes and folders, and all of their child notes and folders recursively', async () => {
-            const rootFolder = await createFolder({})
-
-            const folderDepth1 = await createFolder({
-                parentFolderId: rootFolder._id,
-            })
-            const noteDepth1 = await createNote({
-                parentFolderId: rootFolder._id,
-            })
-
-            const folder1Depth2 = await createFolder({
-                parentFolderId: folderDepth1._id,
-            })
-            const folder2Depth2 = await createFolder({
-                parentFolderId: folderDepth1._id,
-            })
-            const noteDepth2 = await createNote({
-                parentFolderId: folderDepth1._id,
-            })
+            const [[rootFolder], ...generations] = await createFamily()
 
             await deleteFolder(rootFolder._id)
 
-            expect(await getFolder(rootFolder._id)).toBe(null)
-            expect(await getFolder(folderDepth1._id)).toBe(null)
-            expect(await getNote(noteDepth1._id)).toBe(null)
-            expect(await getFolder(folder1Depth2._id)).toBe(null)
-            expect(await getFolder(folder2Depth2._id)).toBe(null)
-            expect(await getNote(noteDepth2._id)).toBe(null)
+            await Promise.all(
+                flattenFamily(generations).map((item) =>
+                    checkUpdatedItem(item, (item) => expect(item).toBe(null))
+                )
+            )
         })
     })
 })

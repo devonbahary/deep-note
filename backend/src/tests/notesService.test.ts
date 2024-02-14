@@ -1,8 +1,8 @@
+import { ObjectId } from 'mongodb'
 import { mongoose } from '../mongoose'
 import { DEFAULT_NAME } from '../models/Note'
-import { createFolder } from './foldersService'
-import { createNote, updateNote } from './notesService'
-import { ObjectId } from 'mongodb'
+import { createFolder } from '../services/foldersService'
+import { createNote, updateNote } from '../services/notesService'
 
 describe('notesService', () => {
     afterAll(async () => {

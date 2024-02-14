@@ -1,5 +1,5 @@
-import { Note, NoteType } from '../models/Note'
 import { UpdateQuery } from 'mongoose'
+import { Note, NoteType } from '../models/Note'
 import { CreateInput, UpdateFolderChildInput } from '../types/types'
 import { validateParentFolder } from '../validators/parentFolderValidator'
 
@@ -56,6 +56,18 @@ export const updateNote = async (
         {
             new: true,
         }
+    )
+}
+
+export const updateManyNotes = async (
+    ids: string[],
+    update: UpdateQuery<NoteType>
+) => {
+    return await Note.updateMany(
+        {
+            _id: ids,
+        },
+        update
     )
 }
 

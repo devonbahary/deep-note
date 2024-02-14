@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { UpdateQuery } from 'mongoose'
+import { AnyObject, UpdateQuery } from 'mongoose'
 import { Folder, FolderType } from '../models/Folder'
 import { Note, NoteType } from '../models/Note'
 import { CreateInput, Protected, UpdateFolderChildInput } from '../types/types'
@@ -10,7 +10,8 @@ type FolderWithDescendants = FolderType & {
 }
 
 export const getDescendantFolders = async (
-    rootFolderId: string
+    rootFolderId: string,
+    restrictSearchWithMatch: AnyObject = {}
 ): Promise<FolderType[]> => {
     const [rootFolder] = await Folder.aggregate<FolderWithDescendants>([
         {
@@ -25,6 +26,7 @@ export const getDescendantFolders = async (
                 connectFromField: '_id',
                 connectToField: '_parentFolderId',
                 as: 'descendants',
+                restrictSearchWithMatch,
             },
         },
     ])
@@ -170,15 +172,28 @@ export const updateFolder = async (
     )
 }
 
+export const updateManyFolders = async (
+    ids: string[],
+    update: UpdateQuery<FolderType>
+) => {
+    return await Folder.updateMany(
+        {
+            _id: ids,
+        },
+        update
+    )
+}
+
 export const deleteFolder = async (id: string): Promise<void> => {
     const descendants = await getDescendantFolders(id)
     const parentFolderIds = [id, ...descendants.map((f) => f._id)]
 
-    await Folder.deleteMany({
-        _id: parentFolderIds,
-    })
-
-    await Note.deleteMany({
-        _parentFolderId: parentFolderIds,
-    })
+    await Promise.all([
+        Folder.deleteMany({
+            _id: parentFolderIds,
+        }),
+        Note.deleteMany({
+            _parentFolderId: parentFolderIds,
+        }),
+    ])
 }

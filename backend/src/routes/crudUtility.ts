@@ -87,7 +87,7 @@ export const destroy = async <T>(
     }, next)
 }
 
-const withErrorHandling = async (
+export const withErrorHandling = async (
     cb: () => Promise<void>,
     next: NextFunction
 ) => {
