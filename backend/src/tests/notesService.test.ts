@@ -1,8 +1,8 @@
+import { ObjectId } from 'mongodb'
 import { mongoose } from '../mongoose'
 import { DEFAULT_NAME } from '../models/Note'
-import { createFolder } from './foldersService'
-import { createNote, updateNote } from './notesService'
-import { ObjectId } from 'mongodb'
+import { createFolder } from '../services/foldersService'
+import { createNote, updateNote } from '../services/notesService'
 
 describe('notesService', () => {
     afterAll(async () => {
@@ -12,17 +12,19 @@ describe('notesService', () => {
     let parentFolderId: string
 
     beforeAll(async () => {
-        const folder = await createFolder()
+        const folder = await createFolder({})
         parentFolderId = folder._id
     })
 
     describe('createNote', () => {
         it('should fail without a _parentFolderId', async () => {
-            await expect(createNote('fake_folder_id')).rejects.toThrow()
+            await expect(
+                createNote({ parentFolderId: 'fake_folder_id' })
+            ).rejects.toThrow()
         })
 
         it('should succeed a _parentFolderId, with a default name', async () => {
-            const note = await createNote(parentFolderId)
+            const note = await createNote({ parentFolderId })
 
             expect(note.toJSON()).toMatchObject({
                 name: DEFAULT_NAME,
@@ -32,7 +34,9 @@ describe('notesService', () => {
 
         it(`should not create a note with invalid parentFolderId`, async () => {
             const randomId = new ObjectId()
-            await expect(createNote(randomId.toString())).rejects.toThrow()
+            await expect(
+                createNote({ parentFolderId: randomId.toString() })
+            ).rejects.toThrow()
         })
     })
 
@@ -40,7 +44,7 @@ describe('notesService', () => {
         let noteId: string
 
         beforeAll(async () => {
-            const note = await createNote(parentFolderId)
+            const note = await createNote({ parentFolderId })
             noteId = note._id
         })
 
@@ -67,7 +71,7 @@ describe('notesService', () => {
         })
 
         it('should update the _parentFolderId field, returning the updated document', async () => {
-            const newParentFolder = await createFolder()
+            const newParentFolder = await createFolder({})
 
             const updatedNote = await updateNote(noteId, {
                 parentFolderId: newParentFolder._id,

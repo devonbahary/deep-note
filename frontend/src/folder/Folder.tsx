@@ -1,14 +1,15 @@
 import clsx from 'clsx/lite'
 import { FC } from 'react'
-import { Header } from '../common/Header'
-import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
+import { Header } from '../common/components/Header'
+import { HeaderFolderItemContents } from '../common/components/HeaderFolderItemContents'
 import { UnorderedList } from './common/UnorderedList'
 import { FolderChildFolder } from './folder-child/FolderChildFolder'
 import { FolderChildNote } from './folder-child/FolderChildNote'
 import { ListItem } from './common/ListItem'
-import { ViewContainer } from '../common/ViewContainer'
+import { ViewContainer } from '../common/components/ViewContainer'
 import { useAddChildFolder, useAddChildNote } from './hooks/useFolderQueries'
 import { FolderWithFamily } from '../types/Folder'
+import { ErrorPopup } from './common/ErrorPopup'
 import FolderAddIcon from '../assets/folder-add-line.svg?react'
 import NoteAddIcon from '../assets/file-add-line.svg?react'
 
@@ -17,11 +18,17 @@ type FolderProps = {
 }
 
 export const Folder: FC<FolderProps> = ({ folder }) => {
-    const { mutate: addChildFolder, isPending: isAddFolderPending } =
-        useAddChildFolder(folder._id)
+    const {
+        mutate: addChildFolder,
+        isPending: isAddFolderPending,
+        error: addFolderError,
+    } = useAddChildFolder(folder._id)
 
-    const { mutate: addChildNote, isPending: isAddNotePending } =
-        useAddChildNote(folder._id)
+    const {
+        mutate: addChildNote,
+        isPending: isAddNotePending,
+        error: addNoteError,
+    } = useAddChildNote(folder._id)
 
     const liClassName = 'bg-zinc-900 hover:bg-zinc-800 border-zinc-700'
 
@@ -47,40 +54,50 @@ export const Folder: FC<FolderProps> = ({ folder }) => {
                 </Header>
             }
             scrollableContent={
-                <UnorderedList className="grow bg-zinc-900 text-zinc-100">
-                    {folder.folders.map((child) => (
-                        <FolderChildFolder
-                            key={child._id}
-                            folder={child}
-                            parentFolder={folder}
-                        />
-                    ))}
-                    {folder.notes.map((child) => (
-                        <FolderChildNote
-                            key={child._id}
-                            note={child}
-                            parentFolder={folder}
-                        />
-                    ))}
-                    <ListItem
-                        className={addFolderClassName}
-                        icon={<FolderAddIcon />}
-                        onClick={() => {
-                            if (!isAddFolderPending) addChildFolder()
-                        }}
-                    >
-                        add folder
-                    </ListItem>
-                    <ListItem
-                        className={addNoteClassName}
-                        icon={<NoteAddIcon />}
-                        onClick={() => {
-                            if (!isAddNotePending) addChildNote()
-                        }}
-                    >
-                        add note
-                    </ListItem>
-                </UnorderedList>
+                <>
+                    <UnorderedList className="grow bg-zinc-900 text-zinc-100">
+                        {folder.folders.map((child) => (
+                            <FolderChildFolder
+                                key={child._id}
+                                folder={child}
+                                parentFolder={folder}
+                            />
+                        ))}
+                        {folder.notes.map((child) => (
+                            <FolderChildNote
+                                key={child._id}
+                                note={child}
+                                parentFolder={folder}
+                            />
+                        ))}
+                        <ListItem
+                            className={addFolderClassName}
+                            icon={<FolderAddIcon />}
+                            onClick={() => {
+                                if (!isAddFolderPending) addChildFolder()
+                            }}
+                        >
+                            add folder
+                        </ListItem>
+                        <ListItem
+                            className={addNoteClassName}
+                            icon={<NoteAddIcon />}
+                            onClick={() => {
+                                if (!isAddNotePending) addChildNote()
+                            }}
+                        >
+                            add note
+                        </ListItem>
+                    </UnorderedList>
+                    <ErrorPopup
+                        prependMsg="Failed to add folder:"
+                        error={addFolderError}
+                    />
+                    <ErrorPopup
+                        prependMsg="Failed to add note:"
+                        error={addNoteError}
+                    />
+                </>
             }
         />
     )

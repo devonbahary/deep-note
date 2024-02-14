@@ -1,20 +1,21 @@
-import SadIcon from '../assets/emotion-sad-line.svg?react'
 import { FC } from 'react'
+import SadIcon from '../../assets/emotion-sad-line.svg?react'
 
 type ErrorElementProps = {
     error: Error
 }
 
 const getErrDetails = (errMessage?: string): string => {
-    if (errMessage === '404') {
-        return '404 - Not found'
+    switch (errMessage) {
+        case '403':
+            return '403 - Forbidden'
+        case '404':
+            return '404 - Not Found'
+        case '500':
+            return '500 - Internal Server Error'
+        default:
+            return ''
     }
-
-    if (errMessage === '500') {
-        return '500 - Internal server error'
-    }
-
-    return errMessage || ''
 }
 
 export const ErrorElement: FC<ErrorElementProps> = ({ error }) => {

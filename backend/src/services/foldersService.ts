@@ -1,8 +1,8 @@
 import { ObjectId } from 'mongodb'
-import { UpdateQuery } from 'mongoose'
+import { AnyObject, UpdateQuery } from 'mongoose'
 import { Folder, FolderType } from '../models/Folder'
 import { Note, NoteType } from '../models/Note'
-import { UpdateFolderChildInput } from '../types/types'
+import { CreateInput, Protected, UpdateFolderChildInput } from '../types/types'
 import { validateParentFolder } from '../validators/parentFolderValidator'
 
 type FolderWithDescendants = FolderType & {
@@ -10,7 +10,8 @@ type FolderWithDescendants = FolderType & {
 }
 
 export const getDescendantFolders = async (
-    rootFolderId: string
+    rootFolderId: string,
+    restrictSearchWithMatch: AnyObject = {}
 ): Promise<FolderType[]> => {
     const [rootFolder] = await Folder.aggregate<FolderWithDescendants>([
         {
@@ -25,6 +26,7 @@ export const getDescendantFolders = async (
                 connectFromField: '_id',
                 connectToField: '_parentFolderId',
                 as: 'descendants',
+                restrictSearchWithMatch,
             },
         },
     ])
@@ -36,7 +38,7 @@ export const getDescendantFolders = async (
     return rootFolder.descendants
 }
 
-type DescendantsCount = {
+type DescendantsCount = Protected & {
     folders: number
     notes: number
 }
@@ -44,16 +46,17 @@ type DescendantsCount = {
 export const getFolderDescendantsCount = async (
     rootFolderId: string
 ): Promise<DescendantsCount> => {
+    const rootFolder = await getFolder(rootFolderId)
+
     const descendantFolders = await getDescendantFolders(rootFolderId)
     const descendantNoteCount = await Note.countDocuments({
-        _parentFolderId: {
-            $in: [rootFolderId, ...descendantFolders.map((f) => f._id)],
-        },
+        _parentFolderId: [rootFolderId, ...descendantFolders.map((f) => f._id)],
     })
 
     return {
         folders: descendantFolders.length,
         notes: descendantNoteCount,
+        userId: rootFolder?.userId,
     }
 }
 
@@ -82,6 +85,14 @@ export const getFolderWithFamily = async (
                 localField: '_id',
                 foreignField: '_parentFolderId',
                 as: 'notes',
+                pipeline: [
+                    {
+                        // content should only be shown to authorized users of a note
+                        $project: {
+                            content: 0,
+                        },
+                    },
+                ],
             },
         },
         {
@@ -117,9 +128,9 @@ export const getFolderWithFamily = async (
     return folders[0]
 }
 
-export const createFolder = async (
-    parentFolderId?: string
-): Promise<FolderType> => {
+export const createFolder = async (input: CreateInput): Promise<FolderType> => {
+    const { parentFolderId, userId } = input
+
     if (parentFolderId) {
         await validateParentFolder(parentFolderId)
     }
@@ -127,6 +138,7 @@ export const createFolder = async (
     return await Folder.create({
         name: parentFolderId ? undefined : 'root',
         _parentFolderId: parentFolderId,
+        userId,
     })
 }
 
@@ -167,19 +179,28 @@ export const updateFolder = async (
     )
 }
 
+export const updateManyFolders = async (
+    ids: string[],
+    update: UpdateQuery<FolderType>
+) => {
+    return await Folder.updateMany(
+        {
+            _id: ids,
+        },
+        update
+    )
+}
+
 export const deleteFolder = async (id: string): Promise<void> => {
     const descendants = await getDescendantFolders(id)
     const parentFolderIds = [id, ...descendants.map((f) => f._id)]
 
-    await Folder.deleteMany({
-        _id: {
-            $in: parentFolderIds,
-        },
-    })
-
-    await Note.deleteMany({
-        _parentFolderId: {
-            $in: parentFolderIds,
-        },
-    })
+    await Promise.all([
+        Folder.deleteMany({
+            _id: parentFolderIds,
+        }),
+        Note.deleteMany({
+            _parentFolderId: parentFolderIds,
+        }),
+    ])
 }

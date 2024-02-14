@@ -3,7 +3,7 @@ import { FC } from 'react'
 import { Modal } from '../modal/Modal'
 import { UnorderedList } from '../common/UnorderedList'
 import { Folder, FolderWithFamily } from '../../types/Folder'
-import { TruncatedTextDiv } from '../../common/TruncatedTextDiv'
+import { TruncatedTextDiv } from '../../common/components/TruncatedTextDiv'
 import { FolderListItem } from '../FolderListItem'
 import FolderIcon from '../../assets/folder-fill.svg?react'
 

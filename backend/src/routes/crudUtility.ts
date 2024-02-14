@@ -1,10 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
+import { CreateInput, Protected } from '../types/types'
+import { getUserId, isAuthorized } from '../auth/auth'
 
-export const getById = async <T>(
+type GetById<T> = (id: string) => Promise<T | null>
+
+export const getById = async <T extends Protected>(
     req: Request,
     res: Response,
     next: NextFunction,
-    getById: (id: string) => Promise<T | null>
+    getById: GetById<T>,
+    cb?: (resource: T) => Promise<void>
 ): Promise<void> => {
     withErrorHandling(async () => {
         const { id } = req.params
@@ -13,9 +18,14 @@ export const getById = async <T>(
 
         if (!resource) {
             res.sendStatus(404)
+        } else if (!isAuthorized(req, resource)) {
+            res.sendStatus(403)
+        } else {
+            if (cb) {
+                return cb(resource)
+            }
+            res.json(resource)
         }
-
-        res.json(resource)
     }, next)
 }
 
@@ -23,44 +33,57 @@ export const create = async <T>(
     req: Request,
     res: Response,
     next: NextFunction,
-    create: (parentFolderId: string) => Promise<T>
+    create: (input: CreateInput) => Promise<T>
 ): Promise<void> => {
     withErrorHandling(async () => {
         const { parentFolderId } = req.body
+        const userId = getUserId(req)
 
-        const newNote = await create(parentFolderId)
+        const resource = await create({ parentFolderId, userId })
 
-        res.json(newNote)
+        res.json(resource)
     }, next)
 }
 
+// TODO: possible to reparent a resource into a folder not owned by user; revisit this
 export const update = async <T, I>(
     req: Request,
     res: Response,
     next: NextFunction,
+    getById: GetById<T>,
     update: (id: string, input: I) => Promise<T>
 ): Promise<void> => {
     withErrorHandling(async () => {
         const { id } = req.params
 
-        const updatedResource = await update(id, req.body)
+        const resource = await getById(id)
 
-        if (!updatedResource) {
+        if (!resource) {
             res.sendStatus(404)
+        } else if (!isAuthorized(req, resource)) {
+            res.sendStatus(403)
+        } else {
+            const updatedResource = await update(id, req.body)
+            res.json(updatedResource)
         }
-
-        res.json(updatedResource)
     }, next)
 }
 
-export const destroy = async (
+export const destroy = async <T>(
     req: Request,
     res: Response,
     next: NextFunction,
+    getById: GetById<T>,
     destroy: (id: string) => Promise<void>
 ): Promise<void> => {
     withErrorHandling(async () => {
         const { id } = req.params
+
+        const resource = await getById(id)
+
+        if (resource && !isAuthorized(req, resource)) {
+            res.sendStatus(403)
+        }
 
         await destroy(id)
 
@@ -68,7 +91,7 @@ export const destroy = async (
     }, next)
 }
 
-const withErrorHandling = async (
+export const withErrorHandling = async (
     cb: () => Promise<void>,
     next: NextFunction
 ) => {

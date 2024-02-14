@@ -1,11 +1,11 @@
-import { Header } from '../common/Header'
-import { ListItem } from './common/ListItem'
-import { UnorderedList } from './common/UnorderedList'
-import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
-import { SkeletonBox } from '../common/SkeletonBox'
-import { getRandomArray } from '../common/skeletonUtility'
-import { ViewContainer } from '../common/ViewContainer'
-import SquareIcon from '../assets/square-fill.svg?react'
+import { Header } from '../../common/components/Header'
+import { ListItem } from '../common/ListItem'
+import { UnorderedList } from '../common/UnorderedList'
+import { HeaderFolderItemContents } from '../../common/components/HeaderFolderItemContents'
+import { SkeletonBox } from '../../common/components/SkeletonBox'
+import { getRandomArray } from '../../common/skeletonUtility'
+import { ViewContainer } from '../../common/components/ViewContainer'
+import SquareIcon from '../../assets/square-fill.svg?react'
 
 export const FolderSkeleton = () => {
     const skeletonItems = getRandomArray(4, 10)

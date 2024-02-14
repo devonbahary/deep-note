@@ -1,12 +1,12 @@
 import { Fragment } from 'react'
-import { Header } from '../common/Header'
-import { HeaderFolderItemContents } from '../common/HeaderFolderItemContents'
-import { SkeletonBox } from '../common/SkeletonBox'
-import { getRandomArray } from '../common/skeletonUtility'
-import { COMMAND_BUTTON_GROUPS } from './editor-commands-menu/commands'
-import { CommandButtonGroup } from './editor-commands-menu/CommandButtonGroup'
-import { EditCommandsMenuContainer } from './editor-commands-menu/EditCommandsMenuContainer'
-import { ViewContainer } from '../common/ViewContainer'
+import { Header } from '../../common/components/Header'
+import { HeaderFolderItemContents } from '../../common/components/HeaderFolderItemContents'
+import { SkeletonBox } from '../../common/components/SkeletonBox'
+import { getRandomArray } from '../../common/skeletonUtility'
+import { COMMAND_BUTTON_GROUPS } from '../editor-commands-menu/commands'
+import { CommandButtonGroup } from '../editor-commands-menu/CommandButtonGroup'
+import { EditCommandsMenuContainer } from '../editor-commands-menu/EditCommandsMenuContainer'
+import { ViewContainer } from '../../common/components/ViewContainer'
 
 export const NoteSkeleton = () => {
     const skeletonTexts = getRandomArray(4, 10)

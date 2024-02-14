@@ -1,18 +1,17 @@
 import { useNavigate } from 'react-router-dom'
 
-type UseNavigateFoldersResponse = {
+type useNavigationResponse = {
     goToFolder: (id: string) => void
     goToNote: (id: string) => void
+    goToUser: () => void
 }
 
-export const useNavigateFolders = (): UseNavigateFoldersResponse => {
+export const useNavigation = (): useNavigationResponse => {
     const navigate = useNavigate()
 
-    const goToFolder = (id: string) => navigate(`/folders/${id}`)
-    const goToNote = (id: string) => navigate(`/notes/${id}`)
-
     return {
-        goToFolder,
-        goToNote,
+        goToFolder: (id: string) => navigate(`/folders/${id}`),
+        goToNote: (id: string) => navigate(`/notes/${id}`),
+        goToUser: () => navigate('/user'),
     }
 }

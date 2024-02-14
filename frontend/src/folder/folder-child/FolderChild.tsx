@@ -10,8 +10,10 @@ import { DeleteFolderItemModal } from './delete-modal/DeleteFolderItemModal'
 import { ColorModal } from './color-modal/ColorModal'
 import { MoveToFolderModal } from './MoveToFolderModal'
 import { FolderChildMenu } from './FolderChildMenu'
-import { TruncatedTextDiv } from '../../common/TruncatedTextDiv'
+import { TruncatedTextDiv } from '../../common/components/TruncatedTextDiv'
 import { FolderListItem } from '../FolderListItem'
+import { ClaimFolderChildModal } from './ClaimFolderChildModal'
+import LockIcon from '../../assets/lock-fill.svg?react'
 import MenuIcon from '../../assets/more-line.svg?react'
 
 type FolderChildProps = {
@@ -20,6 +22,8 @@ type FolderChildProps = {
     updateChild: (input: UpdateFolderChildInput) => void
     reparentChild: (input: ReparentInput) => void
     deleteChild: (id: string) => void
+    claimChild: (id: string) => void
+    unclaimChild: (id: string) => void
     parentFolder: FolderWithFamily
     child: Note | Folder
     editProps: EditProps
@@ -37,6 +41,7 @@ enum EditMode {
     Color,
     Move,
     Delete,
+    Claim,
 }
 
 export const FolderChild: FC<FolderChildProps> = ({
@@ -46,6 +51,8 @@ export const FolderChild: FC<FolderChildProps> = ({
     reparentChild,
     updateChild,
     deleteChild,
+    claimChild,
+    unclaimChild,
     child,
     editProps,
     isPending,
@@ -78,6 +85,16 @@ export const FolderChild: FC<FolderChildProps> = ({
         reset()
     }
 
+    const onClaimChild = async () => {
+        await claimChild(child._id)
+        reset()
+    }
+
+    const onUnclaimChild = async () => {
+        await unclaimChild(child._id)
+        reset()
+    }
+
     const onDeleteChild = async () => {
         await deleteChild(child._id)
         reset()
@@ -95,7 +112,7 @@ export const FolderChild: FC<FolderChildProps> = ({
         >
             <div className="flex w-full items-center">
                 <div className="flex-grow">
-                    <TruncatedTextDiv className="max-w-[200px] xs:max-w-[300px] md:max-w-[660px] lg:max-w-[880px]">
+                    <TruncatedTextDiv className="max-w-[180px] xs:max-w-[280px] md:max-w-[620px] lg:max-w-[880px]">
                         {editMode === EditMode.Rename ? (
                             <TextInput
                                 defaultValue={child.name}
@@ -110,6 +127,12 @@ export const FolderChild: FC<FolderChildProps> = ({
                     </TruncatedTextDiv>
                 </div>
                 <div
+                    className="icon-box text-zinc-400"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    {child.userId && <LockIcon />}
+                </div>
+                <div
                     className="icon-box"
                     onClick={(e) => {
                         e.stopPropagation()
@@ -121,12 +144,14 @@ export const FolderChild: FC<FolderChildProps> = ({
             </div>
             {isMenuOpen && (
                 <FolderChildMenu
+                    child={child}
                     canMove={canMove}
                     onClose={closeMenu}
                     onRename={() => beginEditing(EditMode.Rename)}
                     onColor={() => beginEditing(EditMode.Color)}
                     onMove={() => beginEditing(EditMode.Move)}
                     onDelete={() => beginEditing(EditMode.Delete)}
+                    onToggleClaim={() => beginEditing(EditMode.Claim)}
                 />
             )}
             {editMode === EditMode.Color && (
@@ -153,6 +178,14 @@ export const FolderChild: FC<FolderChildProps> = ({
                 >
                     {editProps.deleteModalContents}
                 </DeleteFolderItemModal>
+            )}
+            {editMode === EditMode.Claim && (
+                <ClaimFolderChildModal
+                    item={child}
+                    onClose={reset}
+                    onClaim={() => onClaimChild()}
+                    onUnclaim={() => onUnclaimChild()}
+                />
             )}
         </FolderListItem>
     )

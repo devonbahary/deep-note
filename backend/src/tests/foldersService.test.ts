@@ -1,17 +1,23 @@
+import { ObjectId } from 'mongodb'
 import { mongoose } from '../mongoose'
 import { DEFAULT_NAME, FolderType } from '../models/Folder'
 import {
     createFolder,
     deleteFolder,
-    getFolder,
     getFolderDescendantsCount,
     getFolderWithFamily,
     updateFolder,
-} from './foldersService'
-import { createNote, getNote } from './notesService'
-import { ObjectId } from 'mongodb'
+} from '../services/foldersService'
+import { createNote, updateNote } from '../services/notesService'
+import {
+    checkUpdatedItem,
+    createFamily,
+    createNoteWithContent,
+    flattenFamily,
+    getDescendantCount,
+} from './testsUtility'
 
-describe('foldsService', () => {
+describe('foldersService', () => {
     afterAll(async () => {
         await mongoose.connection.close()
     })
@@ -20,57 +26,58 @@ describe('foldsService', () => {
         let parentFolderId: string
 
         beforeAll(async () => {
-            const folder = await createFolder()
+            const folder = await createFolder({})
             parentFolderId = folder._id
         })
 
         it('a folder with no _parentFolderId should default to being named `root`', async () => {
-            const folder = await createFolder()
+            const folder = await createFolder({})
             expect(folder.name).toBe('root')
         })
 
         it(`a folder with _parentFolderId should default to being named '${DEFAULT_NAME}'`, async () => {
-            const folder = await createFolder(parentFolderId)
+            const folder = await createFolder({ parentFolderId })
             expect(folder.name).toBe(DEFAULT_NAME)
         })
 
         it(`should not create a folder with invalid parentFolderId`, async () => {
             const randomId = new ObjectId()
-            await expect(createFolder(randomId.toString())).rejects.toThrow()
+            await expect(
+                createFolder({ parentFolderId: randomId.toString() })
+            ).rejects.toThrow()
         })
     })
 
     describe('getFolderDescendantsCount', () => {
         it('should return the total number of descendant folders and notes', async () => {
-            const rootFolder = await createFolder()
+            const family = await createFamily()
 
-            const folderDepth1 = await createFolder(rootFolder._id)
-            await createNote(rootFolder._id)
-
-            await createFolder(folderDepth1._id)
-            await createFolder(folderDepth1._id)
-            await createNote(folderDepth1._id)
+            const [[rootFolder], ...generations] = family
 
             const descendantsCount = await getFolderDescendantsCount(
                 rootFolder._id
             )
 
-            expect(descendantsCount).toMatchObject({
-                folders: 3,
-                notes: 2,
-            })
+            expect(descendantsCount).toMatchObject(
+                getDescendantCount(generations)
+            )
         })
     })
 
     describe('getFolderWithFamily', () => {
-        it('should retrieve the folder with parent and all child items', async () => {
-            const grandparentFolder = await createFolder()
+        it('should retrieve the folder with parent and all child items, hiding note content', async () => {
+            const grandparentFolder = await createFolder({})
 
-            const folder = await createFolder(grandparentFolder._id)
+            const folder = await createFolder({
+                parentFolderId: grandparentFolder._id,
+            })
             const parentFolderId = folder._id
 
-            const childFolder = await createFolder(parentFolderId)
-            const childNote = await createNote(parentFolderId)
+            const childFolder = await createFolder({ parentFolderId })
+            const childNote = await createNoteWithContent(
+                { parentFolderId },
+                'this is content'
+            )
 
             const folderWithParentAndChildren =
                 await getFolderWithFamily(parentFolderId)
@@ -81,17 +88,28 @@ describe('foldsService', () => {
             expect(folderWithParentAndChildren.folders).toContainEqual(
                 childFolder.toJSON()
             )
-            expect(folderWithParentAndChildren.notes).toContainEqual(
-                childNote.toJSON()
+
+            const expectedChildNote = folderWithParentAndChildren.notes.find(
+                (n) => n._id.equals(childNote._id)
             )
+            expect(expectedChildNote).toBeDefined()
+
+            const match = { ...childNote?.toJSON() }
+            delete match.content
+
+            expect(expectedChildNote).toMatchObject(match)
+            expect(expectedChildNote).not.toHaveProperty('content')
         })
 
-        it('should retrieve the folder with no parent if does not exist and all child items', async () => {
-            const folder = await createFolder()
+        it('should retrieve the folder with no parent if does not exist and all child items, hiding note content', async () => {
+            const folder = await createFolder({})
             const parentFolderId = folder._id
 
-            const childFolder = await createFolder(parentFolderId)
-            const childNote = await createNote(parentFolderId)
+            const childFolder = await createFolder({ parentFolderId })
+            const childNote = await createNoteWithContent(
+                { parentFolderId },
+                'this is content'
+            )
 
             const folderWithParentAndChildren =
                 await getFolderWithFamily(parentFolderId)
@@ -100,9 +118,17 @@ describe('foldsService', () => {
             expect(folderWithParentAndChildren.folders).toContainEqual(
                 childFolder.toJSON()
             )
-            expect(folderWithParentAndChildren.notes).toContainEqual(
-                childNote.toJSON()
+
+            const expectedChildNote = folderWithParentAndChildren.notes.find(
+                (n) => n._id.equals(childNote._id)
             )
+            expect(expectedChildNote).toBeDefined()
+
+            const match = { ...childNote?.toJSON() }
+            delete match.content
+
+            expect(expectedChildNote).toMatchObject(match)
+            expect(expectedChildNote).not.toHaveProperty('content')
         })
     })
 
@@ -110,7 +136,7 @@ describe('foldsService', () => {
         let folder: FolderType
 
         beforeAll(async () => {
-            folder = await createFolder()
+            folder = await createFolder({})
         })
 
         it('should update and trim the name field, returning the updated document', async () => {
@@ -122,7 +148,7 @@ describe('foldsService', () => {
         })
 
         it('should update the _parentFolderId field, returning the updated document', async () => {
-            const childFolderToBe = await createFolder()
+            const childFolderToBe = await createFolder({})
             expect(childFolderToBe._parentFolderId).toBe(undefined)
 
             const updatedFolder = await updateFolder(childFolderToBe._id, {
@@ -134,14 +160,14 @@ describe('foldsService', () => {
         })
 
         it('should not allow a folder to become its own parent', async () => {
-            const folder = await createFolder()
+            const folder = await createFolder({})
             await expect(
                 updateFolder(folder._id, { parentFolderId: folder._id })
             ).rejects.toThrow()
         })
 
         it('should not update with an invalid parentFolderId', async () => {
-            const folder = await createFolder()
+            const folder = await createFolder({})
 
             const randomId = new ObjectId()
 
@@ -165,23 +191,15 @@ describe('foldsService', () => {
 
     describe('deleteFolder', () => {
         it('should delete the folder, all of its child notes and folders, and all of their child notes and folders recursively', async () => {
-            const rootFolder = await createFolder()
-
-            const folderDepth1 = await createFolder(rootFolder._id)
-            const noteDepth1 = await createNote(rootFolder._id)
-
-            const folder1Depth2 = await createFolder(folderDepth1._id)
-            const folder2Depth2 = await createFolder(folderDepth1._id)
-            const noteDepth2 = await createNote(folderDepth1._id)
+            const [[rootFolder], ...generations] = await createFamily()
 
             await deleteFolder(rootFolder._id)
 
-            expect(await getFolder(rootFolder._id)).toBe(null)
-            expect(await getFolder(folderDepth1._id)).toBe(null)
-            expect(await getNote(noteDepth1._id)).toBe(null)
-            expect(await getFolder(folder1Depth2._id)).toBe(null)
-            expect(await getFolder(folder2Depth2._id)).toBe(null)
-            expect(await getNote(noteDepth2._id)).toBe(null)
+            await Promise.all(
+                flattenFamily(generations).map((item) =>
+                    checkUpdatedItem(item, (item) => expect(item).toBe(null))
+                )
+            )
         })
     })
 })

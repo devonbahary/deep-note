@@ -1,8 +1,9 @@
 import clsx from 'clsx/lite'
 import { FC, ReactNode } from 'react'
-import { useNavigateFolders } from './hooks/useNavigateFolders'
-import ArrowLeftIcon from '../assets/arrow-left-line.svg?react'
+import { useNavigation } from '../hooks/useNavigateFolders'
 import { TruncatedTextDiv } from './TruncatedTextDiv'
+import ArrowLeftIcon from '../../assets/arrow-left-line.svg?react'
+import UserIcon from '../../assets/user-3-fill.svg?react'
 
 type HeaderFolderItemContentsProps = {
     _parentFolderId?: string
@@ -13,7 +14,7 @@ export const HeaderFolderItemContents: FC<HeaderFolderItemContentsProps> = ({
     _parentFolderId,
     children,
 }) => {
-    const { goToFolder } = useNavigateFolders()
+    const { goToFolder, goToUser } = useNavigation()
 
     const goToParentFolder = () => {
         if (_parentFolderId) goToFolder(_parentFolderId)
@@ -30,9 +31,14 @@ export const HeaderFolderItemContents: FC<HeaderFolderItemContentsProps> = ({
             <button className={buttonClassName} onClick={goToParentFolder}>
                 <ArrowLeftIcon />
             </button>
-            <TruncatedTextDiv className="flex-1 max-w-[220px] xs:max-w-[320px] md:max-w-[660px] lg:max-w-[900px]">
-                {children}
-            </TruncatedTextDiv>
+            <div className="flex-1">
+                <TruncatedTextDiv className="flex-1 max-w-[220px] xs:max-w-[320px] md:max-w-[660px] lg:max-w-[900px]">
+                    {children}
+                </TruncatedTextDiv>
+            </div>
+            <button className="icon-box" onClick={goToUser}>
+                <UserIcon />
+            </button>
         </>
     )
 }

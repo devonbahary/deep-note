@@ -34,7 +34,7 @@ export const ErrorPopup: FC<ErrorPopupProps> = ({ prependMsg, error }) => {
 
     return (
         <div
-            className="fixed right-4 bottom-40 bg-red-800 text-zinc-100 px-4 py-3 rounded flex items-center"
+            className="fixed right-4 bottom-10 bg-red-800 text-zinc-100 px-4 py-3 rounded flex items-center"
             role="alert"
         >
             <strong className="font-bold">{prependMsg}</strong>
