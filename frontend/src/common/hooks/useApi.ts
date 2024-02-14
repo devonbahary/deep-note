@@ -1,8 +1,7 @@
 import { useContext } from 'react'
 import { AccessTokenContext } from '../components/AccessTokenProvider'
-const { DEV } = import.meta.env
 
-const BASE_URL = DEV ? '/api' : ''
+const BASE_URL = '/api'
 
 const useAuthHeaders = (): HeadersInit => {
     const { accessToken } = useContext(AccessTokenContext)

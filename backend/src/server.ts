@@ -27,9 +27,9 @@ app.use(express.static(pathToClient))
 
 app.use(checkJwt)
 
-app.use('/folders', folders)
-app.use('/notes', notes)
-app.use('/user', user)
+app.use('/api/folders', folders)
+app.use('/api/notes', notes)
+app.use('/api/user', user)
 
 app.get('/*', (req, res) => {
     res.sendFile(path.join(pathToClient, 'index.html'))
