@@ -1,4 +1,4 @@
-import { Request } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { Protected } from '../types/types'
 
 export const getUserId = (req: Request): string | undefined => {
@@ -11,4 +11,15 @@ export const isAuthorized = (req: Request, resource: Protected): boolean => {
     }
 
     return true
+}
+
+export const assertAuthentication = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    if (!req.auth) {
+        return res.sendStatus(403)
+    }
+    next()
 }

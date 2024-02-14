@@ -7,7 +7,7 @@ import {
     getFolder,
     updateManyFolders,
 } from './foldersService'
-import { getUserId, isAuthorized } from '../authorization/authorization'
+import { getUserId, isAuthorized } from '../auth/auth'
 import { getNote, updateManyNotes } from './notesService'
 
 export const getUserRootFolders = async (

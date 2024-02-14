@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { CreateInput, Protected } from '../types/types'
-import { getUserId, isAuthorized } from '../authorization/authorization'
+import { getUserId, isAuthorized } from '../auth/auth'
 
 type GetById<T> = (id: string) => Promise<T | null>
 
@@ -8,7 +8,8 @@ export const getById = async <T extends Protected>(
     req: Request,
     res: Response,
     next: NextFunction,
-    getById: GetById<T>
+    getById: GetById<T>,
+    cb?: (resource: T) => Promise<void>
 ): Promise<void> => {
     withErrorHandling(async () => {
         const { id } = req.params
@@ -20,6 +21,9 @@ export const getById = async <T extends Protected>(
         } else if (!isAuthorized(req, resource)) {
             res.sendStatus(403)
         } else {
+            if (cb) {
+                return cb(resource)
+            }
             res.json(resource)
         }
     }, next)

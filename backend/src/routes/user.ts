@@ -1,14 +1,16 @@
 import { Router } from 'express'
-import { updateNoteUserId } from './../services/userService'
+import { assertAuthentication } from '../auth/auth'
 import { getFolder } from './../services/foldersService'
-import { withErrorHandling } from './crudUtility'
-import { getUserId, isAuthorized } from '../authorization/authorization'
+import { getById, withErrorHandling } from './crudUtility'
+import { getUserId } from '../auth/auth'
 import {
     claimFolderAndDescendants,
     getUserRootFolders,
     unclaimFolderAndDescendants,
 } from '../services/userService'
 import { getQueryStringParam } from './paramUtility'
+import { getNote } from '../services/notesService'
+import { Note } from '../models/Note'
 
 const router = Router()
 
@@ -28,59 +30,74 @@ router.get('/root-folders', async (req, res, next) => {
     }, next)
 })
 
-router.put('/claim-folder/:id', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const { id } = req.params
+router.put(
+    '/claim-folder/:id',
+    assertAuthentication,
+    async (req, res, next) => {
+        getById(req, res, next, getFolder, async (folder) => {
+            const userId = getUserId(req)
+
+            if (!userId) {
+                res.sendStatus(403)
+            } else {
+                await claimFolderAndDescendants(userId, folder)
+
+                const updatedFolder = await getFolder(folder._id)
+
+                res.json(updatedFolder)
+            }
+        })
+    }
+)
+
+router.put(
+    '/unclaim-folder/:id',
+    assertAuthentication,
+    async (req, res, next) => {
+        getById(req, res, next, getFolder, async (folder) => {
+            const userId = getUserId(req)
+
+            if (!userId) {
+                res.sendStatus(403)
+            } else {
+                await unclaimFolderAndDescendants(userId, folder)
+
+                const updatedFolder = await getFolder(folder._id)
+
+                res.json(updatedFolder)
+            }
+        })
+    }
+)
+
+router.put('/claim-note/:id', assertAuthentication, async (req, res, next) => {
+    getById(req, res, next, getNote, async (note) => {
         const userId = getUserId(req)
 
-        const folder = await getFolder(id)
+        const updatedNote = await Note.findOneAndUpdate(
+            { _id: note._id },
+            { userId },
+            { new: true }
+        )
 
-        if (!folder) {
-            res.sendStatus(404)
-        } else if (!userId || !isAuthorized(req, folder)) {
-            res.sendStatus(403)
-        } else {
-            await claimFolderAndDescendants(userId, folder)
-
-            const updatedFolder = await getFolder(id)
-
-            res.json(updatedFolder)
-        }
-    }, next)
+        res.json(updatedNote)
+    })
 })
 
-router.put('/unclaim-folder/:id', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const { id } = req.params
-        const userId = getUserId(req)
+router.put(
+    '/unclaim-note/:id',
+    assertAuthentication,
+    async (req, res, next) => {
+        getById(req, res, next, getNote, async (note) => {
+            const updatedNote = await Note.findOneAndUpdate(
+                { _id: note._id },
+                { userId: null },
+                { new: true }
+            )
 
-        const folder = await getFolder(id)
-
-        if (!folder) {
-            res.sendStatus(404)
-        } else if (!userId || !isAuthorized(req, folder)) {
-            res.sendStatus(403)
-        } else {
-            await unclaimFolderAndDescendants(userId, folder)
-
-            const updatedFolder = await getFolder(id)
-
-            res.json(updatedFolder)
-        }
-    }, next)
-})
-
-router.put('/claim-note/:id', async (req, res, next) => {
-    withErrorHandling(async () => {
-        const userId = getUserId(req)
-        await updateNoteUserId(req, res, { userId })
-    }, next)
-})
-
-router.put('/unclaim-note/:id', async (req, res, next) => {
-    withErrorHandling(async () => {
-        await updateNoteUserId(req, res, { userId: null })
-    }, next)
-})
+            res.json(updatedNote)
+        })
+    }
+)
 
 export default router
