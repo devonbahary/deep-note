@@ -1,5 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Folder, FolderWithFamily } from './../../types/Folder'
+import {
+    Folder,
+    FolderDescendantsCount,
+    FolderWithFamily,
+} from './../../types/Folder'
 import {
     CreateFolderChildInput,
     UpdateFolderChildInput,
@@ -37,6 +41,19 @@ export const useGetFolder = (id?: string) => {
         queryFn: () => {
             if (id) return get(id)
             throw new Error(`Cannot get folder without id`)
+        },
+        enabled: Boolean(id),
+    })
+}
+
+export const useGetFolderDescendantsCount = (id?: string) => {
+    const get = useGet<FolderDescendantsCount>('/api/folders/descendants-count')
+
+    return useQuery({
+        queryKey: ['folder-descendants-count', id],
+        queryFn: () => {
+            if (id) return get(id)
+            throw new Error(`Cannot get folder descendants count without id`)
         },
         enabled: Boolean(id),
     })
@@ -81,13 +98,12 @@ export const useUpdateChildFolder = (parentFolderId: string) => {
 
     return useMutation({
         mutationFn: (input: UpdateFolderChildInput) => update(input.id, input),
-        onSuccess: (updatedFolder, { id }) => {
-            updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
-                ...oldData,
-                folders: oldData.folders.map((f) =>
-                    f._id === id ? updatedFolder : f
-                ),
-            }))
+        onSuccess: (updatedFolder) => {
+            updateChildFolderInParentFolder(
+                updateParent,
+                parentFolderId,
+                updatedFolder
+            )
         },
     })
 }
@@ -99,13 +115,12 @@ export const useUpdateChildNote = (parentFolderId: string) => {
 
     return useMutation({
         mutationFn: (input: UpdateFolderChildInput) => update(input.id, input),
-        onSuccess: (updatedNote, { id }) => {
-            updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
-                ...oldData,
-                notes: oldData.notes.map((n) =>
-                    n._id === id ? updatedNote : n
-                ),
-            }))
+        onSuccess: (updatedNote) => {
+            updateChildNoteInParentFolder(
+                updateParent,
+                parentFolderId,
+                updatedNote
+            )
         },
     })
 }
@@ -132,6 +147,74 @@ export const useReparentChildNote = (parentFolderId: string) => {
         mutationFn: (input: ReparentInput) => update(input.id, input),
         onSuccess: (_, { id }) => {
             filterChildNoteFromParentFolder(updateParent, parentFolderId, id)
+        },
+    })
+}
+
+export const useClaimChildFolder = (parentFolderId: string) => {
+    const updateParent = useUpdateFolderCache()
+
+    const update = useUpdate<Folder, {}>('/api/user/claim-folder')
+
+    return useMutation({
+        mutationFn: (id: string) => update(id, {}),
+        onSuccess: (updatedFolder) => {
+            updateChildFolderInParentFolder(
+                updateParent,
+                parentFolderId,
+                updatedFolder
+            )
+        },
+    })
+}
+
+export const useClaimChildNote = (parentFolderId: string) => {
+    const updateParent = useUpdateFolderCache()
+
+    const update = useUpdate<Note, {}>('/api/user/claim-note')
+
+    return useMutation({
+        mutationFn: (id: string) => update(id, {}),
+        onSuccess: (updatedNote) => {
+            updateChildNoteInParentFolder(
+                updateParent,
+                parentFolderId,
+                updatedNote
+            )
+        },
+    })
+}
+
+export const useUnclaimChildFolder = (parentFolderId: string) => {
+    const updateParent = useUpdateFolderCache()
+
+    const update = useUpdate<Folder, {}>('/api/user/unclaim-folder')
+
+    return useMutation({
+        mutationFn: (id: string) => update(id, {}),
+        onSuccess: (updatedFolder) => {
+            updateChildFolderInParentFolder(
+                updateParent,
+                parentFolderId,
+                updatedFolder
+            )
+        },
+    })
+}
+
+export const useUnclaimChildNote = (parentFolderId: string) => {
+    const updateParent = useUpdateFolderCache()
+
+    const update = useUpdate<Note, {}>('/api/user/unclaim-note')
+
+    return useMutation({
+        mutationFn: (id: string) => update(id, {}),
+        onSuccess: (updatedNote) => {
+            updateChildNoteInParentFolder(
+                updateParent,
+                parentFolderId,
+                updatedNote
+            )
         },
     })
 }
@@ -181,5 +264,31 @@ const filterChildNoteFromParentFolder = (
     updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
         ...oldData,
         notes: oldData.notes.filter((n) => n._id !== childNoteId),
+    }))
+}
+
+const updateChildFolderInParentFolder = (
+    updateParent: UpdateParent,
+    parentFolderId: string,
+    childFolder: Folder
+) => {
+    updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
+        ...oldData,
+        folders: oldData.folders.map((f) =>
+            f._id === childFolder._id ? childFolder : f
+        ),
+    }))
+}
+
+const updateChildNoteInParentFolder = (
+    updateParent: UpdateParent,
+    parentFolderId: string,
+    childNote: Note
+) => {
+    updateParent(parentFolderId, (oldData: FolderWithFamily) => ({
+        ...oldData,
+        notes: oldData.notes.map((n) =>
+            n._id === childNote._id ? childNote : n
+        ),
     }))
 }

@@ -5,7 +5,12 @@ type Document = {
     _id: string
 }
 
+type Protected = {
+    userId?: string
+}
+
 export type FolderChild = Document &
+    Protected &
     Timestamps & {
         _parentFolderId: string
         name: string

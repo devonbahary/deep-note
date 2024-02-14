@@ -14,8 +14,8 @@ const useAuthHeaders = (): HeadersInit => {
 export const useGet = <T>(url: string) => {
     const headers = useAuthHeaders()
 
-    const get = async (id: string): Promise<T> => {
-        const response = await fetch(`${url}/${id}`, {
+    const get = async (id?: string): Promise<T> => {
+        const response = await fetch(id ? `${url}/${id}` : url, {
             headers,
         })
 

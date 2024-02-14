@@ -1,7 +1,9 @@
 import { FC } from 'react'
 import {
+    useClaimChildFolder,
     useDeleteChildFolder,
     useReparentChildFolder,
+    useUnclaimChildFolder,
     useUpdateChildFolder,
 } from '../hooks/useFolderQueries'
 import { useNavigation } from '../../common/hooks/useNavigateFolders'
@@ -40,7 +42,24 @@ export const FolderChildFolder: FC<FolderChildFolderProps> = ({
         error: deleteError,
     } = useDeleteChildFolder(parentFolder._id)
 
-    const isPending = isUpdatePending || isReparentPending || isDeletePending
+    const {
+        mutate: claimChildFolder,
+        isPending: isClaimPending,
+        error: claimError,
+    } = useClaimChildFolder(parentFolder._id)
+
+    const {
+        mutate: unclaimChildFolder,
+        isPending: isUnclaimPending,
+        error: unclaimError,
+    } = useUnclaimChildFolder(parentFolder._id)
+
+    const isPending =
+        isUpdatePending ||
+        isReparentPending ||
+        isDeletePending ||
+        isClaimPending ||
+        isUnclaimPending
 
     return (
         <>
@@ -59,11 +78,21 @@ export const FolderChildFolder: FC<FolderChildFolderProps> = ({
                 reparentChild={reparentChildFolder}
                 updateChild={updateChildFolder}
                 deleteChild={deleteChildFolder}
+                claimChild={claimChildFolder}
+                unclaimChild={unclaimChildFolder}
                 isPending={isPending}
             />
             <ErrorPopup prependMsg="Failed to update:" error={updateError} />
             <ErrorPopup prependMsg="Failed to update:" error={reparentError} />
             <ErrorPopup prependMsg="Failed to delete:" error={deleteError} />
+            <ErrorPopup
+                prependMsg="Failed to mark private:"
+                error={claimError}
+            />
+            <ErrorPopup
+                prependMsg="Failed to mark public:"
+                error={unclaimError}
+            />
         </>
     )
 }

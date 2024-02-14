@@ -2,11 +2,11 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Auth0Provider } from '@auth0/auth0-react'
-import { LandingPage } from './landing-page/LandingPage'
 import { FolderRoute } from './folder/route/FolderRoute'
 import { NoteRoute } from './note/route/NoteRoute'
 import { AccessTokenProvider } from './common/components/AccessTokenProvider'
-import { UserRoute } from './user/UserRoute'
+import { UserRoute } from './user/route/UserRoute'
+import { LandingPageRoute } from './landing-page/LandingPageRoute'
 const { VITE_AUTH_DOMAIN, VITE_AUTH_CLIENT_ID } = import.meta.env
 
 const router = createBrowserRouter([
@@ -24,7 +24,7 @@ const router = createBrowserRouter([
     },
     {
         path: '/',
-        element: <LandingPage />,
+        element: <LandingPageRoute />,
     },
 ])
 

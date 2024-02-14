@@ -1,8 +1,8 @@
 import { AuthenticatedRoute } from '../common/components/AuthenticatedRoute'
-import { User } from './User'
+import { LandingPage } from './LandingPage'
 
-export const UserRoute = () => (
+export const LandingPageRoute = () => (
     <AuthenticatedRoute>
-        <User />
+        <LandingPage />
     </AuthenticatedRoute>
 )

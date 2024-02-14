@@ -31,9 +31,11 @@ export const HeaderFolderItemContents: FC<HeaderFolderItemContentsProps> = ({
             <button className={buttonClassName} onClick={goToParentFolder}>
                 <ArrowLeftIcon />
             </button>
-            <TruncatedTextDiv className="flex-1 max-w-[220px] xs:max-w-[320px] md:max-w-[660px] lg:max-w-[900px]">
-                {children}
-            </TruncatedTextDiv>
+            <div className="flex-1">
+                <TruncatedTextDiv className="flex-1 max-w-[220px] xs:max-w-[320px] md:max-w-[660px] lg:max-w-[900px]">
+                    {children}
+                </TruncatedTextDiv>
+            </div>
             <button className="icon-box" onClick={goToUser}>
                 <UserIcon />
             </button>
