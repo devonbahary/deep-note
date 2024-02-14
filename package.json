@@ -9,7 +9,7 @@
     },
     "scripts": {
         "dev": "conc 'cd backend && npm run dev' 'cd frontend && npm run dev'",
-        "install": "cd frontend && npm i -D && cd ../backend && npm i -D",
+        "install": "npm i -D tsc && cd frontend && npm i -D && cd ../backend && npm i -D",
         "build": "cd frontend && npm run build && cd ../backend && npm run build",
         "start": "cd backend && npm run serve",
         "lint": "cd backend && npm run lint && cd ../frontend && npm run lint",
