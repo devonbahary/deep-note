@@ -5,7 +5,7 @@ import { Note } from '../../types/Note'
 import { UpdateNoteContentInput } from '../../types/types'
 
 export const useGetNote = (id?: string) => {
-    const get = useGet<Note>('/api/notes')
+    const get = useGet<Note>('/notes')
 
     return useQuery({
         queryKey: ['note', id],
@@ -19,7 +19,7 @@ export const useGetNote = (id?: string) => {
 }
 
 export const useUpdateContent = (noteId: string) => {
-    const update = useUpdate<Note, UpdateNoteContentInput>('/api/notes')
+    const update = useUpdate<Note, UpdateNoteContentInput>('/notes')
 
     return useMutation({
         mutationFn: (content: Content) => update(noteId, { content }),

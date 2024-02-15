@@ -25,7 +25,7 @@ export const useGetUserRootFolders = () => {
     const { unauthenticatedRootFolderId } = useUnauthenticatedRootFolderId()
 
     const get = useGet<Folder[]>(
-        '/api/user/root-folders' +
+        '/user/root-folders' +
             (unauthenticatedRootFolderId
                 ? `?unauthenticatedRootFolderId=${unauthenticatedRootFolderId}`
                 : '')

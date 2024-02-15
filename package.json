@@ -7,8 +7,15 @@
         "concurrently": "^8.2.2",
         "prettier": "^3.2.4"
     },
+    "engines": {
+        "node": "20.8.0",
+        "npm": "10.1.0"
+    },
     "scripts": {
         "dev": "conc 'cd backend && npm run dev' 'cd frontend && npm run dev'",
+        "install": "cd frontend && npm i -D && cd ../backend && npm i -D",
+        "heroku-postbuild": "cd frontend && npm run build && cd ../backend && npm run build",
+        "start": "cd backend && npm run serve",
         "lint": "cd backend && npm run lint && cd ../frontend && npm run lint",
         "format": "prettier . --write"
     },

@@ -4,15 +4,17 @@ import { useAuth0 } from '@auth0/auth0-react'
 export const AuthenticationAction = () => {
     const { isAuthenticated, loginWithRedirect, logout, isLoading } = useAuth0()
 
+    const origin = window.location.origin
+
     const onClick = () => {
         if (isAuthenticated) {
-            logout()
-        } else {
-            loginWithRedirect({
-                appState: {
-                    hello: 'world',
+            logout({
+                openUrl() {
+                    window.location.replace(`${origin}/user`)
                 },
             })
+        } else {
+            loginWithRedirect()
         }
     }
 

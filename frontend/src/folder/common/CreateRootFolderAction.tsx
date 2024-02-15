@@ -9,7 +9,7 @@ import { useUnauthenticatedRootFolderId } from '../../common/hooks/useUnauthenti
 import AddFolderIcon from '../../assets/folder-add-fill.svg?react'
 
 export const CreateRootFolderAction = () => {
-    const create = useCreate<Folder, {}>('/api/folders')
+    const create = useCreate<Folder, {}>('/folders')
 
     const { setUnauthenticatedRootFolderId } = useUnauthenticatedRootFolderId()
 

@@ -1,4 +1,5 @@
 import express from 'express'
+import path from 'path'
 import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
 import { auth } from 'express-oauth2-jwt-bearer'
@@ -8,7 +9,7 @@ import user from './routes/user'
 
 dotenv.config()
 
-const { AUTH_AUDIENCE, AUTH_ISSUER_BASE_URL } = process.env
+const { AUTH_AUDIENCE, AUTH_ISSUER_BASE_URL, PORT } = process.env
 
 const app = express()
 
@@ -21,12 +22,19 @@ const checkJwt = auth({
 
 app.use(bodyParser.json())
 
+const pathToClient = path.join(__dirname, '/../../frontend/dist')
+app.use(express.static(pathToClient))
+
 app.use(checkJwt)
 
-app.use('/folders', folders)
-app.use('/notes', notes)
-app.use('/user', user)
+app.use('/api/folders', folders)
+app.use('/api/notes', notes)
+app.use('/api/user', user)
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`)
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(pathToClient, 'index.html'))
+})
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`)
 })

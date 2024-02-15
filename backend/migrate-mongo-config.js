@@ -3,11 +3,11 @@ const dotenv = require('dotenv')
 
 dotenv.config()
 
-const { MONGODB_USER, MONGODB_PASSWORD, MONGODB_DB_NAME } = process.env
+const { MONGODB_CONNECTION_STRING, MONGODB_DB_NAME } = process.env
 
 const config = {
     mongodb: {
-        url: `mongodb+srv://${MONGODB_USER}:${MONGODB_PASSWORD}@deepnotedevcluster.ncspqj5.mongodb.net/?retryWrites=true&w=majority`,
+        url: `${MONGODB_CONNECTION_STRING}/?retryWrites=true&w=majority`,
         databaseName: MONGODB_DB_NAME,
     },
 
