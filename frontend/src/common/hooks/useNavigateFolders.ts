@@ -12,6 +12,6 @@ export const useNavigation = (): useNavigationResponse => {
     return {
         goToFolder: (id: string) => navigate(`/folders/${id}`),
         goToNote: (id: string) => navigate(`/notes/${id}`),
-        goToUser: () => navigate('/user'),
+        goToUser: () => navigate('/'),
     }
 }

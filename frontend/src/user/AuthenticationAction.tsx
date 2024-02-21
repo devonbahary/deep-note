@@ -10,7 +10,7 @@ export const AuthenticationAction = () => {
         if (isAuthenticated) {
             logout({
                 openUrl() {
-                    window.location.replace(`${origin}/user`)
+                    window.location.replace(origin)
                 },
             })
         } else {
