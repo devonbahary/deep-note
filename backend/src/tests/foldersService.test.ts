@@ -8,7 +8,6 @@ import {
     getFolderWithFamily,
     updateFolder,
 } from '../services/foldersService'
-import { createNote, updateNote } from '../services/notesService'
 import {
     checkUpdatedItem,
     createFamily,

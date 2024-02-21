@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { useTimeout } from '../../common/hooks/useTimeout'
 import CloseIcon from '../../assets/close-line.svg?react'
 
@@ -12,10 +12,10 @@ export const ErrorPopup: FC<ErrorPopupProps> = ({ prependMsg, error }) => {
 
     const { setTimeout, clearTimeout } = useTimeout()
 
-    const reset = () => {
+    const reset = useCallback(() => {
         setErr(null)
         clearTimeout()
-    }
+    }, [clearTimeout])
 
     useEffect(() => {
         if (error) {
@@ -26,7 +26,7 @@ export const ErrorPopup: FC<ErrorPopupProps> = ({ prependMsg, error }) => {
                 setErr(null)
             })
         }
-    }, [error])
+    }, [error, reset, setTimeout])
 
     if (!err) {
         return null

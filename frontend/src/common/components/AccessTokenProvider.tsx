@@ -33,7 +33,7 @@ export const AccessTokenProvider: FC<AccessTokenProviderProps> = ({
         }
 
         if (isAuthenticated) getAccessToken()
-    }, [isAuthenticated])
+    }, [isAuthenticated, getAccessTokenSilently])
 
     const context = {
         accessToken,

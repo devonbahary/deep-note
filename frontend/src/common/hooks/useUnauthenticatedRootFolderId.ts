@@ -18,7 +18,7 @@ type UseUnauthenticatedRootFolderIdResponse = {
 
 export const useUnauthenticatedRootFolderId =
     (): UseUnauthenticatedRootFolderIdResponse => {
-        const [_, updateState] = useState({})
+        const [, updateState] = useState({})
 
         return {
             unauthenticatedRootFolderId: getUnauthenticatedRootFolderId(),

@@ -31,7 +31,7 @@ export const useTiptapEditor = (
         if (editable) {
             onDebouncedChange()
         }
-    }, [noteId, debouncedEditorJSON])
+    }, [noteId, debouncedEditorJSON, editable, updateContent])
 
     return {
         editor,
