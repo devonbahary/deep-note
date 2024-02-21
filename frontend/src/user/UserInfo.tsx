@@ -19,7 +19,11 @@ export const UserInfo = () => {
             <div className="flex gap-2 items-center p-2 text-zinc-400">
                 <div className="w-12 h-12 grid">
                     <div className="icon-box place-self-center">
-                        {isAuthenticated && user ? <LockIcon /> : <UnlockIcon />}
+                        {isAuthenticated && user ? (
+                            <LockIcon />
+                        ) : (
+                            <UnlockIcon />
+                        )}
                     </div>
                 </div>
                 <p className="w-full text-center">
