@@ -12,6 +12,7 @@ import H4Icon from '../../assets/h-4.svg?react'
 import H5Icon from '../../assets/h-5.svg?react'
 import H6Icon from '../../assets/h-6.svg?react'
 import ItalicIcon from '../../assets/italic.svg?react'
+import LinkIcon from '../../assets/link.svg?react'
 import OrderedListIcon from '../../assets/list-ordered.svg?react'
 import RedoIcon from '../../assets/arrow-go-forward.svg?react'
 import StrikeIcon from '../../assets/strikethrough.svg?react'
@@ -23,7 +24,7 @@ type CommandButtonGroup = CommandProps[]
 type CommandProps = {
     name: string
     icon: ReactNode
-    command: (chain: ChainedCommands) => ChainedCommands
+    command: (chain: ChainedCommands, editor: Editor) => ChainedCommands
     isActiveAttributes?: object
     disabled?: (editor: Editor) => boolean
 }
@@ -62,6 +63,19 @@ export const COMMAND_BUTTON_GROUPS: CommandButtonGroup[] = [
             name: 'strike',
             icon: <StrikeIcon />,
             command: (chain) => chain.toggleStrike(),
+        },
+        {
+            name: 'link',
+            icon: <LinkIcon />,
+            command: (chain, editor) => {
+                if (editor.isActive('link')) {
+                    return chain.unsetLink()
+                }
+
+                const href = prompt('Enter URL (https://...):')
+
+                return href ? chain.setLink({ href }) : chain.unsetLink()
+            },
         },
         {
             name: 'blockquote',

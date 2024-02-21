@@ -29,7 +29,7 @@ export const EditorCommandsMenu: FC<EditorCommandsMenuProps> = ({ editor }) => {
 
                         const runCommand = () => {
                             const chainedCommand = editor.chain().focus()
-                            command(chainedCommand).run()
+                            command(chainedCommand, editor).run()
                         }
 
                         const isActive = editor.isActive(
