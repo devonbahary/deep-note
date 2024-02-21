@@ -15,3 +15,8 @@
     height: 0;
     pointer-events: none;
 }
+
+.tiptap a.link {
+    @apply text-blue-500;
+    @apply underline;
+}

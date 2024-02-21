@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Content, Editor, useEditor } from '@tiptap/react'
-import Placeholder from '@tiptap/extension-placeholder'
-import Underline from '@tiptap/extension-underline'
-import StarterKit from '@tiptap/starter-kit'
+import { Content, Editor } from '@tiptap/react'
 import { useDebounce } from 'usehooks-ts'
 import { useUpdateContent } from './useNoteQueries'
+import { useConfiguredTiptapEditor } from './useConfiguredTiptapEditor'
 
 type UseTipTapEditorResponse = {
     editor: Editor | null
@@ -21,34 +19,9 @@ export const useTiptapEditor = (
 
     const { mutate: updateContent, error } = useUpdateContent(noteId)
 
-    const editor = useEditor({
-        extensions: [
-            Placeholder.configure({
-                placeholder: 'Text here..',
-            }),
-            StarterKit.configure({
-                code: {
-                    HTMLAttributes: {
-                        class: 'bg-stone-950 px-0.5',
-                    },
-                },
-                codeBlock: {
-                    HTMLAttributes: {
-                        class: 'bg-stone-950 p-1',
-                    },
-                },
-            }),
-            Underline,
-        ],
-        content,
-        editable,
-        editorProps: {
-            attributes: {
-                class: 'px-4 pb-4',
-            },
-        },
-        onUpdate: ({ editor }) => setEditorJSON(editor.getJSON()),
-    })
+    const editor = useConfiguredTiptapEditor(content, editable, ({ editor }) =>
+        setEditorJSON(editor.getJSON())
+    )
 
     useEffect(() => {
         const onDebouncedChange = async () => {
@@ -58,7 +31,7 @@ export const useTiptapEditor = (
         if (editable) {
             onDebouncedChange()
         }
-    }, [noteId, debouncedEditorJSON])
+    }, [noteId, debouncedEditorJSON, editable, updateContent])
 
     return {
         editor,

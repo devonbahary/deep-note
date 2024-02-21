@@ -9,7 +9,7 @@ type NoteContentProps = {
 
 export const NoteContent: FC<NoteContentProps> = ({ editor }) => {
     const className = clsx(
-        'grow bg-zinc-900 min-h-full pt-4',
+        'grow bg-zinc-900 h-full pt-4',
         editor?.options.editable ? 'text-zinc-100' : 'text-zinc-400'
     )
 

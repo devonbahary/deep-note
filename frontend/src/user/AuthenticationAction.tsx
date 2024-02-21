@@ -10,7 +10,7 @@ export const AuthenticationAction = () => {
         if (isAuthenticated) {
             logout({
                 openUrl() {
-                    window.location.replace(`${origin}/user`)
+                    window.location.replace(origin)
                 },
             })
         } else {
@@ -27,7 +27,7 @@ export const AuthenticationAction = () => {
 
     return (
         <button className={buttonClassName} onClick={onClick}>
-            {isAuthenticated ? 'Log Out' : 'Log In'}
+            {isAuthenticated ? 'Sign Out' : 'Sign In'}
         </button>
     )
 }

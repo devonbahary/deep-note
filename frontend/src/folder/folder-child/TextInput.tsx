@@ -22,7 +22,7 @@ export const TextInput: FC<TextInputProps> = ({
     return (
         <input
             autoFocus
-            className="bg-inherit"
+            className="bg-inherit w-full"
             type="text"
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => {

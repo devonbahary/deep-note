@@ -46,7 +46,7 @@ export const RootFolderListItem: FC<RootFolderListItemProps> = ({ folder }) => {
         },
     })
 
-    const updateClaimFolder = useUpdate<Folder, {}>(`/user/claim-folder`)
+    const updateClaimFolder = useUpdate<Folder, object>(`/user/claim-folder`)
 
     const { mutate: claimFolder, error: claimFolderError } = useMutation({
         mutationFn: () => updateClaimFolder(folder._id, {}),

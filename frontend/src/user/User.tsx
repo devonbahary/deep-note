@@ -14,7 +14,7 @@ export const User: FC<UserProps> = ({ rootFolders }) => {
     return (
         <div className="relative bg-zinc-900 text-zinc-100 overflow-y-scroll w-full h-full grid">
             <div className="place-self-center pt-16 pb-8">
-                <UserInfo />
+                {Boolean(rootFolders.length) && <UserInfo />}
                 <div className="mt-8 mb-12">
                     {rootFolders.length ? (
                         <>

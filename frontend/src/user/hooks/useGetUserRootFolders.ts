@@ -18,7 +18,11 @@ const useResetUnauthenticatedRootFolderIfClaimed = (rootFolders?: Folder[]) => {
                 setUnauthenticatedRootFolderId(null)
             }
         }
-    }, [rootFolders])
+    }, [
+        rootFolders,
+        setUnauthenticatedRootFolderId,
+        unauthenticatedRootFolderId,
+    ])
 }
 
 export const useGetUserRootFolders = () => {

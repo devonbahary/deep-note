@@ -154,7 +154,7 @@ export const useReparentChildNote = (parentFolderId: string) => {
 export const useClaimChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Folder, {}>('/user/claim-folder')
+    const update = useUpdate<Folder, object>('/user/claim-folder')
 
     return useMutation({
         mutationFn: (id: string) => update(id, {}),
@@ -171,7 +171,7 @@ export const useClaimChildFolder = (parentFolderId: string) => {
 export const useClaimChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Note, {}>('/user/claim-note')
+    const update = useUpdate<Note, object>('/user/claim-note')
 
     return useMutation({
         mutationFn: (id: string) => update(id, {}),
@@ -188,7 +188,7 @@ export const useClaimChildNote = (parentFolderId: string) => {
 export const useUnclaimChildFolder = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Folder, {}>('/user/unclaim-folder')
+    const update = useUpdate<Folder, object>('/user/unclaim-folder')
 
     return useMutation({
         mutationFn: (id: string) => update(id, {}),
@@ -205,7 +205,7 @@ export const useUnclaimChildFolder = (parentFolderId: string) => {
 export const useUnclaimChildNote = (parentFolderId: string) => {
     const updateParent = useUpdateFolderCache()
 
-    const update = useUpdate<Note, {}>('/user/unclaim-note')
+    const update = useUpdate<Note, object>('/user/unclaim-note')
 
     return useMutation({
         mutationFn: (id: string) => update(id, {}),
