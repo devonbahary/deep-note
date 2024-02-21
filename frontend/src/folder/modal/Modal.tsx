@@ -1,6 +1,7 @@
 import { FC, ReactNode } from 'react'
 import { Overlay } from '../common/Overlay'
 import { Header } from '../../common/components/Header'
+import { useCloseOnEscape } from '../../common/hooks/useCloseOnEscape'
 
 type ModalProps = {
     children: ReactNode
@@ -9,6 +10,8 @@ type ModalProps = {
 }
 
 export const Modal: FC<ModalProps> = ({ children, heading, onClose }) => {
+    useCloseOnEscape(onClose)
+
     return (
         <div
             className="fixed grid top-0 left-0 w-full h-full"

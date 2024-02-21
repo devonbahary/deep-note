@@ -6,6 +6,7 @@ import { ListItem } from '../common/ListItem'
 import { useMoveElementOnScreen } from '../hooks/useMoveElementOnScreen'
 import { FolderChild } from '../../types/types'
 import { belongsToNoOne, belongsToUser } from '../../common/authUtility'
+import { useCloseOnEscape } from '../../common/hooks/useCloseOnEscape'
 import DeleteIcon from '../../assets/delete-bin-5-fill.svg?react'
 import ColorIcon from '../../assets/palette-fill.svg?react'
 import LockIcon from '../../assets/lock-fill.svg?react'
@@ -43,6 +44,8 @@ export const FolderChildMenu: FC<FolderChildMenuProps> = ({
     const { user } = useAuth0()
 
     const ref = useMoveElementOnScreen()
+
+    useCloseOnEscape(onClose)
 
     const menuItems: MenuItem[] = [
         {
