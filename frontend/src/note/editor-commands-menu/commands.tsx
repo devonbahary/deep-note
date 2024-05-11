@@ -11,6 +11,8 @@ import H3Icon from '../../assets/h-3.svg?react'
 import H4Icon from '../../assets/h-4.svg?react'
 import H5Icon from '../../assets/h-5.svg?react'
 import H6Icon from '../../assets/h-6.svg?react'
+import IndentDecreaseIcon from '../../assets/indent-decrease.svg?react'
+import IndentIncreaseIcon from '../../assets/indent-increase.svg?react'
 import ItalicIcon from '../../assets/italic.svg?react'
 import LinkIcon from '../../assets/link.svg?react'
 import OrderedListIcon from '../../assets/list-ordered.svg?react'
@@ -109,6 +111,18 @@ export const COMMAND_BUTTON_GROUPS: CommandButtonGroup[] = [
             name: 'bulletList',
             icon: <BulletListIcon />,
             command: (chain) => chain.toggleBulletList(),
+        },
+        {
+            name: 'indentDecrease',
+            icon: <IndentDecreaseIcon />,
+            command: (chain) => chain.liftListItem('listItem'),
+            disabled: (editor) => !editor.can().liftListItem('listItem'),
+        },
+        {
+            name: 'indentIncrease',
+            icon: <IndentIncreaseIcon />,
+            command: (chain) => chain.sinkListItem('listItem'),
+            disabled: (editor) => !editor.can().sinkListItem('listItem'),
         },
         {
             name: 'undo',
