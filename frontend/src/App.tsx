@@ -23,7 +23,16 @@ const router = createBrowserRouter([
     },
 ])
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: (failureCount, error) => {
+                if (error.message === '403') return false;
+                return failureCount < 2;
+            }
+        }
+    }
+})
 
 export const App = () => {
     return (
