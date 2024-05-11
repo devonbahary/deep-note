@@ -8,6 +8,7 @@ type AccessTokenProviderProps = {
 type AccessTokenContext = {
     isAuthenticating: boolean
     accessToken: string | null
+    error?: Error
 }
 
 export const AccessTokenContext = createContext<AccessTokenContext>({
@@ -18,7 +19,7 @@ export const AccessTokenContext = createContext<AccessTokenContext>({
 export const AccessTokenProvider: FC<AccessTokenProviderProps> = ({
     children,
 }) => {
-    const { getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0()
+    const { error, getAccessTokenSilently, isAuthenticated, isLoading } = useAuth0()
 
     const [accessToken, setAccessToken] = useState<string | null>(null)
 
@@ -38,6 +39,7 @@ export const AccessTokenProvider: FC<AccessTokenProviderProps> = ({
     const context = {
         accessToken,
         isAuthenticating: isLoading || (isAuthenticated && !accessToken),
+        error,
     }
 
     return (
