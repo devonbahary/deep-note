@@ -7,7 +7,7 @@ export const UserInfo = () => {
     const { user, isAuthenticated } = useAuth0()
 
     return (
-        <div className="bg-zinc-800 rounded-md">
+        <div className="bg-zinc-800 rounded-md shadow-md">
             <div className="flex gap-2 items-center border-b-2 border-zinc-700 p-2">
                 <div className="w-12 h-12">
                     <UserIcon />

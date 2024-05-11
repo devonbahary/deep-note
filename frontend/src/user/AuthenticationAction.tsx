@@ -19,7 +19,7 @@ export const AuthenticationAction = () => {
     }
 
     const buttonClassName = clsx(
-        'w-full bg-zinc-800 rounded-md p-2 transition ease-out duration-200',
+        'w-full bg-zinc-800 rounded-md p-2 transition ease-out duration-200 shadow-md',
         isLoading
             ? 'animate-ping opacity-50 cursor-default'
             : 'hover:bg-zinc-700'
