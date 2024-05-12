@@ -17,6 +17,10 @@ type FolderProps = {
     folder: FolderWithFamily
 }
 
+const MAX_DELAY = 5000; // corresponds with tailwind-safelist.js
+
+const getDelay = (count: number) => `[--fadeIn-delay:${Math.min(count * 50, MAX_DELAY)}ms]`;
+
 export const Folder: FC<FolderProps> = ({ folder }) => {
     const {
         mutate: addChildFolder,
@@ -32,14 +36,18 @@ export const Folder: FC<FolderProps> = ({ folder }) => {
 
     const liClassName = 'bg-zinc-900 hover:bg-zinc-800 border-zinc-700'
 
+    const totalChildren = folder.folders.length + folder.notes.length;
+
     const addFolderClassName = clsx(
         liClassName,
-        isAddFolderPending ? 'opacity-50 cursor-default' : 'hover:bg-zinc-800'
+        isAddFolderPending ? 'opacity-50 cursor-default' : 'hover:bg-zinc-800',
+        `animate-fadeIn opacity-0 ${getDelay(totalChildren)}`
     )
 
     const addNoteClassName = clsx(
         liClassName,
-        isAddNotePending ? 'opacity-50 cursor-default' : 'hover:bg-zinc-800'
+        isAddNotePending ? 'opacity-50 cursor-default' : 'hover:bg-zinc-800',
+        `animate-fadeIn opacity-0 ${getDelay(totalChildren + 1)}`
     )
 
     return (
@@ -56,20 +64,24 @@ export const Folder: FC<FolderProps> = ({ folder }) => {
             scrollableContent={
                 <>
                     <UnorderedList className="grow bg-zinc-900 text-zinc-100">
-                        {folder.folders.map((child) => (
+                        {folder.folders.map((child, index) => (
                             <FolderChildFolder
                                 key={child._id}
+                                className={`animate-fadeIn opacity-0 ${getDelay(index)}`}
                                 folder={child}
                                 parentFolder={folder}
                             />
-                        ))}
-                        {folder.notes.map((child) => (
+                        )
+                        )}
+                        {folder.notes.map((child, index) => (
                             <FolderChildNote
                                 key={child._id}
+                                className={`animate-fadeIn opacity-0 ${getDelay(folder.folders.length + index)}`}
                                 note={child}
                                 parentFolder={folder}
                             />
-                        ))}
+                        )
+                        )}
                         <ListItem
                             className={addFolderClassName}
                             icon={<FolderAddIcon />}

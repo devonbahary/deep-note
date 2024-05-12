@@ -9,7 +9,17 @@ export default {
             xs: '425px',
             ...defaultTheme.screens,
         },
-        extend: {},
+        extend: {
+            animation: {
+                "fadeIn": "fadeIn 1s ease-in-out var(--fadeIn-delay, 0) forwards",
+            },
+            keyframes: () => ({
+                fadeIn: {
+                    "0%": { opacity: 0 },
+                    "100%": { opacity: 1 }
+                }
+            })
+        },
     },
     safelist,
     plugins: [],
