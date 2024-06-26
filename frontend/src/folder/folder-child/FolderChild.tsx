@@ -1,4 +1,3 @@
-import clsx from 'clsx/lite'
 import { FC, ReactNode, useState } from 'react'
 import { useBoolean } from 'usehooks-ts'
 import { canMoveFolderChild } from '../utility'
@@ -18,7 +17,6 @@ import LockIcon from '../../assets/lock-fill.svg?react'
 import MenuIcon from '../../assets/more-line.svg?react'
 
 type FolderChildProps = {
-    className?: string
     Icon: SVGIcon
     navigateTo: () => void
     updateChild: (input: UpdateFolderChildInput) => void
@@ -47,7 +45,6 @@ enum EditMode {
 }
 
 export const FolderChild: FC<FolderChildProps> = ({
-    className,
     Icon,
     navigateTo,
     parentFolder,
@@ -107,12 +104,7 @@ export const FolderChild: FC<FolderChildProps> = ({
 
     return (
         <FolderListItem
-            className={
-                clsx(
-                    className,
-                    "bg-zinc-900 hover:bg-zinc-800 border-zinc-700"
-                )
-            }
+            className="bg-zinc-900 hover:bg-zinc-800 border-zinc-700"
             Icon={Icon}
             item={child}
             onClick={navigateTo}

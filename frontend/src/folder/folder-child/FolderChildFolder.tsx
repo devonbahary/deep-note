@@ -14,13 +14,11 @@ import { ErrorPopup } from '../common/ErrorPopup'
 import FolderIcon from '../../assets/folder-fill.svg?react'
 
 type FolderChildFolderProps = {
-    className?: string
     folder: Folder
     parentFolder: FolderWithFamily
 }
 
 export const FolderChildFolder: FC<FolderChildFolderProps> = ({
-    className,
     folder,
     parentFolder,
 }) => {
@@ -66,7 +64,6 @@ export const FolderChildFolder: FC<FolderChildFolderProps> = ({
     return (
         <>
             <FolderChild
-                className={className}
                 Icon={FolderIcon}
                 child={folder}
                 editProps={{

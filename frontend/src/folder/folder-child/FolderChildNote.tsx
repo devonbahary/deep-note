@@ -15,13 +15,11 @@ import { ErrorPopup } from '../common/ErrorPopup'
 import NoteIcon from '../../assets/file-text-fill.svg?react'
 
 type FolderChildNoteProps = {
-    className?: string;
     note: Note
     parentFolder: FolderWithFamily
 }
 
 export const FolderChildNote: FC<FolderChildNoteProps> = ({
-    className,
     note,
     parentFolder,
 }) => {
@@ -67,7 +65,6 @@ export const FolderChildNote: FC<FolderChildNoteProps> = ({
     return (
         <>
             <FolderChild
-                className={className}
                 Icon={NoteIcon}
                 child={note}
                 editProps={{
